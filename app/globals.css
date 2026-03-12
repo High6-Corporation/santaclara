@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+:root {
+  --font-size: 16px;
+  --background: #ffffff;
+  --foreground: #1e1e1e;
+  --border: rgba(0, 0, 0, 0.1);
+  --radius: 0.625rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-border: var(--border);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Brand Colors */
+  --color-brand-primary: #04217B;
+  --color-brand-primary-dark: #031a5f;
+  --color-brand-secondary: #E31C26;
+  --color-brand-secondary-dark: #a91f1a;
+  --color-brand-text: #1e1e1e;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-inter);
+   overflow-x: hidden;
+  }
+
+  html {
+    font-size: var(--font-size);
+   overflow-x: hidden;
+  }
+
+  /* Font Utility Classes */
+  .font-heading {
+    font-family: var(--font-inter);
+  }
+
+  .font-body {
+    font-family: var(--font-inter);
+  }
+}
+
