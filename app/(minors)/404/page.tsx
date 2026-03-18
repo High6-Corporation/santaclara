@@ -30,7 +30,7 @@ export default function NotFoundPage() {
               <div className="flex flex-col-reverse items-center justify-between gap-8 [@media(min-width:981px)]:flex-row [@media(min-width:981px)]:gap-12">
                 {/* Left Column - Text */}
                 <div className="text-center [@media(min-width:981px)]:text-left max-w-[500px]">
-                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-normal text-white mb-2">Ooops...</h1>
+                  <h1 className="text-[42px] md:text-[72px] lg:text-[84px] font-normal text-white mb-2">Ooops...</h1>
                   <h2 className="text-xl md:text-2xl text-white mb-6">Page not found</h2>
                   <p 
                     className="text-white/80 mb-8"
@@ -42,7 +42,7 @@ export default function NotFoundPage() {
                       letterSpacing: '-0.72px'
                     }}
                   >
-                    The page you are looking for doesn&apos;t exist or an other error occurred, go back to home page.
+                    The page you are looking for doesn&apos;t exist or another error occurred, go back to homepage.
                   </p>
                   <div className="inline-block">
                     <ArrowButton href="/" variant="primary" className="px-6 py-3 text-sm">

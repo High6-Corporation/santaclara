@@ -7,7 +7,7 @@ import Image from "next/image";
 
 export default function ThankYouPage() {
   return (
-    <div className="relative w-full">
+    <div className="relative w-full overflow-x-hidden">
       {/* Hero Section with Background */}
       <div className="relative min-h-[785px]">
         {/* Background Image */}
@@ -30,15 +30,15 @@ export default function ThankYouPage() {
                 <Image 
                   src="/images/thank-you-icon.svg" 
                   alt="Thank you" 
-                  width={64} 
-                  height={64}
-                  className="w-16 h-16"
+                  width={80} 
+                  height={80}
+                  className="w-20 h-20"
                 />
               </div>
               
-              <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">Thank You!</h1>
+              <h1 className="text-[42px] md:text-[72px] lg:text-[84px] font-normal text-white mb-2">Thank You!</h1>
               <p 
-                className="text-white mb-10 whitespace-pre-line"
+                className="text-white mb-10"
                 style={{
                   fontFamily: 'Inter',
                   fontSize: '18px',
@@ -48,7 +48,7 @@ export default function ThankYouPage() {
                   textAlign: 'center'
                 }}
               >
-                Thanks for reaching out!{'\n'}Your message just showed up in our inbox. Talk to you soon!
+                Thanks for reaching out! Your message just showed up in our inbox.<br className="md:hidden" /> Talk to you soon!
               </p>
               <div className="inline-block">
                 <ArrowButton href="/" variant="primary" className="px-6 py-3 text-sm">

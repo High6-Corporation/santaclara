@@ -27,38 +27,13 @@ export default function MaintenancePage() {
           </div>
           
           {/* Content */}
-          <h1 
-            className="font-normal text-white mb-4"
-            style={{
-              fontSize: 'clamp(36px, 5vw, 84px)',
-              lineHeight: '1.07',
-              letterSpacing: '-0.02em'
-            }}
-          >
+          <h1 className="font-normal text-white mb-[31px] text-[36px] md:text-[60px] lg:text-[84px] leading-[1.07] tracking-[-0.02em]">
             Under Maintenance
           </h1>
-          <p 
-            className="text-white mb-2"
-            style={{
-              fontFamily: 'Inter',
-              fontSize: 'clamp(14px, 1.5vw, 18px)',
-              fontWeight: 400,
-              lineHeight: '1.55',
-              letterSpacing: '-0.04em'
-            }}
-          >
+          <p className="text-white mb-1 text-[14px] md:text-[16px] lg:text-[18px] leading-[1.55] tracking-[-0.04em] font-body">
             Exciting things are on the horizon! Stay tuned for our upcoming website.
           </p>
-          <p 
-            className="text-white mb-8"
-            style={{
-              fontFamily: 'Inter',
-              fontSize: 'clamp(14px, 1.5vw, 18px)',
-              fontWeight: 400,
-              lineHeight: '1.55',
-              letterSpacing: '-0.04em'
-            }}
-          >
+          <p className="text-white mb-[60px] text-[14px] md:text-[16px] lg:text-[18px] leading-[1.55] tracking-[-0.04em] font-body">
             Launching soon!
           </p>
           

@@ -16,7 +16,7 @@ export default function ComingSoonPage() {
       <div 
         className="hidden [@media(min-width:981px)]:block absolute inset-0"
         style={{
-          background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.00) 0%, rgba(255, 255, 255, 0.00) 40%, rgba(255, 255, 255, 0.8) 55%, #FFF 65%)'
+          background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.00) 0%, rgba(255, 255, 255, 0.00) 40%, rgba(255, 255, 255, 0.8) 65%, #FFF 75%)'
         }}
       />
       
@@ -26,8 +26,8 @@ export default function ComingSoonPage() {
         <div className="hidden [@media(min-width:981px)]:block w-1/2" />
         
         {/* Right side - content */}
-        <div className="w-full [@media(min-width:981px)]:w-1/2 flex flex-col justify-center items-center px-8 py-16 [@media(min-width:981px)]:px-16 [@media(min-width:981px)]:lg:px-20">
-          <div className="max-w-[566px] w-full">
+        <div className="w-full [@media(min-width:981px)]:w-1/2 flex flex-col justify-center items-center px-8 py-16 [@media(min-width:981px)]:px-16 [@media(min-width:1440px)]:px-12">
+          <div className="max-w-[566px] [@media(min-width:1440px)]:max-w-[750px] w-full">
             {/* Logo */}
             <div className="mb-8 flex justify-center [@media(min-width:981px)]:justify-center">
               <Image 
@@ -41,39 +41,14 @@ export default function ComingSoonPage() {
             </div>
             
             {/* Content */}
-            <div className="text-center [@media(min-width:981px)]:text-center">
-              <h1 
-                className="font-normal text-black mb-4"
-                style={{
-                  fontSize: 'clamp(36px, 5vw, 84px)',
-                  lineHeight: '1.07',
-                  letterSpacing: '-0.02em'
-                }}
-              >
+            <div className="text-center">
+              <h1 className="font-normal text-black mb-4 text-[36px] md:text-[60px] lg:text-[84px] leading-[1.07] tracking-[-0.02em]">
                 Coming Soon
               </h1>
-              <p 
-                className="text-black mb-2 text-center [@media(min-width:981px)]:text-center"
-                style={{
-                  fontFamily: 'Inter',
-                  fontSize: 'clamp(14px, 1.5vw, 18px)',
-                  fontWeight: 400,
-                  lineHeight: '1.55',
-                  letterSpacing: '-0.04em'
-                }}
-              >
+              <p className="text-black mb-2 text-center text-[14px] md:text-[16px] lg:text-[18px] leading-[1.55] tracking-[-0.04em] font-body">
                 Exciting things are on the horizon! Stay tuned for our upcoming website.
               </p>
-              <p 
-                className="text-black mb-8 text-center [@media(min-width:981px)]:text-center"
-                style={{
-                  fontFamily: 'Inter',
-                  fontSize: 'clamp(14px, 1.5vw, 18px)',
-                  fontWeight: 400,
-                  lineHeight: '1.55',
-                  letterSpacing: '-0.04em'
-                }}
-              >
+              <p className="text-black mb-8 text-center text-[14px] md:text-[16px] lg:text-[18px] leading-[1.55] tracking-[-0.04em] font-body">
                 Launching soon!
               </p>
               
