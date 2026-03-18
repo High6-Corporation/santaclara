@@ -32,8 +32,8 @@ function GalleryImageCard({
     <div 
       className={`bg-black overflow-hidden cursor-pointer ${
         isMain 
-          ? "h-[300px] sm:h-[400px] lg:h-[487px] w-full lg:max-w-[637px]"
-          : "h-[200px] sm:h-[235px] w-full sm:max-w-[calc(50%-8.5px)] lg:max-w-[308px]"
+          ? "h-[300px] sm:h-[400px] lg:h-[487px] w-full"
+          : "h-[200px] sm:h-[235px] w-full"
       }`}
       onClick={() => onClick(image)}
     >
@@ -135,9 +135,13 @@ export function CompanyGallerySection() {
           </div>
 
           {/* Gallery Grid */}
-          <div className="flex flex-col xl:flex-row gap-[16px] xl:gap-[10px] items-stretch xl:items-start w-full justify-center">
-            <GalleryImageCard image={mainImage} onClick={handleImageClick} isMain />
-            <div className="flex flex-wrap gap-[16px] sm:gap-[17px] w-full lg:max-w-[633px]">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-[16px] xl:gap-[20px] w-full">
+            {/* Main Image */}
+            <div className="xl:row-span-2">
+              <GalleryImageCard image={mainImage} onClick={handleImageClick} isMain />
+            </div>
+            {/* Grid Images - 2x2 layout */}
+            <div className="grid grid-cols-2 gap-[16px] xl:gap-[20px]">
               {gridImages.map((image) => (
                 <GalleryImageCard key={image.id} image={image} onClick={handleImageClick} />
               ))}

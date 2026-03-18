@@ -1,10 +1,10 @@
 "use client";
 
-import { ContentBlock } from "../blocks/ContentBlock";
+import { ArrowButton } from "../ui/ArrowButton";
 
 export function CtaSection() {
   return (
-    <section className="relative w-full bg-black py-[100px] overflow-hidden">
+    <section className="relative w-full bg-black py-[103.5px] overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
@@ -17,23 +17,22 @@ export function CtaSection() {
 
       {/* Row Container - Constrained to 1440px and centered */}
       <div className="relative max-w-[1440px] mx-auto px-[5%] lg:px-[60px] flex items-center justify-center">
-        <ContentBlock
-          title="Your Project Deserves the Best Plywood"
-          paragraphs={[
-            "Durable, reliable, and built to last — trusted by professionals nationwide.",
-          ]}
-          primaryButton={{
-            text: "Request a Quote",
-            href: "#",
-            variant: "primary",
-          }}
-          align="center"
-          showLine={false}
-          textColor="text-white"
-          titleColor="text-white"
-          className="w-full max-w-[90%] md:max-w-none"
-          gap="gap-[40px]"
-        />
+        <div className="flex flex-col items-center text-center w-full max-w-[90%] md:max-w-none">
+          {/* Title */}
+          <h2 className="font-body text-[36px] md:text-[48px] lg:text-[60px] text-white tracking-[-2.4px] leading-[1.1]">
+            Your Project Deserves the Best Plywood
+          </h2>
+          {/* Paragraph */}
+          <p className="font-body text-[24px] leading-[32px] text-white tracking-[-0.64px] mt-[16px]">
+            Durable, reliable, and built to last — trusted by professionals nationwide.
+          </p>
+          {/* Button */}
+          <div className="mt-[40px]">
+            <ArrowButton href="#" variant="primary">
+              Request a Quote
+            </ArrowButton>
+          </div>
+        </div>
       </div>
     </section>
   );

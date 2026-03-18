@@ -29,7 +29,7 @@ const testimonials: Testimonial[] = [
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
     <div className="bg-[#f5f6fa] relative rounded-[20px] w-full md:w-[calc(50%-10px)] xl:w-full max-w-[413px] flex flex-col border border-[#cdcdcd]">
-      <div className="p-[20px] flex flex-col gap-[16px] flex-1">
+      <div className="px-[20px] py-[41.5px] flex flex-col gap-[16px] flex-1">
         <p className="font-body font-medium leading-[1.3] lg:leading-[27px] text-[20px] md:text-[24px] text-black tracking-[-0.24px]">
           {testimonial.title}
         </p>

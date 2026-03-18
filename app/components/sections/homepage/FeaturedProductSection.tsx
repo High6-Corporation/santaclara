@@ -1,8 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
+import { useState, useRef } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 import { ArrowButton } from "@/app/components/ui/ArrowButton";
 import { ContentBlock } from "@/app/components/blocks/ContentBlock";
 
@@ -38,20 +42,21 @@ function ProductCard({ image, overlayImage, title, description }: ProductCardPro
         </div>
       )}
       
-      {/* Icon */}
-      <div className={`absolute right-[16px] lg:right-[24px] bottom-[24px] lg:bottom-[30px] size-[24px] lg:size-[32px] transition-transform duration-300 ease-in-out ${isHovered ? 'rotate-[-45deg]' : 'rotate-0'}`}>
-       <img 
-       src="/images/arrow-icon.svg" 
-       alt="Arrow icon" 
-       className="block size-full"
-       />
-      </div>
-      
       {/* Product Info */}
       <div className="absolute left-[16px] lg:left-[30px] right-[16px] lg:right-[30px] bottom-[24px] lg:bottom-[30px] flex flex-col gap-[8px] lg:gap-[16px]">
-        <p className="font-body font-semibold text-[18px] lg:text-[24px] leading-[1.3] text-white tracking-[-0.96px]">
-          {title}
-        </p>
+        {/* Title with Arrow */}
+        <div className="flex items-start justify-between gap-[12px]">
+          <p className="font-body font-semibold text-[18px] lg:text-[24px] leading-[1.3] text-white tracking-[-0.96px]">
+            {title}
+          </p>
+          <div className={`shrink-0 size-[24px] lg:size-[32px] transition-transform duration-300 ease-in-out ${isHovered ? 'rotate-[-45deg]' : 'rotate-0'}`}>
+            <img 
+              src="/images/arrow-icon.svg" 
+              alt="Arrow icon" 
+              className="block size-full"
+            />
+          </div>
+        </div>
         <p className="font-body font-normal text-[13px] lg:text-[16px] leading-[1.5] lg:leading-[28px] text-white tracking-[-0.64px]">
           {description}
         </p>
@@ -89,112 +94,12 @@ function FeaturedProductsContainer() {
 
 
 export function FeaturedProductSection() {
-  const settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 2,
-    slidesToScroll: 1,
-    arrows: false,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    variableWidth: true,
-    centerMode: false,
-    responsive: [
-      {
-        breakpoint: 980,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          centerMode: true,
-          centerPadding: "18%",
-          variableWidth: false,
-        },
-      },
-      {
-        breakpoint: 640,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          centerMode: false,
-          centerPadding: "0px",
-          variableWidth: false,
-        },
-      },
-    ],
-  };
-
-  const sliderStyles = `
-    /* Desktop: allow right overflow, clip left */
-    @media (min-width: 981px) {
-      .slick-list {
-        overflow: visible !important;
-        clip-path: inset(0 -100vw 0 0);
-      }
-    }
-    .slick-track {
-      display: flex !important;
-      flex-wrap: nowrap !important;
-    }
-    .slick-slide {
-      margin-right: 22px;
-      float: none !important;
-      height: auto;
-    }
-    .slick-slide > div {
-      width: 425px;
-      height: 460px;
-    }
-
-    /* Tablet: center mode with side peek */
-    @media (max-width: 980px) {
-      .slick-slider {
-        overflow: visible !important;
-      }
-      .slick-list {
-        overflow: visible !important;
-        clip-path: none;
-      }
-      .slick-slide {
-        margin-right: 0;
-        padding: 0 10px;
-        transition: all 0.4s ease;
-      }
-      .slick-slide > div {
-        width: 100% !important;
-        height: 420px;
-        transform: scale(0.85);
-        opacity: 0.6;
-        transition: all 0.4s ease;
-      }
-      .slick-slide.slick-center > div {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    /* Mobile: single slide */
-    @media (max-width: 640px) {
-      .slick-list {
-        overflow: hidden !important;
-        clip-path: none;
-      }
-      .slick-slide {
-        padding: 0;
-      }
-      .slick-slide > div {
-        transform: scale(1) !important;
-        opacity: 1 !important;
-        width: 100% !important;
-        height: 420px;
-      }
-    }
-  `;
+  const desktopSwiperRef = useRef<SwiperType | null>(null);
+  const tabletSwiperRef = useRef<SwiperType | null>(null);
+  const mobileSwiperRef = useRef<SwiperType | null>(null);
 
   return (
-    <>
-      <style>{sliderStyles}</style>
-      <section className="relative w-full bg-[#04217b] py-[100px] overflow-hidden">
+    <section className="relative w-full bg-[#04217b] py-[100px]">
       {/* Row Container - Constrained to 1440px and centered */}
       <div className="max-w-[1440px] mx-auto lg:px-[60px]">
         <div className="flex flex-col lg:flex-row gap-[40px] lg:gap-[80px] items-start">
@@ -204,34 +109,282 @@ export function FeaturedProductSection() {
           </div>
 
           {/* Right Column - Product Carousel */}
-          <div className="w-full lg:flex-1">
-            <Slider {...settings} className="pb-[40px]">
-              <ProductCard 
-                image="/images/7d9187bda933145126e88ddb487babf0a9a6ff9e.png"
-                overlayImage="/images/76e811688cf4a3b19460e7cce5d5a53f86817a84.png"
-                title="Marine Plywood"
-                description="High-quality marine plywood designed for durability, water resistance, and long-lasting performance."
-              />
-              <ProductCard 
-                image="/images/7e0c58a94520b877241b31fd384100e7428bfc17.png"
-                title="Ordinary Plywood"
-                description="Reliable plywood for general construction and interior projects, offering durability and versatility."
-              />
-              <ProductCard 
-                image="/images/974bbd648b8a0570fe415755bbe12be9898052ec.png"
-                title="SMPly"
-                description="Versatile plywood ideal for general construction and interior applications."
-              />
-              <ProductCard 
-                image="/images/d16802cced46c5759edc3e11bddedf609c37f12f.png"
-                title="Plyboard"
-                description="Premium Plyboard for high-quality interior and furniture applications."
-              />
-            </Slider>
+          <div className="w-full lg:flex-1 min-w-0">
+            {/* Desktop Swiper - Shows partial next slide */}
+            <div className="hidden lg:block relative" style={{ clipPath: 'inset(0 -100vw 0 0)' }}>
+              {/* Navigation Buttons */}
+              <button 
+                onClick={() => desktopSwiperRef.current?.slidePrev()}
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-[48px] h-[48px] flex items-center justify-center hover:opacity-80 transition-opacity"
+                aria-label="Previous slide"
+              >
+                <img src="/images/slider-button.png" alt="" className="w-full h-full object-contain" />
+              </button>
+              <button 
+                onClick={() => desktopSwiperRef.current?.slideNext()}
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-[48px] h-[48px] flex items-center justify-center hover:opacity-80 transition-opacity"
+                aria-label="Next slide"
+              >
+                <img src="/images/slider-button.png" alt="" className="w-full h-full object-contain rotate-180" />
+              </button>
+              <Swiper
+                modules={[Autoplay, Navigation]}
+                slidesPerView={"auto"}
+                spaceBetween={22}
+                loop={true}
+                autoplay={{
+                  delay: 3000,
+                  disableOnInteraction: false,
+                }}
+                onSwiper={(swiper) => { desktopSwiperRef.current = swiper; }}
+                className="!overflow-visible px-[60px]"
+              >
+                <SwiperSlide className="!w-[425px]">
+                  <ProductCard 
+                    image="/images/7d9187bda933145126e88ddb487babf0a9a6ff9e.png"
+                    overlayImage="/images/76e811688cf4a3b19460e7cce5d5a53f86817a84.png"
+                    title="Marine Plywood"
+                    description="High-quality marine plywood designed for durability, water resistance, and long-lasting performance."
+                  />
+                </SwiperSlide>
+                <SwiperSlide className="!w-[425px]">
+                  <ProductCard 
+                    image="/images/7e0c58a94520b877241b31fd384100e7428bfc17.png"
+                    title="Ordinary Plywood"
+                    description="Reliable plywood for general construction and interior projects, offering durability and versatility."
+                  />
+                </SwiperSlide>
+                <SwiperSlide className="!w-[425px]">
+                  <ProductCard 
+                    image="/images/974bbd648b8a0570fe415755bbe12be9898052ec.png"
+                    title="SMPly"
+                    description="Versatile plywood ideal for general construction and interior applications."
+                  />
+                </SwiperSlide>
+                <SwiperSlide className="!w-[425px]">
+                  <ProductCard 
+                    image="/images/d16802cced46c5759edc3e11bddedf609c37f12f.png"
+                    title="Plyboard"
+                    description="Premium Plyboard for high-quality interior and furniture applications."
+                  />
+                </SwiperSlide>
+                <SwiperSlide className="!w-[425px]">
+                  <ProductCard 
+                    image="/images/7d9187bda933145126e88ddb487babf0a9a6ff9e.png"
+                    overlayImage="/images/76e811688cf4a3b19460e7cce5d5a53f86817a84.png"
+                    title="Marine Plywood"
+                    description="High-quality marine plywood designed for durability, water resistance, and long-lasting performance."
+                  />
+                </SwiperSlide>
+                <SwiperSlide className="!w-[425px]">
+                  <ProductCard 
+                    image="/images/7e0c58a94520b877241b31fd384100e7428bfc17.png"
+                    title="Ordinary Plywood"
+                    description="Reliable plywood for general construction and interior projects, offering durability and versatility."
+                  />
+                </SwiperSlide>
+                <SwiperSlide className="!w-[425px]">
+                  <ProductCard 
+                    image="/images/974bbd648b8a0570fe415755bbe12be9898052ec.png"
+                    title="SMPly"
+                    description="Versatile plywood ideal for general construction and interior applications."
+                  />
+                </SwiperSlide>
+                <SwiperSlide className="!w-[425px]">
+                  <ProductCard 
+                    image="/images/d16802cced46c5759edc3e11bddedf609c37f12f.png"
+                    title="Plyboard"
+                    description="Premium Plyboard for high-quality interior and furniture applications."
+                  />
+                </SwiperSlide>
+                
+              </Swiper>
+            </div>
+
+            {/* Tablet Swiper - Center mode with side peek */}
+            <div className="hidden sm:block lg:hidden relative">
+              {/* Navigation Buttons */}
+              <button 
+                onClick={() => tabletSwiperRef.current?.slidePrev()}
+                className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-[40px] h-[40px] flex items-center justify-center hover:opacity-80 transition-opacity"
+                aria-label="Previous slide"
+              >
+                <img src="/images/slider-button.png" alt="" className="w-full h-full object-contain" />
+              </button>
+              <button 
+                onClick={() => tabletSwiperRef.current?.slideNext()}
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-[40px] h-[40px] flex items-center justify-center hover:opacity-80 transition-opacity"
+                aria-label="Next slide"
+              >
+                <img src="/images/slider-button.png" alt="" className="w-full h-full object-contain rotate-180" />
+              </button>
+              <Swiper
+                modules={[Autoplay, Navigation]}
+                slidesPerView={3}
+                centeredSlides={true}
+                spaceBetween={20}
+                loop={true}
+                autoplay={{
+                  delay: 3000,
+                  disableOnInteraction: false,
+                }}
+                onSwiper={(swiper) => { tabletSwiperRef.current = swiper; }}
+                className="pb-[40px] px-[50px]"
+              >
+                <SwiperSlide>
+                  <ProductCard 
+                    image="/images/7d9187bda933145126e88ddb487babf0a9a6ff9e.png"
+                    overlayImage="/images/76e811688cf4a3b19460e7cce5d5a53f86817a84.png"
+                    title="Marine Plywood"
+                    description="High-quality marine plywood designed for durability, water resistance, and long-lasting performance."
+                  />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <ProductCard 
+                    image="/images/7e0c58a94520b877241b31fd384100e7428bfc17.png"
+                    title="Ordinary Plywood"
+                    description="Reliable plywood for general construction and interior projects, offering durability and versatility."
+                  />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <ProductCard 
+                    image="/images/974bbd648b8a0570fe415755bbe12be9898052ec.png"
+                    title="SMPly"
+                    description="Versatile plywood ideal for general construction and interior applications."
+                  />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <ProductCard 
+                    image="/images/d16802cced46c5759edc3e11bddedf609c37f12f.png"
+                    title="Plyboard"
+                    description="Premium Plyboard for high-quality interior and furniture applications."
+                  />
+                </SwiperSlide>
+                                <SwiperSlide>
+                  <ProductCard 
+                    image="/images/7d9187bda933145126e88ddb487babf0a9a6ff9e.png"
+                    overlayImage="/images/76e811688cf4a3b19460e7cce5d5a53f86817a84.png"
+                    title="Marine Plywood"
+                    description="High-quality marine plywood designed for durability, water resistance, and long-lasting performance."
+                  />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <ProductCard 
+                    image="/images/7e0c58a94520b877241b31fd384100e7428bfc17.png"
+                    title="Ordinary Plywood"
+                    description="Reliable plywood for general construction and interior projects, offering durability and versatility."
+                  />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <ProductCard 
+                    image="/images/974bbd648b8a0570fe415755bbe12be9898052ec.png"
+                    title="SMPly"
+                    description="Versatile plywood ideal for general construction and interior applications."
+                  />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <ProductCard 
+                    image="/images/d16802cced46c5759edc3e11bddedf609c37f12f.png"
+                    title="Plyboard"
+                    description="Premium Plyboard for high-quality interior and furniture applications."
+                  />
+                </SwiperSlide>
+              </Swiper>
+            </div>
+
+            {/* Mobile Swiper - Single slide */}
+            <div className="sm:hidden relative">
+              {/* Navigation Buttons */}
+              <button 
+                onClick={() => mobileSwiperRef.current?.slidePrev()}
+                className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-[36px] h-[36px] flex items-center justify-center hover:opacity-80 transition-opacity"
+                aria-label="Previous slide"
+              >
+                <img src="/images/slider-button.png" alt="" className="w-full h-full object-contain" />
+              </button>
+              <button 
+                onClick={() => mobileSwiperRef.current?.slideNext()}
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-[36px] h-[36px] flex items-center justify-center hover:opacity-80 transition-opacity"
+                aria-label="Next slide"
+              >
+                <img src="/images/slider-button.png" alt="" className="w-full h-full object-contain rotate-180" />
+              </button>
+              <Swiper
+                modules={[Autoplay, Pagination, Navigation]}
+                slidesPerView={1}
+                spaceBetween={0}
+                loop={true}
+                autoplay={{
+                  delay: 3000,
+                  disableOnInteraction: false,
+                }}
+                pagination={{ clickable: true }}
+                onSwiper={(swiper) => { mobileSwiperRef.current = swiper; }}
+                className="pb-[40px]"
+              >
+                <SwiperSlide>
+                  <ProductCard 
+                    image="/images/7d9187bda933145126e88ddb487babf0a9a6ff9e.png"
+                    overlayImage="/images/76e811688cf4a3b19460e7cce5d5a53f86817a84.png"
+                    title="Marine Plywood"
+                    description="High-quality marine plywood designed for durability, water resistance, and long-lasting performance."
+                  />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <ProductCard 
+                    image="/images/7e0c58a94520b877241b31fd384100e7428bfc17.png"
+                    title="Ordinary Plywood"
+                    description="Reliable plywood for general construction and interior projects, offering durability and versatility."
+                  />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <ProductCard 
+                    image="/images/974bbd648b8a0570fe415755bbe12be9898052ec.png"
+                    title="SMPly"
+                    description="Versatile plywood ideal for general construction and interior applications."
+                  />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <ProductCard 
+                    image="/images/d16802cced46c5759edc3e11bddedf609c37f12f.png"
+                    title="Plyboard"
+                    description="Premium Plyboard for high-quality interior and furniture applications."
+                  />
+                </SwiperSlide>
+                                <SwiperSlide>
+                  <ProductCard 
+                    image="/images/7d9187bda933145126e88ddb487babf0a9a6ff9e.png"
+                    overlayImage="/images/76e811688cf4a3b19460e7cce5d5a53f86817a84.png"
+                    title="Marine Plywood"
+                    description="High-quality marine plywood designed for durability, water resistance, and long-lasting performance."
+                  />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <ProductCard 
+                    image="/images/7e0c58a94520b877241b31fd384100e7428bfc17.png"
+                    title="Ordinary Plywood"
+                    description="Reliable plywood for general construction and interior projects, offering durability and versatility."
+                  />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <ProductCard 
+                    image="/images/974bbd648b8a0570fe415755bbe12be9898052ec.png"
+                    title="SMPly"
+                    description="Versatile plywood ideal for general construction and interior applications."
+                  />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <ProductCard 
+                    image="/images/d16802cced46c5759edc3e11bddedf609c37f12f.png"
+                    title="Plyboard"
+                    description="Premium Plyboard for high-quality interior and furniture applications."
+                  />
+                </SwiperSlide>
+              </Swiper>
+            </div>
           </div>
         </div>
       </div>
     </section>
-  </>
   );
 }

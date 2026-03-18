@@ -71,7 +71,7 @@ function NewsContentContainer() {
 
 export function NewsSection() {
   return (
-    <section className="relative w-full bg-[#020718] py-[100px]">
+    <section className="relative w-full bg-[#020718] py-[124px]">
       <div className="max-w-[1440px] mx-auto px-[5%] lg:px-[60px]">
         <div className="content-stretch flex flex-col lg:flex-row justify-between items-start gap-[60px] lg:gap-[40px] relative shrink-0 w-full" data-name="NewsContainer">
           <NewsContentContainer />

@@ -57,7 +57,7 @@ function FooterNavTitle1() {
 
 function FooterNavGroup() {
   return (
-    <div className="content-stretch flex flex-col md:flex-row font-body font-medium gap-[40px] md:gap-[100px] lg:gap-[160px] items-center md:items-start leading-[40px] md:leading-[56px] not-italic relative shrink-0 text-[#333] text-[16px] md:text-[18px] tracking-[-0.72px]" data-name="FooterNavGroup">
+    <div className="content-stretch flex flex-col md:flex-row font-body font-medium gap-[5px] md:gap-[100px] lg:gap-[160px] items-center md:items-start leading-[40px] md:leading-[56px] not-italic relative shrink-0 text-[#333] text-[16px] md:text-[18px] tracking-[-0.72px]" data-name="FooterNavGroup">
       <FooterNavTitle />
       <FooterNavTitle1 />
     </div>

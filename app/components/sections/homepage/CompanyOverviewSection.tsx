@@ -98,7 +98,7 @@ function CTACard() {
   return (
     <Link
       href="/about-us"
-      className={`h-auto md:h-[370px] w-full md:w-[325px] p-6 flex flex-col gap-[24px] justify-between transition-colors duration-300 ${
+      className={`h-auto md:h-[370px] w-full md:w-[325px] p-6 flex flex-col gap-[60px] md:gap-[160px] transition-colors duration-300 ${
         isHovered ? "bg-[#04217B]" : "bg-[#cf2923]"
       }`}
       onMouseEnter={() => setIsHovered(true)}
@@ -107,7 +107,7 @@ function CTACard() {
       <p className="text-[16px] leading-[28px] tracking-[-0.64px] text-white">
         Discover how we&apos;ve built over a century of excellence
       </p>
-      <div className={`h-[50px] flex items-center gap-[10px] px-[16px] transition-colors duration-300 ${isHovered ? "bg-[#04217B]" : "bg-[#cf2923]"}`}>
+      <div className="flex items-center gap-[10px]">
         <span className="font-body font-semibold text-[16px] text-white tracking-[-0.64px] whitespace-nowrap">
           Explore our legacy
         </span>
@@ -158,7 +158,7 @@ function OverviewContent() {
 // Stats Grid Component
 function StatsGrid() {
   return (
-    <div className="flex flex-col md:flex-row md:flex-wrap gap-[24px] md:gap-0 w-full md:w-[650px]">
+    <div className="flex flex-col md:flex-row md:flex-wrap gap-[24px] md:gap-0 w-full md:w-[650px] border-t border-black/50">
       <StatCard value={103} label="More than a century of excellence in marine plywood manufacturing" borderPosition="right" />
       <StatCard value={1} suffix="k" label="Employees supporting over a century<br />of excellence" borderPosition="left" />
       <StatCard value={2} label="Strategically located manufacturing plants nationwide" borderPosition="right" />

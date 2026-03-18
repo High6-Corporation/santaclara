@@ -71,7 +71,7 @@ export function ContentBlock({
         )}
         {(title || titleImage || titleSuffix) && (
           <h2
-            className={`lg:text-[54px] md:text-[44px] text-[28px] lg:leading-[62px] md:leading-[48px] leading-[36px] tracking-[-0.02em] ${titleColor} flex items-center justify-center gap-2 font-heading`}
+            className={`text-[36px] md:text-[48px] lg:text-[60px] leading-[1.1] tracking-[-2.4px] ${titleColor} flex items-center justify-center gap-2 font-body`}
           >
             {title}
             {titleImage && (
@@ -91,7 +91,7 @@ export function ContentBlock({
       )}
 
       {paragraphs && paragraphs.length > 0 && (
-        <div className={`lg:text-lg/7 md:text-base/6 text-sm/6 ${textColor} font-body`}>
+        <div className={`text-[16px] leading-[28px] tracking-[-0.64px] ${textColor} font-body`}>
           {paragraphs.map((paragraph, index) => (
             <p key={index}>
               {paragraph}
