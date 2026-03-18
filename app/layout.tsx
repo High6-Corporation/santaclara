@@ -12,6 +12,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Santa Clara Marine Plywood",
   description: "Santa Clara Marine Plywood - Quality products and services",
+  icons: {
+    icon: "/images/santa-clara-favicon.png",
+  },
 };
 
 export default function RootLayout({
