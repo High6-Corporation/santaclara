@@ -48,7 +48,7 @@ export default function ThankYouPage() {
                   textAlign: 'center'
                 }}
               >
-                Thanks for reaching out! Your message just showed up in our inbox.<br className="lg:hidden" /> Talk to you soon!
+                Thanks for reaching out!<br/>Your message just showed up in our inbox.<br className="lg:hidden" /> Talk to you soon!
               </p>
               <div className="inline-block">
                 <ArrowButton href="/" variant="primary" className="px-6 py-3 text-sm">
