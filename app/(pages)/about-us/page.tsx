@@ -4,20 +4,24 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Section } from "@/components/layout/Section";
 import { Row } from "@/components/layout/Row";
+import { SubpageBanner } from "@/components/globals/SubpageBanner";
+import { AboutCompanyOverviewSection } from "@/components/sections/about-us/AboutCompanyOverviewSection";
+import { AboutHistoryOverviewSection } from "@/components/sections/about-us/AboutHistoryOverviewSection";
+import { AboutMissionVisionSection } from "@/components/sections/about-us/AboutMissionVisionSection";
+import { AboutCompanyValuesSection } from "@/components/sections/about-us/AboutCompanyValuesSection";
+import { CtaSection } from "@/app/components/globals/CtaSection";
 
 export default function AboutPage() {
   return (
     <div className="bg-white flex justify-center min-h-screen w-full">
       <div className="relative w-full">
         <Header />
-        <Section bgColor="bg-white">
-          <Row>
-            <div className="pt-[200px] pb-[100px] px-[60px]">
-              <h1 className="text-4xl font-bold text-[#2c2525] mb-6">About Us</h1>
-              <p className="text-lg text-[#333]">Content coming soon...</p>
-            </div>
-          </Row>
-        </Section>
+        <SubpageBanner title="About Us" />
+        <AboutCompanyOverviewSection />
+        <AboutHistoryOverviewSection />
+        <AboutMissionVisionSection />
+        <AboutCompanyValuesSection />
+        <CtaSection/>
         <Footer />
       </div>
     </div>

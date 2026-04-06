@@ -27,6 +27,8 @@ interface ContentBlockProps {
   badgeTextColor?: string;
   className?: string;
   gap?: string;
+  titleTracking?: string;
+  removeParagraphSpacing?: boolean;
 }
 
 export function ContentBlock({
@@ -48,6 +50,8 @@ export function ContentBlock({
   badgeTextColor = "text-[#2c2525]",
   className = "",
   gap = "gap-10",
+  titleTracking = "tracking-[-2.4px]",
+  removeParagraphSpacing = false,
 }: ContentBlockProps) {
   const alignClass =
     align === "center" ? "text-center items-center" : "text-left items-start";
@@ -71,7 +75,7 @@ export function ContentBlock({
         )}
         {(title || titleImage || titleSuffix) && (
           <h2
-            className={`text-[36px] md:text-[48px] lg:text-[60px] leading-[1.1] tracking-[-2.4px] ${titleColor} flex items-center justify-center gap-2 font-body`}
+            className={`text-[36px] md:text-[48px] lg:text-[60px] leading-[1.1] ${titleTracking} ${titleColor} flex items-center justify-center gap-2 font-body`}
           >
             {title}
             {titleImage && (
@@ -95,7 +99,7 @@ export function ContentBlock({
           {paragraphs.map((paragraph, index) => (
             <p key={index}>
               {paragraph}
-              {index < paragraphs.length - 1 && (
+              {!removeParagraphSpacing && index < paragraphs.length - 1 && (
                 <span className="hidden lg:block">&nbsp;</span>
               )}
             </p>
