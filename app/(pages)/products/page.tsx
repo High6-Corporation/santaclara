@@ -2,22 +2,42 @@
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Section } from "@/components/layout/Section";
-import { Row } from "@/components/layout/Row";
+import { CategorySection } from "@/components/sections/products/CategorySection";
+import { productCategories } from "@/lib/data/products";
+import { CtaSection } from "@/app/components/globals/CtaSection";
+import { SubpageBanner } from "@/app/components/globals/SubpageBanner";
 
 export default function ProductsPage() {
   return (
     <div className="bg-white flex justify-center min-h-screen w-full">
       <div className="relative w-full">
         <Header />
-        <Section bgColor="bg-white">
-          <Row>
-            <div className="pt-[200px] pb-[100px] px-[60px]">
-              <h1 className="text-4xl font-bold text-[#2c2525] mb-6">Products</h1>
-              <p className="text-lg text-[#333]">Content coming soon...</p>
-            </div>
-          </Row>
-        </Section>
+        <SubpageBanner title="Products" backgroundImage="/images/category-listing-bg.jpg" />
+
+        {/* Product Categories - Alternating light and dark variants */}
+        {productCategories.map((category, index) => {
+          // Even index (0, 2) use light variant, Odd index (1, 3) use dark variant
+          const variant = index % 2 === 0 ? "light" : "dark";
+
+          // Odd index categories have reversed layout (image on left)
+          const reverseLayout = index % 2 !== 0;
+
+          return (
+            <CategorySection
+              key={category.id}
+              title={category.title}
+              description={category.description}
+              image={category.image}
+              variant={variant}
+              reverseLayout={reverseLayout}
+              href={category.href}
+            />
+          );
+        })}
+
+        {/* CTA Section */}
+        <CtaSection />
+        
         <Footer />
       </div>
     </div>
