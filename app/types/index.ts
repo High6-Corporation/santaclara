@@ -7,6 +7,13 @@ export interface Product {
   image: string;
   category: string;
   features?: string[];
+  thickness?: string;
+  dimensions?: string;
+  plyCount?: string;
+  weight?: string;
+  boilTested?: string;
+  applications?: string[];
+  gallery?: string[];
 }
 
 export interface Testimonial {
