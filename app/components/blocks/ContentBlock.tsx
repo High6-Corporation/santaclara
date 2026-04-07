@@ -29,6 +29,7 @@ interface ContentBlockProps {
   gap?: string;
   titleTracking?: string;
   removeParagraphSpacing?: boolean;
+  bulletIcon?: string;
 }
 
 export function ContentBlock({
@@ -52,6 +53,7 @@ export function ContentBlock({
   gap = "gap-10",
   titleTracking = "tracking-[-2.4px]",
   removeParagraphSpacing = false,
+  bulletIcon,
 }: ContentBlockProps) {
   const alignClass =
     align === "center" ? "text-center items-center" : "text-left items-start";
@@ -97,11 +99,20 @@ export function ContentBlock({
       {paragraphs && paragraphs.length > 0 && (
         <div className={`text-[16px] leading-[28px] tracking-[-0.64px] ${textColor} font-body`}>
           {paragraphs.map((paragraph, index) => (
-            <p key={index}>
-              {paragraph}
-              {!removeParagraphSpacing && index < paragraphs.length - 1 && (
-                <span className="hidden lg:block">&nbsp;</span>
+            <p key={index} className="flex items-start gap-3">
+              {bulletIcon && (
+                <img 
+                  src={bulletIcon} 
+                  alt="" 
+                  className="w-[32px] h-[32px] mt-1 flex-shrink-0"
+                />
               )}
+              <span>
+                {paragraph}
+                {!removeParagraphSpacing && index < paragraphs.length - 1 && (
+                  <span className="hidden lg:block">&nbsp;</span>
+                )}
+              </span>
             </p>
           ))}
         </div>

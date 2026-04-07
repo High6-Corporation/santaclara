@@ -4,7 +4,7 @@ import { ContentBlock } from "@/components/blocks/ContentBlock";
 
 export function AboutHistoryOverviewSection() {
   return (
-    <section className="relative w-full bg-[#04217B] py-[100px]">
+    <section className="relative w-full bg-[#04217B] py-[100px] overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-[5%] lg:px-[60px]">
         <div className="flex flex-col lg:flex-row gap-[50px] items-center">
           {/* Left Column - Image */}
@@ -13,7 +13,7 @@ export function AboutHistoryOverviewSection() {
               <img 
                 alt="Santa Clara Marine Plywood history" 
                 className="absolute inset-0 w-full h-full object-cover" 
-                src="/images/d16802cced46c5759edc3e11bddedf609c37f12f.png" 
+                src="/images/company_history.jpg" 
               />
             </div>
           </div>

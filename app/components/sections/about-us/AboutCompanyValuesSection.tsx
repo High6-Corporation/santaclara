@@ -33,31 +33,31 @@ export function AboutCompanyValuesSection() {
           border: 5px solid #04217B !important;
         }
       `}</style>
-      <section className="relative w-full py-[100px] bg-white">
+      <section className="relative w-full py-[100px] bg-white overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-[5%] lg:px-[60px]">
         {/* First Row - Existing Content */}
         <div className="flex flex-col lg:flex-row gap-[50px] items-center mb-[100px]">
           {/* Left Column - Image */}
-          <div className="w-full lg:flex-[1.00]">
+          <div className="w-full lg:flex-[1.06]">
             <div className="aspect-[671/556] relative w-full">
               <img 
                 alt="Santa Clara Company Values" 
                 className="absolute inset-0 w-full h-full object-cover" 
-                src="/images/974bbd648b8a0570fe415755bbe12be9898052ec.png" 
+                src="/images/our_purpose.jpg" 
               />
             </div>
           </div>
 
           {/* Right Column - Content Block */}
-          <div className="w-full lg:flex-[1.00]">
+          <div className="w-full lg:flex-[0.94]">
             <ContentBlock
               title="Our Purpose"
               paragraphs={[
-                "• Quality – We are committed to delivering products that meet the highest standards of excellence.",
-                "• Integrity – We conduct our business with honesty, transparency, and accountability.",
-                "• Innovation – We continuously improve our processes and products to better serve our customers.",
-                "• Sustainability – We are dedicated to responsible sourcing and environmentally conscious practices.",
-                "• Customer Focus – We prioritize the needs and satisfaction of our customers in everything we do."
+                "To be able to continue improving our products in order to perpetuate the life of the business.",
+                "To cope with the pace and challenges besetting the world's wood industry through updated technology.",
+                "To have a dynamic organization to carry out the task of innovative undertakings.",
+                "To motivate our people into higher level of commitment in fulfilling our mission.",
+                "To be able to sustain growth & continue improving our human resources, machineries and structural facilities."
               ]}
               showLine={true}
               lineWidth="w-full"
@@ -67,17 +67,17 @@ export function AboutCompanyValuesSection() {
               lineColor="bg-[#CF2923]"
               titleTracking="tracking-[-2.4px]"
               gap="gap-10"
-              removeParagraphSpacing={true}
+              bulletIcon="/images/bullet_icon.svg"
             />
           </div>
         </div>
 
         {/* Second Row - Two Columns with Sliders */}
-        <div className="flex flex-col lg:flex-row gap-[50px] items-start">
+        <div className="flex flex-col lg:flex-row gap-[20px] items-start">
           {/* Left Column - Slider with Content */}
           <div className="w-full lg:flex-[1.00] min-w-0">
             {/* Slider Container */}
-            <div className="relative mb-8">
+            <div className="relative mb-8 overflow-hidden">
               <Swiper
                 modules={[Pagination]}
                 slidesPerView={1}
@@ -94,7 +94,7 @@ export function AboutCompanyValuesSection() {
                     <img 
                       alt="Value Slider Image 1" 
                       className="absolute inset-0 w-full h-full object-cover" 
-                      src="/images/974bbd648b8a0570fe415755bbe12be9898052ec.png" 
+                      src="/images/superior_quality.jpg" 
                     />
                   </div>
                 </SwiperSlide>
@@ -123,17 +123,17 @@ export function AboutCompanyValuesSection() {
             </div>
             
             {/* Content Block Below Slider */}
-            <div className="text-center">
+            <div className="text-center max-w-[600px] mx-auto">
               <ContentBlock
-                title="Innovation"
+                title="Superior Quality"
                 paragraphs={[
-                  "We continuously strive to innovate and improve our processes to deliver superior products that meet the evolving needs of our customers."
+                  "SMWPI prides itself in the renowned Santa Clara Marine Plywood. The Santa Clara Marine Plywood brand gained the acceptance of customers because of its unmatched quality. A set of Santa Clara Marine Plywood sample is taken from each batch produced and subjected to the 72-hour continuous boiling test to make sure that it can withstand even the toughest weather conditions. The superior quality of Santa Clara Marine Plywood is also a result of using the right adhesive and correct pressing temperature, and careful manual inspection of each Santa Clara Marine Plywood sheet."
                 ]}
                 showLine={true}
-                lineWidth="w-16"
+                lineWidth="w-full"
                 align="center"
                 textColor="text-[#1e1e1e]"
-                titleColor="text-[#04217B]"
+                titleColor="text-black"
                 lineColor="bg-[#CF2923]"
                 titleTracking="tracking-[-2.4px]"
                 gap="gap-6"
@@ -145,7 +145,7 @@ export function AboutCompanyValuesSection() {
           {/* Right Column - Slider with Content */}
           <div className="w-full lg:flex-[1.00] min-w-0">
             {/* Slider Container */}
-            <div className="relative mb-8">
+            <div className="relative mb-8 overflow-hidden">
               <Swiper
                 modules={[Pagination]}
                 slidesPerView={1}
@@ -162,7 +162,7 @@ export function AboutCompanyValuesSection() {
                     <img 
                       alt="Value Slider Image 1" 
                       className="absolute inset-0 w-full h-full object-cover" 
-                      src="/images/d16802cced46c5759edc3e11bddedf609c37f12f.png" 
+                      src="/images/authenticity_guarantee.jpg" 
                     />
                   </div>
                 </SwiperSlide>
@@ -191,17 +191,17 @@ export function AboutCompanyValuesSection() {
             </div>
             
             {/* Content Block Below Slider */}
-            <div className="text-center">
+            <div className="text-center max-w-[600px] mx-auto">
               <ContentBlock
-                title="Sustainability"
+                title="Authenticity Guarantee"
                 paragraphs={[
-                  "We are committed to sustainable practices that protect the environment and ensure a better future for generations to come."
+                  "Customers are assured that they receive only the best product through the authenticity markings, such as Santa Clara Marine Plywood stickers with barcode and tracking number, stamped logo and/or laser etching. Customers can track or inquire about a product through SMWPI’s hotline."
                 ]}
                 showLine={true}
-                lineWidth="w-16"
+                lineWidth="w-full"
                 align="center"
                 textColor="text-[#1e1e1e]"
-                titleColor="text-[#04217B]"
+                titleColor="text-black"
                 lineColor="bg-[#CF2923]"
                 titleTracking="tracking-[-2.4px]"
                 gap="gap-6"
