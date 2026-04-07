@@ -16,7 +16,7 @@ export default function AboutPage() {
     <div className="bg-white flex justify-center min-h-screen w-full">
       <div className="relative w-full">
         <Header />
-        <SubpageBanner title="About Us" />
+        <SubpageBanner title="About Us" backgroundImage="/images/about_us_banner.jpg" />
         <AboutCompanyOverviewSection />
         <AboutHistoryOverviewSection />
         <AboutMissionVisionSection />

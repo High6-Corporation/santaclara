@@ -171,7 +171,7 @@ function SocialMediaIcons() {
         />
       </a>
       <a 
-        href="https://twitter.com" 
+        href="https://www.tiktok.com/@santaclaraplywood" 
         target="_blank" 
        rel="noopener noreferrer" 
        className="relative size-[24px]"
@@ -180,24 +180,8 @@ function SocialMediaIcons() {
         onMouseLeave={() => setHoveredIcon(null)}
       >
         <Image
-         src={hoveredIcon === 'twitter' ? '/images/Twitter-hover.svg' : '/images/Twitter (X).svg'}
+         src={hoveredIcon === 'twitter' ? '/images/tiktok-hover.svg' : '/images/tiktok.svg'}
          alt="Twitter"
-         fill
-         className="object-contain"
-        />
-      </a>
-      <a 
-        href="https://linkedin.com" 
-        target="_blank" 
-       rel="noopener noreferrer" 
-       className="relative size-[24px]"
-        data-name="LinkedIn"
-        onMouseEnter={() => setHoveredIcon('linkedin')}
-        onMouseLeave={() => setHoveredIcon(null)}
-      >
-        <Image
-         src={hoveredIcon === 'linkedin' ? '/images/LinkedIn-hover.svg' : '/images/LinkedIn.svg'}
-         alt="LinkedIn"
          fill
          className="object-contain"
         />

@@ -67,14 +67,14 @@ function StatCard({ icon, value, label, suffix = "" }: StatCardProps) {
   return (
     <div
       ref={ref}
-      className="bg-[#cf2923] w-full md:w-[325px] h-[370px] p-6 flex items-center justify-center"
+      className="bg-[#cf2923] w-full min-h-[320px] md:min-h-[370px] p-6 flex items-center justify-center"
     >
       <div className="flex flex-col items-center gap-[20px]">
-        <img src={icon} alt="" className="w-[70px] h-[70px]" />
-        <p className="text-[46px] md:text-[54px] leading-none tracking-[-2.16px] text-white">
+        <img src={icon} alt="" className="w-[50px] h-[50px] md:w-[60px] md:h-[60px] lg:w-[70px] lg:h-[70px]" />
+        <p className="text-[36px] sm:text-[42px] md:text-[48px] lg:text-[54px] leading-none tracking-[-2.16px] text-white">
           {count}{suffix}
         </p>
-        <p className="text-[16px] leading-[28px] tracking-[-0.64px] text-white text-center" dangerouslySetInnerHTML={{ __html: label }} />
+        <p className="text-[14px] sm:text-[15px] md:text-[16px] leading-[24px] md:leading-[28px] tracking-[-0.64px] text-white text-center" dangerouslySetInnerHTML={{ __html: label }} />
       </div>
     </div>
   );
@@ -82,9 +82,9 @@ function StatCard({ icon, value, label, suffix = "" }: StatCardProps) {
 
 export function AboutCompanyOverviewSection() {
   return (
-    <section className="relative w-full bg-white py-[100px]">
+    <section className="relative w-full bg-white py-[60px] md:py-[80px] lg:py-[100px] overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-[5%] lg:px-[60px]">
-        <div className="flex flex-col lg:flex-row gap-[29px] items-start mb-[80px]">
+        <div className="flex flex-col lg:flex-row gap-[29px] items-start mb-[40px] md:mb-[60px] lg:mb-[80px]">
           {/* Left Column - Content Block */}
           <div className="w-full lg:flex-[1.008]">
             <ContentBlock
@@ -118,7 +118,7 @@ export function AboutCompanyOverviewSection() {
         </div>
 
         {/* Bottom Row - Stat Cards */}
-        <div className="max-w-[1035px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-[24px] pt-[60px]">
+        <div className="w-full max-w-[1035px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[20px] sm:gap-[24px] pt-[40px] md:pt-[60px]">
           <StatCard
             icon="/images/century.svg"
             value={103}
