@@ -14,12 +14,7 @@ export function PressCard({ slug, title, date, image }: PressCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <Link 
-      href={`/press/${slug}`} 
-      className="max-w-[315px] group"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <div className="md:max-w-[315px] group">
       <div className="w-full">
         {/* Image */}
         <div className="w-full overflow-hidden">
@@ -32,16 +27,21 @@ export function PressCard({ slug, title, date, image }: PressCardProps) {
 
         {/* Content */}
         <div className="w-full text-left mt-[20px] mb-[24px]">
-          <h3 className="text-[#333333] text-base leading-[32px] tracking-[-0.64px] font-medium mb-[8px] line-clamp-2">
+          <p className="text-[#333333] text-base md:leading-[32px] tracking-[-0.64px] font-medium mb-[8px] line-clamp-2">
             {title}
-          </h3>
+          </p>
           <p className="text-sm leading-[17px] tracking-[-0.56px] text-[#333333] opacity-70">
             {date}
           </p>
         </div>
 
-        {/* Read More Button */}
-        <div className="content-stretch flex gap-[4px] items-center relative shrink-0">
+        {/* Read More Button - Only this is clickable */}
+        <Link 
+          href={`/press/${slug}`}
+          className="content-stretch flex gap-[4px] items-center relative shrink-0 cursor-pointer"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
           <p className="font-body font-semibold leading-[normal] not-italic relative shrink-0 text-[#ff1c14] text-[14px] tracking-[-0.56px] whitespace-nowrap">
             Read More
           </p>
@@ -54,8 +54,8 @@ export function PressCard({ slug, title, date, image }: PressCardProps) {
               }`}
             />
           </div>
-        </div>
+        </Link>
       </div>
-    </Link>
+    </div>
   );
 }
