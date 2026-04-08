@@ -5,10 +5,10 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     
-    const { fullName, email, contactNo, companyName, dropdown, textField } = body;
+    const { fullName, email, contactNo, companyName, subject, message } = body;
 
     // Validate required fields
-    if (!fullName || !email || !dropdown || !textField) {
+    if (!fullName || !email || !contactNo || !subject) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -81,8 +81,8 @@ export async function POST(request: Request) {
         input_2: email,           // Email Address
         input_3: contactNo,       // Contact No.
         input_4: companyName,     // Company Name
-        input_5: dropdown,        // Dropdown
-        input_6: textField,       // Text Field
+        input_5: subject,         // Subject (dropdown)
+        input_6: message,         // Message
       }),
     });
 
