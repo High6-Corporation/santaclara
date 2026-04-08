@@ -84,9 +84,9 @@ export function AboutCompanyOverviewSection() {
   return (
     <section className="relative w-full bg-white py-[60px] md:py-[80px] lg:py-[100px] overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-[5%] lg:px-[60px]">
-        <div className="flex flex-col lg:flex-row gap-[29px] items-start mb-[40px] md:mb-[60px] lg:mb-[80px]">
+        <div className="flex flex-col lg:flex-row gap-[18px] items-start mb-[40px] md:mb-[60px] lg:mb-[80px]">
           {/* Left Column - Content Block */}
-          <div className="w-full lg:flex-[1.008]">
+          <div className="w-full lg:flex-[1.001]">
             <ContentBlock
               title="The Leading Manufacturer of Premium Wood Products"
               paragraphs={[
@@ -101,12 +101,13 @@ export function AboutCompanyOverviewSection() {
               titleColor="text-black"
               lineColor="bg-[#CF2923]"
               titleTracking="tracking-[-2.4px]"
-              gap="gap-10"
+              gap="gap-6"
+              paragraphMarginTop="mt-[20px]"
             />
           </div>
 
           {/* Right Column - Image */}
-          <div className="w-full lg:flex-[0.99]">
+          <div className="w-full lg:flex-[0.999]">
             <div className="aspect-[650/556] relative w-full">
               <img 
                 alt="Santa Clara Marine Plywood manufacturing" 
@@ -118,7 +119,7 @@ export function AboutCompanyOverviewSection() {
         </div>
 
         {/* Bottom Row - Stat Cards */}
-        <div className="w-full max-w-[1035px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[20px] sm:gap-[24px] pt-[40px] md:pt-[60px]">
+        <div className="w-full max-w-[1035px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[20px] sm:gap-[30px] pt-[40px] md:pt-[60px]">
           <StatCard
             icon="/images/century.svg"
             value={103}

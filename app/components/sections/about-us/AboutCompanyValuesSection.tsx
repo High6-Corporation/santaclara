@@ -62,12 +62,13 @@ export function AboutCompanyValuesSection() {
               showLine={true}
               lineWidth="w-full"
               align="left"
-              textColor="text-[#1e1e1e]"
-              titleColor="text-[#04217B]"
+              textColor="text-[#333]"
+              titleColor="text-black"
               lineColor="bg-[#CF2923]"
               titleTracking="tracking-[-2.4px]"
-              gap="gap-10"
+              gap="gap-6"
               bulletIcon="/images/bullet_icon.svg"
+              paragraphMarginTop="mt-[20px]"
             />
           </div>
         </div>
@@ -90,7 +91,7 @@ export function AboutCompanyValuesSection() {
                 onSwiper={(swiper) => { leftSwiperRef.current = swiper; }}
               >
                 <SwiperSlide>
-                  <div className="aspect-[671/556] relative w-full">
+                  <div className="aspect-[650/650] relative w-full">
                     <img 
                       alt="Value Slider Image 1" 
                       className="absolute inset-0 w-full h-full object-cover" 
@@ -99,7 +100,7 @@ export function AboutCompanyValuesSection() {
                   </div>
                 </SwiperSlide>
                 <SwiperSlide>
-                  <div className="aspect-[671/556] relative w-full">
+                  <div className="aspect-[650/650] relative w-full">
                     <img 
                       alt="Value Slider Image 2" 
                       className="absolute inset-0 w-full h-full object-cover" 
@@ -108,7 +109,7 @@ export function AboutCompanyValuesSection() {
                   </div>
                 </SwiperSlide>
                 <SwiperSlide>
-                  <div className="aspect-[671/556] relative w-full">
+                  <div className="aspect-[650/650] relative w-full">
                     <img 
                       alt="Value Slider Image 3" 
                       className="absolute inset-0 w-full h-full object-cover" 
@@ -132,7 +133,7 @@ export function AboutCompanyValuesSection() {
                 showLine={true}
                 lineWidth="w-full"
                 align="center"
-                textColor="text-[#1e1e1e]"
+                textColor="text-[#333]"
                 titleColor="text-black"
                 lineColor="bg-[#CF2923]"
                 titleTracking="tracking-[-2.4px]"
@@ -158,7 +159,7 @@ export function AboutCompanyValuesSection() {
                 onSwiper={(swiper) => { rightSwiperRef.current = swiper; }}
               >
                 <SwiperSlide>
-                  <div className="aspect-[671/556] relative w-full">
+                  <div className="aspect-[650/650] relative w-full">
                     <img 
                       alt="Value Slider Image 1" 
                       className="absolute inset-0 w-full h-full object-cover" 
@@ -167,7 +168,7 @@ export function AboutCompanyValuesSection() {
                   </div>
                 </SwiperSlide>
                 <SwiperSlide>
-                  <div className="aspect-[671/556] relative w-full">
+                  <div className="aspect-[650/650] relative w-full">
                     <img 
                       alt="Value Slider Image 2" 
                       className="absolute inset-0 w-full h-full object-cover" 
@@ -176,7 +177,7 @@ export function AboutCompanyValuesSection() {
                   </div>
                 </SwiperSlide>
                 <SwiperSlide>
-                  <div className="aspect-[671/556] relative w-full">
+                  <div className="aspect-[650/650] relative w-full">
                     <img 
                       alt="Value Slider Image 3" 
                       className="absolute inset-0 w-full h-full object-cover" 
@@ -200,7 +201,7 @@ export function AboutCompanyValuesSection() {
                 showLine={true}
                 lineWidth="w-full"
                 align="center"
-                textColor="text-[#1e1e1e]"
+                textColor="text-[#333]"
                 titleColor="text-black"
                 lineColor="bg-[#CF2923]"
                 titleTracking="tracking-[-2.4px]"

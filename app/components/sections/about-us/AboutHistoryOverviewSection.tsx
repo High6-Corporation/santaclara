@@ -6,10 +6,10 @@ export function AboutHistoryOverviewSection() {
   return (
     <section className="relative w-full bg-[#04217B] py-[100px] overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-[5%] lg:px-[60px]">
-        <div className="flex flex-col lg:flex-row gap-[50px] items-center">
+        <div className="flex flex-col lg:flex-row gap-[40px] items-center">
           {/* Left Column - Image */}
-          <div className="w-full lg:flex-[1.00]">
-            <div className="aspect-[671/556] relative w-full">
+          <div className="w-full lg:flex-[1.06]">
+            <div className="aspect-[671/556] max-w-[671px] relative w-full">
               <img 
                 alt="Santa Clara Marine Plywood history" 
                 className="absolute inset-0 w-full h-full object-cover" 
@@ -19,7 +19,7 @@ export function AboutHistoryOverviewSection() {
           </div>
 
           {/* Right Column - Content Block */}
-          <div className="w-full lg:flex-[1.00]">
+          <div className="w-full lg:flex-[0.94]">
             <ContentBlock
               title="A Century of Excellence"
               paragraphs={[
@@ -34,8 +34,9 @@ export function AboutHistoryOverviewSection() {
               titleColor="text-white"
               lineColor="bg-[#CF2923]"
               titleTracking="tracking-[-2.4px]"
-              gap="gap-10"
+              gap="gap-6"
               removeParagraphSpacing={true}
+              paragraphMarginTop="mt-[20px]"
             />
           </div>
         </div>

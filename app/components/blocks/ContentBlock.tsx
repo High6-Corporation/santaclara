@@ -30,6 +30,7 @@ interface ContentBlockProps {
   titleTracking?: string;
   removeParagraphSpacing?: boolean;
   bulletIcon?: string;
+  paragraphMarginTop?: string;
 }
 
 export function ContentBlock({
@@ -54,6 +55,7 @@ export function ContentBlock({
   titleTracking = "tracking-[-2.4px]",
   removeParagraphSpacing = false,
   bulletIcon,
+  paragraphMarginTop,
 }: ContentBlockProps) {
   const alignClass =
     align === "center" ? "text-center items-center" : "text-left items-start";
@@ -93,11 +95,11 @@ export function ContentBlock({
       </div>
 
       {showLine && (
-        <div className={`${lineWidth} h-px ${lineColor} ${lineAlignClass}`} />
+        <div className={`${lineWidth} h-[2px] ${lineColor} ${lineAlignClass}`} />
       )}
 
       {paragraphs && paragraphs.length > 0 && (
-        <div className={`text-[16px] leading-[28px] tracking-[-0.64px] ${textColor} font-body`}>
+        <div className={`text-[16px] leading-[28px] tracking-[-0.64px] ${textColor} font-body ${paragraphMarginTop}`}>
           {paragraphs.map((paragraph, index) => (
             <p key={index} className="flex items-start gap-3">
               {bulletIcon && (
@@ -162,6 +164,7 @@ export function MobileContentBlock({
   badgeBorderColor = "border-[#2c2525]",
   badgeTextColor = "text-[#2c2525]",
   className = "",
+  paragraphMarginTop,
 }: ContentBlockProps) {
   const alignClass =
     align === "center" ? "text-center items-center" : "text-left items-start";
@@ -203,7 +206,7 @@ export function MobileContentBlock({
 
       {paragraphs && paragraphs.length > 0 && (
         <div
-          className={`text-sm md:text-base ${textColor} space-y-4 mb-8 font-body`}
+          className={`text-sm md:text-base ${textColor} space-y-4 mb-8 font-body ${paragraphMarginTop}`}
         >
           {paragraphs.map((paragraph, index) => (
             <p key={index} className={index === 1 ? "hidden lg:block" : ""}>

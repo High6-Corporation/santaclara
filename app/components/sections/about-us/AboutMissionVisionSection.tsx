@@ -13,7 +13,7 @@ export function AboutMissionVisionSection() {
       <div className="relative max-w-[1440px] mx-auto px-[5%] lg:px-[60px] h-full flex items-center lg:items-end pb-[30px] lg:pb-[50px]">
         <div className="flex flex-col lg:flex-row gap-[30px] items-stretch justify-center w-full">
           {/* Mission Card */}
-          <div className="w-full lg:flex-1 bg-[#CF2923] p-[30px] md:p-[40px] flex flex-col justify-center min-h-[212px] max-w-[607px] lg:max-w-none mx-auto lg:mx-0">
+          <div className="w-full lg:flex-1 bg-[#CF2923] p-[30px] md:p-[40px] flex flex-col justify-center min-h-[212px] max-w-[607px] mx-auto lg:mx-0">
             <h3 className="text-[24px] md:text-[32px] tracking-[-1.28px] font-semibold text-white font-body mb-[20px]">
               Mission
             </h3>
@@ -23,7 +23,7 @@ export function AboutMissionVisionSection() {
           </div>
 
           {/* Vision Card */}
-          <div className="w-full lg:flex-1 bg-[#CF2923] p-[30px] md:p-[40px] flex flex-col justify-center min-h-[212px] max-w-[607px] lg:max-w-none mx-auto lg:mx-0">
+          <div className="w-full lg:flex-1 bg-[#CF2923] p-[30px] md:p-[40px] flex flex-col justify-center min-h-[212px] max-w-[607px] mx-auto lg:mx-0">
             <h3 className="text-[24px] md:text-[32px] tracking-[-1.28px] font-semibold text-white font-body mb-[20px]">
               Vision
             </h3>

@@ -4,7 +4,7 @@ import { ArrowButton } from "../ui/ArrowButton";
 
 export function CtaSection() {
   return (
-    <section className="relative w-full bg-black py-[103.5px] overflow-hidden">
+    <section className="relative w-full bg-black py-[126px] overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
