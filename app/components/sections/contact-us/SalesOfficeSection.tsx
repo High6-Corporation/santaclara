@@ -6,13 +6,11 @@ import { Row } from "@/components/layout/Row";
 export function SalesOfficeSection() {
   const GOOGLE_MAPS_API_KEY = "AIzaSyAjbHyFs7o64UZtx5xVhryDsHxPHONhNC4";
 
-  // Manila coordinates
-  const manilaLat = 14.6009353;
-  const manilaLng = 120.9715235;
+  // Manila - using place query with fixed marker
+  const manilaQuery = encodeURIComponent("Tytana Plaza, Insular St, Binondo, Manila, 1000 Metro Manila");
 
-  // Davao coordinates
-  const davaoLat = 7.0138252;
-  const davaoLng = 125.4974107;
+  // Davao - using place query with fixed marker
+  const davaoQuery = encodeURIComponent("Daliao, Toril, Davao City, Davao del Sur, Philippines");
 
   return (
     <Section bgColor="bg-[#F5F6FA] lg:py-[50px] md:py-[40px] py-[30px]">
@@ -36,7 +34,7 @@ export function SalesOfficeSection() {
                   scrolling="no"
                   marginHeight={0}
                   marginWidth={0}
-                  src={`https://www.google.com/maps/embed/v1/place?q=${manilaLat},${manilaLng}&zoom=15&key=${GOOGLE_MAPS_API_KEY}`}
+                  src={`https://maps.google.com/maps?q=${manilaQuery}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
                   className="w-full h-full"
                   allowFullScreen
                   loading="lazy"
@@ -156,7 +154,7 @@ export function SalesOfficeSection() {
                   scrolling="no"
                   marginHeight={0}
                   marginWidth={0}
-                  src={`https://www.google.com/maps/embed/v1/place?q=${davaoLat},${davaoLng}&zoom=15&key=${GOOGLE_MAPS_API_KEY}`}
+                  src={`https://maps.google.com/maps?q=${davaoQuery}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
                   className="w-full h-full"
                   allowFullScreen
                   loading="lazy"

@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Section } from "@/components/layout/Section";
 import { Row } from "@/components/layout/Row";
 import Image from "next/image";
 import { ArrowButton } from "@/components/ui/ArrowButton";
+import { getDynamicFormFields, DynamicFormField } from "@/lib/contactFormService";
 
 function SocialMediaIcons() {
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
@@ -63,18 +64,36 @@ function SocialMediaIcons() {
 
 export function ContactFormSection() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    contactNo: '',
-    companyName: '',
-    subject: '',
-    message: '',
-  });
+  const [formFields, setFormFields] = useState<DynamicFormField[]>([]);
+  const [formData, setFormData] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [isButtonHovered, setIsButtonHovered] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch form fields from Gravity Forms
+  useEffect(() => {
+    async function loadFormFields() {
+      try {
+        const fields = await getDynamicFormFields();
+        setFormFields(fields);
+        
+        // Initialize form data with empty values
+        const initialData: Record<string, string> = {};
+        fields.forEach(field => {
+          initialData[field.name] = '';
+        });
+        setFormData(initialData);
+      } catch (error) {
+        console.error('Error loading form fields:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    
+    loadFormFields();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -90,7 +109,7 @@ export function ContactFormSection() {
     const sanitized = value.replace(/[^0-9+\s]/g, '');
     setFormData(prev => ({
       ...prev,
-      contactNo: sanitized,
+      [e.target.name]: sanitized,
     }));
   };
 
@@ -124,6 +143,110 @@ export function ContactFormSection() {
       console.error('Form submission error:', error);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // Render form field based on type
+  const renderField = (field: DynamicFormField) => {
+    const baseClassName = "w-full px-4 py-3 bg-white border border-gray-300 rounded-none focus:ring-2 focus:ring-[#04217B] focus:border-transparent outline-none transition-all text-[#333333] placeholder:text-[#999999]";
+
+    switch (field.type) {
+      case 'select':
+        return (
+          <div key={field.id} className="relative">
+            <label htmlFor={field.name} className="sr-only">{field.label}</label>
+            <select
+              id={field.name}
+              name={field.name}
+              value={formData[field.name] || ''}
+              onChange={handleChange}
+              required={field.isRequired}
+              className={`${baseClassName} cursor-pointer pr-[42px] appearance-none`}
+            >
+              <option value="" disabled>{field.placeholder || `Select ${field.label}`}</option>
+              {field.choices?.map((choice) => (
+                <option key={choice.value} value={choice.value} className="cursor-pointer">
+                  {choice.label}
+                </option>
+              ))}
+            </select>
+            <div className="absolute right-[10px] top-1/2 -translate-y-1/2 pointer-events-none">
+              <img 
+                src="/images/dropdown-icon.svg" 
+                alt="Dropdown arrow" 
+                className="w-[20px] h-[20px]"
+              />
+            </div>
+          </div>
+        );
+      
+      case 'textarea':
+        return (
+          <div key={field.id}>
+            <label htmlFor={field.name} className="sr-only">{field.label}</label>
+            <textarea
+              id={field.name}
+              name={field.name}
+              value={formData[field.name] || ''}
+              onChange={handleChange}
+              rows={6}
+              className={`${baseClassName} resize-none`}
+              placeholder={field.placeholder || field.label}
+            />
+          </div>
+        );
+      
+      case 'phone':
+        return (
+          <div key={field.id}>
+            <label htmlFor={field.name} className="sr-only">{field.label}</label>
+            <input
+              type="tel"
+              id={field.name}
+              name={field.name}
+              value={formData[field.name] || ''}
+              onChange={handlePhoneChange}
+              required={field.isRequired}
+              className={baseClassName}
+              placeholder={field.placeholder || field.label}
+              pattern="[0-9+\s]*"
+            />
+          </div>
+        );
+      
+      case 'email':
+        return (
+          <div key={field.id}>
+            <label htmlFor={field.name} className="sr-only">{field.label}</label>
+            <input
+              type="email"
+              id={field.name}
+              name={field.name}
+              value={formData[field.name] || ''}
+              onChange={handleChange}
+              required={field.isRequired}
+              className={baseClassName}
+              placeholder={field.placeholder || field.label}
+            />
+          </div>
+        );
+      
+      default: // text, number, etc.
+        return (
+          <div key={field.id}>
+            <label htmlFor={field.name} className="sr-only">{field.label}</label>
+            <input
+              type={field.type === 'number' ? 'number' : 'text'}
+              id={field.name}
+              name={field.name}
+              value={formData[field.name] || ''}
+              onChange={handleChange}
+              required={field.isRequired}
+              className={baseClassName}
+              placeholder={field.placeholder || field.label}
+            />
+          </div>
+        );
     }
   };
   return (
@@ -223,158 +346,62 @@ export function ContactFormSection() {
 
         {/* Contact Form */}
         <div className="lg:max-w-[630px] w-full bg-[#04217B] md:px-[30px] px-[20px] md:py-[50px] py-[30px]">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Success/Error Messages */}
-            {submitStatus === 'success' && (
-              <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-green-700">
-                Thank you! Your message has been sent successfully.
-              </div>
-            )}
-            {submitStatus === 'error' && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
-                {errorMessage}
-              </div>
-            )}
+          {isLoading ? (
+            <div className="text-white text-center py-10">Loading form...</div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Success/Error Messages */}
+              {submitStatus === 'success' && (
+                <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-green-700">
+                  Thank you! Your message has been sent successfully.
+                </div>
+              )}
+              {submitStatus === 'error' && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+                  {errorMessage}
+                </div>
+              )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label htmlFor="fullName" className="sr-only">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="fullName"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 bg-white border border-gray-300 rounded-none focus:ring-2 focus:ring-[#04217B] focus:border-transparent outline-none transition-all text-[#333333] placeholder:text-[#999999]"
-                  placeholder="Full Name*"
-                />
+              {/* Dynamic Form Fields */}
+              <div className="space-y-6">
+                {formFields.map((field) => {
+                  // Render in rows of 2 for smaller fields
+                  const shouldBeHalfWidth = field.type !== 'textarea' && field.type !== 'select';
+                  
+                  return (
+                    <div key={field.id}>
+                      {renderField(field)}
+                    </div>
+                  );
+                })}
               </div>
-              <div>
-                <label htmlFor="email" className="sr-only">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 bg-white border border-gray-300 rounded-none focus:ring-2 focus:ring-[#04217B] focus:border-transparent outline-none transition-all text-[#333333] placeholder:text-[#999999]"
-                  placeholder="Email Address*"
-                />
-              </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label htmlFor="contactNo" className="sr-only">
-                  Contact No.
-                </label>
-                <input
-                  type="tel"
-                  id="contactNo"
-                  name="contactNo"
-                  value={formData.contactNo}
-                  onChange={handlePhoneChange}
-                  onKeyPress={(e) => {
-                    // Prevent letters from being typed
-                    const char = String.fromCharCode(e.which);
-                    if (!/[0-9+\s]/.test(char)) {
-                      e.preventDefault();
-                    }
-                  }}
-                  required
-                  className="w-full px-4 py-3 bg-white border border-gray-300 rounded-none focus:ring-2 focus:ring-[#04217B] focus:border-transparent outline-none transition-all text-[#333333] placeholder:text-[#999999]"
-                  placeholder="Contact No.*"
-                  pattern="[0-9+\s]*"
-                />
-              </div>
-              <div>
-                <label htmlFor="companyName" className="sr-only">
-                  Company Name
-                </label>
-                <input
-                  type="text"
-                  id="companyName"
-                  name="companyName"
-                  value={formData.companyName}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white border border-gray-300 rounded-none focus:ring-2 focus:ring-[#04217B] focus:border-transparent outline-none transition-all text-[#333333] placeholder:text-[#999999]"
-                  placeholder="Company Name"
-                />
-              </div>
-            </div>
-
-            <div className="relative">
-              <label htmlFor="subject" className="sr-only">
-                Subject
-              </label>
-              <select
-                id="subject"
-                name="subject"
-                value={formData.subject}
-                onChange={handleChange}
-                required
-                className="w-full cursor-pointer px-4 py-3 pr-[42px] bg-white border border-gray-300 rounded-none focus:ring-2 focus:ring-[#04217B] focus:border-transparent outline-none transition-all appearance-none text-[#333333]"
-              >
-                <option value="" disabled>Reason / Subject*</option>
-                <option value="First Choice" className="cursor-pointer">First Choice</option>
-                <option value="Second Choice" className="cursor-pointer hover:bg-[#E31C26]">Second Choice</option>
-                <option value="Third Choice" className="cursor-pointer hover:bg-[#E31C26]">Third Choice</option>
-              </select>
-              <div className="absolute right-[10px] top-1/2 -translate-y-1/2 pointer-events-none">
-                <img 
-                  src="/images/dropdown-icon.svg" 
-                  alt="Dropdown arrow" 
-                  className="w-[20px] h-[20px]"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="message" className="sr-only">
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                rows={6}
-                value={formData.message}
-                onChange={handleChange}
-                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-none focus:ring-2 focus:ring-[#04217B] focus:border-transparent outline-none transition-all resize-none text-[#333333] placeholder:text-[#999999]"
-                placeholder="Message"
-              />
-            </div>
-
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                onMouseEnter={() => setIsButtonHovered(true)}
-                onMouseLeave={() => setIsButtonHovered(false)}
-                className={`content-stretch flex gap-[10px] items-center justify-center px-[24px] py-[21px] rounded-[100px] shrink-0 cursor-pointer transition-all duration-300 ease-in-out font-body font-semibold text-[16px] tracking-[-0.64px] whitespace-nowrap bg-[#e31c26] text-white hover:bg-[#a91f1a] ${
-                  isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-              >
-                {isSubmitting ? 'Submitting...' : 'Submit'}
-                <div
-                  className={`relative shrink-0 size-[24px] transition-transform duration-300 ease-in-out ${
-                    isButtonHovered ? 'rotate-[-45deg]' : 'rotate-0'
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  onMouseEnter={() => setIsButtonHovered(true)}
+                  onMouseLeave={() => setIsButtonHovered(false)}
+                  className={`content-stretch flex gap-[10px] items-center justify-center px-[24px] py-[21px] rounded-[100px] shrink-0 cursor-pointer transition-all duration-300 ease-in-out font-body font-semibold text-[16px] tracking-[-0.64px] whitespace-nowrap bg-[#e31c26] text-white hover:bg-[#a91f1a] ${
+                    isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                 >
-                  <img
-                    src="/images/arrow-icon.svg"
-                    alt="Arrow"
-                    className="absolute inset-0 size-full"
-                  />
-                </div>
-              </button>
-            </div>
-          </form>
+                  {isSubmitting ? 'Submitting...' : 'Submit'}
+                  <div
+                    className={`relative shrink-0 size-[24px] transition-transform duration-300 ease-in-out ${
+                      isButtonHovered ? 'rotate-[-45deg]' : 'rotate-0'
+                    }`}
+                  >
+                    <img
+                      src="/images/arrow-icon.svg"
+                      alt="Arrow"
+                      className="absolute inset-0 size-full"
+                    />
+                  </div>
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </Row>
     </Section>
