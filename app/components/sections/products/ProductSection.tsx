@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
@@ -21,6 +22,11 @@ export function ProductSection({ product, variant = "light", index = 0 }: Produc
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [lightboxMedia, setLightboxMedia] = useState<{ url: string; type: 'image' | 'video' } | null>(null);
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   const isDark = variant === "dark";
   const isEven = index % 2 === 0;
@@ -242,16 +248,17 @@ export function ProductSection({ product, variant = "light", index = 0 }: Produc
         </div>
       </div>
 
-      {/* Lightbox Modal */}
-      {isLightboxOpen && lightboxMedia && (
+      {/* Lightbox Modal - Rendered via Portal */}
+      {mounted && isLightboxOpen && lightboxMedia && createPortal(
         <div 
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
           onClick={() => setIsLightboxOpen(false)}
+          style={{ position: 'fixed' }}
         >
           {/* Close Button */}
           <button
             onClick={() => setIsLightboxOpen(false)}
-            className="absolute top-6 right-6 z-10 text-white hover:text-[#e31c26] transition-colors duration-200"
+            className="absolute top-6 right-6 z-[100000] text-white hover:text-[#e31c26] transition-colors duration-200"
             aria-label="Close lightbox"
           >
             <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -281,7 +288,8 @@ export function ProductSection({ product, variant = "light", index = 0 }: Produc
               </video>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Inquiry Modal */}

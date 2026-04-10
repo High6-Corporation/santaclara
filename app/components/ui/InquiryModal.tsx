@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { getDynamicFormFields, DynamicFormField } from "@/lib/contactFormService";
@@ -21,6 +22,11 @@ export function InquiryModal({ isOpen, onClose, productName, productCategory, fo
   const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Fetch form fields from Gravity Forms
   useEffect(() => {
@@ -245,8 +251,10 @@ export function InquiryModal({ isOpen, onClose, productName, productCategory, fo
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+  if (!mounted) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4" style={{ position: 'fixed' }}>
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
@@ -254,11 +262,11 @@ export function InquiryModal({ isOpen, onClose, productName, productCategory, fo
       />
 
       {/* Modal Content */}
-      <div className="relative bg-[#04217B] w-full max-w-[700px] max-h-[90vh] overflow-y-auto shadow-2xl [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[#031a64] [&::-webkit-scrollbar-thumb]:bg-white/30 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-white/50">
+      <div className="relative bg-[#04217B] w-full max-w-[700px] max-h-[90vh] overflow-y-auto shadow-2xl [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[#031a64] [&::-webkit-scrollbar-thumb]:bg-white/30 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-white/50" style={{ zIndex: 100000 }}>
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 text-white hover:text-[#e31c26] transition-colors duration-200"
+          className="absolute top-4 right-4 z-[100001] text-white hover:text-[#e31c26] transition-colors duration-200"
           aria-label="Close modal"
         >
           <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -332,6 +340,7 @@ export function InquiryModal({ isOpen, onClose, productName, productCategory, fo
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { ArrowButton } from "@/app/components/ui/ArrowButton";
 import { ContentBlock } from "@/app/components/blocks/ContentBlock";
 
@@ -58,18 +59,19 @@ function Lightbox({
 }) {
   return (
     <div 
-      className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/90 z-[99999] flex items-center justify-center p-4"
       onClick={onClose}
+      style={{ position: 'fixed' }}
     >
       <button 
-        className="absolute top-4 right-4 text-white text-4xl hover:text-gray-300 transition-colors z-10"
+        className="absolute top-4 right-4 text-white text-4xl hover:text-gray-300 transition-colors z-[100000]"
         onClick={onClose}
       >
         ×
       </button>
       
       <button 
-        className="absolute left-4 text-white text-4xl hover:text-gray-300 transition-colors z-10"
+        className="absolute left-4 text-white text-4xl hover:text-gray-300 transition-colors z-[100000]"
         onClick={(e) => { e.stopPropagation(); onNavigate('prev'); }}
       >
         ‹
@@ -83,7 +85,7 @@ function Lightbox({
       />
       
       <button 
-        className="absolute right-4 text-white text-4xl hover:text-gray-300 transition-colors z-10"
+        className="absolute right-4 text-white text-4xl hover:text-gray-300 transition-colors z-[100000]"
         onClick={(e) => { e.stopPropagation(); onNavigate('next'); }}
       >
         ›
@@ -95,6 +97,11 @@ function Lightbox({
 export function CompanyGallerySection() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleImageClick = (image: GalleryImage) => {
     setSelectedImage(image);
@@ -153,13 +160,14 @@ export function CompanyGallerySection() {
         </div>
       </div>
 
-      {/* Lightbox */}
-      {lightboxOpen && selectedImage && (
+      {/* Lightbox - Rendered via Portal */}
+      {mounted && lightboxOpen && selectedImage && createPortal(
         <Lightbox 
           selectedImage={selectedImage} 
           onClose={closeLightbox} 
           onNavigate={navigateImage} 
-        />
+        />,
+        document.body
       )}
     </section>
   );
