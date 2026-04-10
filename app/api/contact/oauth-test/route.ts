@@ -62,10 +62,11 @@ export async function GET() {
       url: baseUrl,
       data: data,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error:', error);
+    const message = error instanceof Error ? error.message : 'Unknown error occurred';
     return NextResponse.json(
-      { error: 'Internal server error', details: error.message },
+      { error: 'Internal server error', details: message },
       { status: 500 }
     );
   }

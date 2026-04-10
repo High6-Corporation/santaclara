@@ -31,7 +31,13 @@ export async function GET() {
       `${siteUrl}/wp-json/gravityforms/v2/forms/${formId}`,
     ];
 
-    const results: any[] = [];
+    const results: Array<{
+      endpoint?: string;
+      status?: number;
+      ok?: boolean;
+      data?: unknown;
+      error?: string;
+    }> = [];
 
     for (const endpoint of endpoints) {
       try {
@@ -63,10 +69,10 @@ export async function GET() {
             allTests: results,
           });
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         results.push({
           endpoint,
-          error: error.message,
+          error: error instanceof Error ? error.message : 'Unknown error occurred',
         });
       }
     }
@@ -77,10 +83,11 @@ export async function GET() {
       message: 'No working endpoint found',
       allTests: results,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error testing API:', error);
+    const message = error instanceof Error ? error.message : 'Unknown error occurred';
     return NextResponse.json(
-      { error: 'Internal server error', details: error.message },
+      { error: 'Internal server error', details: message },
       { status: 500 }
     );
   }

@@ -20,7 +20,14 @@ export async function GET() {
       },
     ];
 
-    const results: any[] = [];
+    const results: Array<{
+      name: string;
+      url: string;
+      status?: number;
+      ok?: boolean;
+      data?: unknown;
+      error?: string;
+    }> = [];
 
     for (const test of tests) {
       try {
@@ -41,11 +48,11 @@ export async function GET() {
           ok: response.ok,
           data: response.ok ? data : null,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         results.push({
           name: test.name,
           url: test.url,
-          error: error.message,
+          error: error instanceof Error ? error.message : 'Unknown error occurred',
         });
       }
     }
@@ -54,10 +61,11 @@ export async function GET() {
       results,
       message: 'Check if WordPress REST API is accessible',
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error:', error);
+    const message = error instanceof Error ? error.message : 'Unknown error occurred';
     return NextResponse.json(
-      { error: 'Internal server error', details: error.message },
+      { error: 'Internal server error', details: message },
       { status: 500 }
     );
   }
