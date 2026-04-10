@@ -28,6 +28,8 @@ interface ContentBlockProps {
   className?: string;
   gap?: string;
   titleTracking?: string;
+  titleSize?: string;
+  textSize?: string;
   removeParagraphSpacing?: boolean;
   bulletIcon?: string;
   paragraphMarginTop?: string;
@@ -53,6 +55,8 @@ export function ContentBlock({
   className = "",
   gap = "gap-10",
   titleTracking = "tracking-[-2.4px]",
+  titleSize = "text-[36px] md:text-[48px] lg:text-[60px]",
+  textSize = "text-[16px]",
   removeParagraphSpacing = false,
   bulletIcon,
   paragraphMarginTop,
@@ -79,7 +83,7 @@ export function ContentBlock({
         )}
         {(title || titleImage || titleSuffix) && (
           <h2
-            className={`text-[36px] md:text-[48px] lg:text-[60px] leading-[1.1] ${titleTracking} ${titleColor} flex items-center justify-center gap-2 font-body`}
+            className={`${titleSize} leading-[1.1] ${titleTracking} ${titleColor} flex items-center justify-center gap-2 font-body`}
           >
             {title}
             {titleImage && (
@@ -99,7 +103,7 @@ export function ContentBlock({
       )}
 
       {paragraphs && paragraphs.length > 0 && (
-        <div className={`text-[16px] leading-[28px] tracking-[-0.64px] ${textColor} font-body ${paragraphMarginTop}`}>
+        <div className={`${textSize} leading-[28px] tracking-[-0.64px] ${textColor} font-body ${paragraphMarginTop}`}>
           {paragraphs.map((paragraph, index) => (
             <p key={index} className="flex items-start gap-3">
               {bulletIcon && (

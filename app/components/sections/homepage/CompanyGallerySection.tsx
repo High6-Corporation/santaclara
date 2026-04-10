@@ -149,7 +149,7 @@ export function CompanyGallerySection() {
           </div>
 
           {/* CTA Button */}
-          <ArrowButton href="#">View More Photos</ArrowButton>
+          <ArrowButton href="/coming-soon">View More Photos</ArrowButton>
         </div>
       </div>
 

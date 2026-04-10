@@ -33,7 +33,7 @@ export function ProductOverview() {
             <p className="text-[16px] leading-[28px] text-white tracking-[-0.64px] lg:max-w-[682px]">
               At Santa Clara Plywood, we believe that building strong communities goes beyond providing quality materials - it also means supporting initiatives that create meaningful change.
             </p>
-            <ArrowButton href="#">Learn More</ArrowButton>
+            <ArrowButton href="https://nowyouknowph.rappler.com/723/santa-clara-marine-plywood-yellow-boat-of-hope-foundation-forge-partnership-for-coastal-communities/">Learn More</ArrowButton>
           </div>
         </div>
       </div>

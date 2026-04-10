@@ -4,17 +4,18 @@ import { submitDynamicFormAction, getDynamicFormFields } from '@/lib/contactForm
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    const formId = body.form_id || process.env.WP_GRAVITY_FORM_CONTACT_ID;
 
     // Convert JSON body to FormData for dynamic submission
     const formData = new FormData();
     for (const [key, value] of Object.entries(body)) {
-      if (value !== null && value !== undefined) {
+      if (key !== 'form_id' && value !== null && value !== undefined) {
         formData.append(key, String(value));
       }
     }
 
     // Fetch dynamic form fields from Gravity Forms
-    const fields = await getDynamicFormFields();
+    const fields = await getDynamicFormFields(formId);
 
     if (fields.length === 0) {
       console.error('No form fields found. Check your Gravity Forms configuration.');
@@ -25,7 +26,7 @@ export async function POST(request: Request) {
     }
 
     // Submit using dynamic form service
-    const result = await submitDynamicFormAction(formData, fields);
+    const result = await submitDynamicFormAction(formData, fields, formId);
 
     if (result.success) {
       return NextResponse.json({ 

@@ -1,20 +1,50 @@
 "use client";
 
 import { useState } from "react";
-import { Product } from "@/types/index";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { Product as WPProduct } from "@/lib/graphqlService";
 import { ArrowButton } from "@/app/components/ui/ArrowButton";
+import { InquiryModal } from "@/app/components/ui/InquiryModal";
 
 interface ProductSectionProps {
-  product: Product;
+  product: WPProduct;
   variant?: "light" | "dark";
+  index?: number;
 }
 
-export function ProductSection({ product, variant = "light" }: ProductSectionProps) {
-  const [selectedImage, setSelectedImage] = useState(0);
+export function ProductSection({ product, variant = "light", index = 0 }: ProductSectionProps) {
+  const [selectedMedia, setSelectedMedia] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [lightboxMedia, setLightboxMedia] = useState<{ url: string; type: 'image' | 'video' } | null>(null);
   
   const isDark = variant === "dark";
+  const isEven = index % 2 === 0;
   
-  const allImages = [product.image, ...(product.gallery || [])];
+  // Extract gallery items from ACF repeater
+  const galleryItems = product.productGalleries?.imageAndVideoGalleries || [];
+  
+  // Filter images and videos - fileType is an ARRAY, not a string!
+  const images = galleryItems.filter(item => 
+    Array.isArray(item.fileType) && item.fileType.includes('image')
+  );
+  const videos = galleryItems.filter(item => 
+    Array.isArray(item.fileType) && item.fileType.includes('video')
+  );
+
+  // Get media URL from file node - handle different possible structures
+  const getMediaUrl = (item: typeof galleryItems[0]) => {
+    const fileData = item.file as unknown as { node?: { sourceUrl?: string } };
+    const url = fileData?.node?.sourceUrl || '';
+    return url;
+  };
+
+  // Get all image URLs for thumbnail gallery
+  const allImageUrls = images.map(getMediaUrl).filter(Boolean);
 
   return (
     <section
@@ -23,8 +53,10 @@ export function ProductSection({ product, variant = "light" }: ProductSectionPro
       } py-[100px] lg:py-[120px] overflow-hidden`}
     >
       <div className="w-[90%] max-w-[1320px] mx-auto">
-        <div className="flex flex-col lg:flex-row items-start justify-between gap-[60px] lg:gap-[50px]">
-          {/* Left Content */}
+        <div className={`flex flex-col lg:flex-row items-start lg:items-center justify-between gap-[60px] lg:gap-[50px] ${
+          isEven ? '' : 'lg:flex-row-reverse'
+        }`}>
+          {/* Content Section */}
           <div className="flex flex-col gap-[40px] items-start w-full lg:w-[599px]">
             {/* Title Section */}
             <div className="flex flex-col gap-[24px] items-start w-full">
@@ -33,79 +65,233 @@ export function ProductSection({ product, variant = "light" }: ProductSectionPro
                   isDark ? "text-white" : "text-black"
                 }`}
               >
-                {product.name}
+                {product.productCategories?.nodes?.[0]?.name && (
+                  <span className="font-normal">{product.productCategories.nodes[0].name} - </span>
+                )}
+                <span className="font-normal">{product.title}</span>
               </h2>
               <div className="w-full h-[2px] bg-[#CF2923]" />
             </div>
 
-            {/* Description */}
-            <div
-              className={`font-['Inter',sans-serif] font-normal text-[16px] leading-[28px] tracking-[-0.64px] w-full ${
-                isDark ? "text-white" : "text-[#333]"
-              }`}
+            {/* Description (Content) */}
+            {product.content && (
+              <div
+                className={`font-['Inter',sans-serif] font-normal text-[16px] leading-[28px] tracking-[-0.64px] w-full ${
+                  isDark ? "text-white" : "text-[#333]"
+                }`}
+              >
+                <div>
+                  <strong>Details:</strong>{" "}
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: product.content.replace(/^<p>|<\/p>$/g, ""),
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* More Info (WYSIWYG) */}
+            {product.productMoreInfo?.moreInfo && (
+              <div
+                className={`font-['Inter',sans-serif] font-normal text-[16px] leading-[28px] tracking-[-0.64px] w-full ${
+                  isDark ? "text-white" : "text-[#333]"
+                }`}
+              >
+                <div>
+                  <strong>More info:</strong>
+                </div>
+                <div
+                  className="more-info-content"
+                  dangerouslySetInnerHTML={{
+                    __html: product.productMoreInfo.moreInfo.replace(/^<p>|<\/p>$/g, ""),
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Application (WYSIWYG) */}
+            {product.productApplication?.application && (
+              <div
+                className={`font-['Inter',sans-serif] font-normal text-[16px] leading-[28px] tracking-[-0.64px] w-full ${
+                  isDark ? "text-white" : "text-[#333]"
+                }`}
+              >
+                <div className="mb-[16px]">
+                  <strong>Recommended Application:</strong>{" "}
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: product.productApplication.application.replace(/^<p>|<\/p>$/g, ""),
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* CTA Button */}
+            <ArrowButton onClick={() => setIsModalOpen(true)}>Inquire Now</ArrowButton>
+          </div>
+
+          {/* Gallery Section */}
+          <div className="flex flex-col gap-[20px] items-start w-full lg:w-[671px]">
+            {/* Main Image Display - Clickable for Lightbox */}
+            <div 
+              className="bg-white w-full h-[460px] overflow-clip relative cursor-pointer"
+              onClick={() => {
+                if (allImageUrls[selectedMedia]) {
+                  setLightboxMedia({ url: allImageUrls[selectedMedia], type: 'image' });
+                  setIsLightboxOpen(true);
+                }
+              }}
             >
-              <p className="mb-[24px]">
-                <span className="font-semibold">Details:</span> {product.description}
-              </p>
-
-              <p className="mb-[16px]">
-                <span className="font-semibold">More info:</span>
-              </p>
-              <ul className="list-disc ml-[24px] mb-[24px] space-y-[8px]">
-                {product.plyCount && <li>{product.plyCount}</li>}
-                <li>C-Marine Type</li>
-                {product.weight && <li>{product.weight}</li>}
-                {product.boilTested && <li>{product.boilTested}</li>}
-              </ul>
-
-              {product.applications && product.applications.length > 0 && (
-                <p>
-                  <span className="font-semibold">Recommended Application:</span>{" "}
-                  {product.applications.join(", ")}
-                </p>
+              {allImageUrls.length > 0 ? (
+                <img
+                  src={allImageUrls[selectedMedia]}
+                  alt={product.title}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center text-gray-400">
+                  No image available
+                </div>
               )}
             </div>
 
-            {/* CTA Button */}
-            <ArrowButton href="#inquire">Inquire Now</ArrowButton>
-          </div>
+            {/* Thumbnail Carousel */}
+            {allImageUrls.length > 1 && (
+              <div className="w-full">
+                <Swiper
+                  modules={[Navigation, Pagination]}
+                  spaceBetween={20}
+                  slidesPerView={4}
+                  navigation
+                  pagination={{ clickable: true, dynamicBullets: true }}
+                  breakpoints={{
+                    320: {
+                      slidesPerView: 2,
+                      spaceBetween: 10,
+                    },
+                    768: {
+                      slidesPerView: 3,
+                      spaceBetween: 15,
+                    },
+                    1024: {
+                      slidesPerView: 4,
+                      spaceBetween: 20,
+                    },
+                  }}
+                  className="!pb-12"
+                >
+                  {allImageUrls.map((url, index) => (
+                    <SwiperSlide key={index}>
+                      <button
+                        onClick={() => setSelectedMedia(index)}
+                        className={`overflow-clip relative w-full aspect-square border-2 transition-all cursor-pointer ${
+                          selectedMedia === index
+                            ? "border-[#cf2923]"
+                            : "border-transparent hover:border-gray-300"
+                        }`}
+                      >
+                        <img
+                          src={url}
+                          alt={`${product.title} - Image ${index + 1}`}
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
+                      </button>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+            )}
 
-          {/* Right Gallery */}
-          <div className="flex flex-col gap-[20px] items-start w-full lg:w-[671px]">
-            {/* Main Image */}
-            <div className="bg-white w-full h-[460px] overflow-clip relative">
-              <img
-                src={allImages[selectedImage] || product.image}
-                alt={product.name}
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-            </div>
-
-            {/* Thumbnail Gallery */}
-            {allImages.length > 1 && (
-              <div className="flex gap-[20px] items-center w-full">
-                {allImages.slice(0, 4).map((img, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImage(index)}
-                    className={`overflow-clip relative shrink-0 size-[153px] border-2 ${
-                      selectedImage === index
-                        ? "border-[#cf2923]"
-                        : "border-transparent"
-                    }`}
-                  >
-                    <img
-                      src={img}
-                      alt={`${product.name} - Image ${index + 1}`}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
+            {/* Video Section (if any) */}
+            {videos.length > 0 && (
+              <div className="flex flex-col gap-[20px] w-full mt-[20px]">
+                <h3 className={`font-['Inter',sans-serif] font-semibold text-[24px] ${
+                  isDark ? "text-white" : "text-black"
+                }`}>
+                  Product Videos
+                </h3>
+                <Swiper
+                  modules={[Navigation, Pagination]}
+                  spaceBetween={20}
+                  slidesPerView={1}
+                  navigation
+                  pagination={{ clickable: true }}
+                >
+                  {videos.map((video, index) => {
+                    const videoUrl = getMediaUrl(video);
+                    return videoUrl ? (
+                      <SwiperSlide key={index}>
+                        <div className="bg-white w-full h-[460px] overflow-clip relative">
+                          <video
+                            controls
+                            className="absolute inset-0 w-full h-full object-cover"
+                            src={videoUrl}
+                          >
+                            Your browser does not support the video tag.
+                          </video>
+                        </div>
+                      </SwiperSlide>
+                    ) : null;
+                  })}
+                </Swiper>
               </div>
             )}
           </div>
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      {isLightboxOpen && lightboxMedia && (
+        <div 
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
+          onClick={() => setIsLightboxOpen(false)}
+        >
+          {/* Close Button */}
+          <button
+            onClick={() => setIsLightboxOpen(false)}
+            className="absolute top-6 right-6 z-10 text-white hover:text-[#e31c26] transition-colors duration-200"
+            aria-label="Close lightbox"
+          >
+            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Lightbox Content */}
+          <div 
+            className="relative max-w-[90vw] max-h-[90vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {lightboxMedia.type === 'image' ? (
+              <img
+                src={lightboxMedia.url}
+                alt={product.title}
+                className="max-w-full max-h-[90vh] object-contain"
+              />
+            ) : (
+              <video
+                controls
+                autoPlay
+                className="max-w-full max-h-[90vh] object-contain"
+                src={lightboxMedia.url}
+              >
+                Your browser does not support the video tag.
+              </video>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Inquiry Modal */}
+      <InquiryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        productName={product.title}
+        productCategory={product.productCategories?.nodes?.[0]?.name || ''}
+        formId="2"
+      />
     </section>
   );
 }

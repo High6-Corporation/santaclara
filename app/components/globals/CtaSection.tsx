@@ -28,7 +28,7 @@ export function CtaSection() {
           </p>
           {/* Button */}
           <div className="mt-[40px]">
-            <ArrowButton href="#" variant="primary">
+            <ArrowButton href="/contact-us" variant="primary">
               Request a Quote
             </ArrowButton>
           </div>

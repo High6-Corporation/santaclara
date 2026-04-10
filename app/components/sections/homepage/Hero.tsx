@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export function Hero() {
   return (
@@ -48,8 +49,8 @@ function HeroCTAButton() {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <a 
-      href="#"
+    <Link 
+      href="/products"
       className="bg-[#e31c26] flex gap-[10px] items-center justify-center px-[24px] py-[21px] rounded-[100px] cursor-pointer transition-colors duration-300 ease-in-out hover:bg-[#a91f1a]" 
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -58,7 +59,7 @@ function HeroCTAButton() {
       <div className={`relative shrink-0 size-[24px] transition-transform duration-300 ease-in-out ${isHovered ? 'rotate-[-45deg]' : 'rotate-0'}`}>
         <img src="/images/arrow-icon.svg" alt="Arrow" className="absolute inset-0 size-full" />
       </div>
-    </a>
+    </Link>
   );
 }
 
