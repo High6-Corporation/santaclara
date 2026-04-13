@@ -148,7 +148,7 @@ export function ContactFormSection() {
 
   // Render form field based on type
   const renderField = (field: DynamicFormField) => {
-    const baseClassName = "w-full px-4 py-3 bg-white border border-gray-300 rounded-none focus:ring-2 focus:ring-[#04217B] focus:border-transparent outline-none transition-all text-[#333333] placeholder:text-[#999999]";
+    const baseClassName = "w-full px-4 py-3 bg-white border border-gray-300 rounded-none focus:ring-2 focus:ring-[#04217B] focus:border-transparent outline-none transition-all text-[#333333] md:text-[18px] text-[16px] md:leading-[22px] leading-[20px] md:tracking-[-0.54px] tracking-[-0.48px] font-normal placeholder:text-[#999999]";
 
     switch (field.type) {
       case 'select':
@@ -255,8 +255,8 @@ export function ContactFormSection() {
         {/* Contact Details */}
         <div className="text-left lg:max-w-[562px] w-full flex flex-col lg:gap-[30px] gap-[20px]">
             <div>
-                <h2 className="text-[36px] md:text-[48px] lg:text-6xl font-normal leading-[40px] lg:leading-[72.6px] tracking-[2.4px] text-[#333333] lg:mb-[30px] mb-[20px]">
-                  Get in Touch
+                <h2 className="text-[36px] md:text-[48px] lg:text-6xl font-normal tracking-[-2.4px] leading-[40px] lg:leading-[72.6px] text-[#333333] lg:mb-[30px] mb-[20px]">
+                  Get in Touch!
                 </h2>
                 <p className="text-base leading-[28px] tracking-[-0.64px] text-[#333333]">
                   Whether you have a product inquiry, need customer support, or want to explore partnership opportunities, our team is ready to assist you.
@@ -265,7 +265,7 @@ export function ContactFormSection() {
             {/* Location and Contacts */}
             <div className="flex flex-col gap-[15px]">
             <div>
-                <p className="md:text-lg text-base font-semibold leading-[24px] tracking-[-0.72px] text-[#333333] uppercase mb-[10px]">Manila</p>
+                <p className="md:text-lg text-base font-semibold leading-[24px] tracking-[-0.72px] text-[#1E1E1E] uppercase mb-[10px]">Manila</p>
                 <p className="md:text-base text-sm leading-[24px] tracking-[-0.72px] text-[#333333]">
                   Address: <a 
                     href="https://www.google.com/maps/place/Tytana+Plaza,+Insular+St,+Binondo,+Manila,+1000+Metro+Manila/@14.6009353,120.9715235,17z/data=!3m1!4b1!4m6!3m5!1s0x3397ca1025c484d1:0xb7f4f660f2aa9f8d!8m2!3d14.6009301!4d120.9740984!16s%2Fg%2F11xzgnf6jq?entry=ttu&g_ep=EgoyMDI2MDQwNS4wIKXMDSoASAFQAw%3D%3D"
@@ -286,7 +286,7 @@ export function ContactFormSection() {
                 </p>
             </div>
             <div>
-                <p className="md:text-lg text-base font-semibold leading-[24px] tracking-[-0.72px] text-[#333333] uppercase mb-[10px]">Davao</p>
+                <p className="md:text-lg text-base font-semibold leading-[24px] tracking-[-0.72px] text-[#1E1E1E] uppercase mb-[10px]">Davao</p>
                 <p className="text-base leading-[28px] tracking-[-0.64px] text-[#333333]">
                   Address: <a 
                     href="https://www.google.com/maps/place/Daliao,+Toril,+Davao+City,+Davao+del+Sur/@7.0138252,125.4974107,15z/data=!3m1!4b1!4m6!3m5!1s0x32f90c427ea824fd:0x749d6d2f5963642c!8m2!3d7.0158047!4d125.5083136!16s%2Fg%2F1ptxlnbn9?entry=ttu&g_ep=EgoyMDI2MDQwNS4wIKXMDSoASAFQAw%3D%3D"
@@ -345,7 +345,7 @@ export function ContactFormSection() {
         </div>
 
         {/* Contact Form */}
-        <div className="lg:max-w-[630px] w-full bg-[#04217B] md:px-[30px] px-[20px] md:py-[50px] py-[30px]">
+        <div className="lg:max-w-[630px] w-full bg-[#04217B] lg:h-[737px] md:px-[30px] px-[20px] md:py-[50px] py-[30px]">
           {isLoading ? (
             <div className="text-white text-center py-10">Loading form...</div>
           ) : (

@@ -102,9 +102,9 @@ export function WatchTikTokSection() {
 
   return (
     <Section bgColor="bg-[#F5F6FA] lg:py-[50px] py-[36px]">
-      <Row className="!max-w-[1440px]">
+      <Row className="!max-w-[1416px]">
         <div className="text-center max-w-[674px] mx-auto">
-          <h2 className="text-[36px] md:text-[48px] lg:text-6xl font-normal leading-[40px] md:leading-[72.6px] tracking-[2.4px] text-[#333333] ">
+          <h2 className="text-[36px] md:text-[48px] lg:text-6xl font-normal leading-[40px] md:leading-[72.6px] tracking-[-2.4px] text-[#333333] ">
             Watch Us on TikTok
           </h2>
           <p className="text-base leading-[28px] tracking-[-0.64px] text-[#333333] lg:my-[30px] my-[20px]">
@@ -146,7 +146,7 @@ export function WatchTikTokSection() {
                   rel="noopener noreferrer"
                   className="block cursor-pointer group"
                 >
-                  <div className="overflow-hidden rounded-lg bg-black relative">
+                  <div className="overflow-hidden bg-black relative">
                     <img 
                       src={video.thumbnail || '/images/gallery-image.jpg'}
                       alt={video.title}
