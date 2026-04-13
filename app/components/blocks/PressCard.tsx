@@ -8,6 +8,7 @@ interface PressCardProps {
   title: string;
   date: string;
   image: string;
+  redirectUrl?: string; // External URL from excerpt/description
 }
 
 // Format date from ISO to "Month Day, Year" format
@@ -20,8 +21,12 @@ function formatDate(dateString: string): string {
   });
 }
 
-export function PressCard({ slug, title, date, image }: PressCardProps) {
+export function PressCard({ slug, title, date, image, redirectUrl }: PressCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+
+  // Use external URL if provided, otherwise fallback to internal route
+  const linkUrl = redirectUrl || `/press/${slug}`;
+  const isExternalLink = redirectUrl && redirectUrl.startsWith('http');
 
   return (
     <div className="md:max-w-[315px] group">
@@ -52,25 +57,49 @@ export function PressCard({ slug, title, date, image }: PressCardProps) {
         </div>
 
         {/* Read More Button - Only this is clickable */}
-        <Link 
-          href={`/press/${slug}`}
-          className="content-stretch flex gap-[4px] items-center relative shrink-0 cursor-pointer"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          <p className="font-body font-semibold leading-[normal] not-italic relative shrink-0 text-[#ff1c14] text-[14px] tracking-[-0.56px] whitespace-nowrap">
-            Read More
-          </p>
-          <div className="relative shrink-0 w-[20px] h-[20px]">
-            <img 
-              src="/images/button-icon-red.svg" 
-              alt="Arrow icon" 
-              className={`absolute inset-0 size-full transition-transform duration-300 ${
-                isHovered ? 'rotate-[-45deg]' : ''
-              }`}
-            />
-          </div>
-        </Link>
+        {isExternalLink ? (
+          <a 
+            href={linkUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="content-stretch flex gap-[4px] items-center relative shrink-0 cursor-pointer"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <p className="font-body font-semibold leading-[normal] not-italic relative shrink-0 text-[#ff1c14] text-[14px] tracking-[-0.56px] whitespace-nowrap">
+              Read More
+            </p>
+            <div className="relative shrink-0 w-[20px] h-[20px]">
+              <img 
+                src="/images/button-icon-red.svg" 
+                alt="Arrow icon" 
+                className={`absolute inset-0 size-full transition-transform duration-300 ${
+                  isHovered ? 'rotate-[-45deg]' : ''
+                }`}
+              />
+            </div>
+          </a>
+        ) : (
+          <Link 
+            href={linkUrl}
+            className="content-stretch flex gap-[4px] items-center relative shrink-0 cursor-pointer"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <p className="font-body font-semibold leading-[normal] not-italic relative shrink-0 text-[#ff1c14] text-[14px] tracking-[-0.56px] whitespace-nowrap">
+              Read More
+            </p>
+            <div className="relative shrink-0 w-[20px] h-[20px]">
+              <img 
+                src="/images/button-icon-red.svg" 
+                alt="Arrow icon" 
+                className={`absolute inset-0 size-full transition-transform duration-300 ${
+                  isHovered ? 'rotate-[-45deg]' : ''
+                }`}
+              />
+            </div>
+          </Link>
+        )}
       </div>
     </div>
   );

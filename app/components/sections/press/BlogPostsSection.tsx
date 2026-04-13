@@ -5,7 +5,7 @@ import { Section } from "@/components/layout/Section";
 import { Row } from "@/components/layout/Row";
 import { PressCard } from "@/components/blocks/PressCard";
 import { ArrowButton } from "@/components/ui/ArrowButton";
-import { fetchPosts, Post } from "@/lib/graphqlService";
+import { fetchPosts, Post, extractUrlFromExcerpt } from "@/lib/graphqlService";
 
 const ITEMS_PER_PAGE = 4;
 
@@ -99,15 +99,20 @@ export function BlogPostsSection() {
         ) : (
           <>
             <div className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center gap-[18px]">
-              {posts.map((post) => (
-                <PressCard
-                  key={post.id}
-                  slug={post.slug}
-                  title={post.title}
-                  date={post.date}
-                  image={post.featuredImage?.node.mediaItemUrl || ''}
-                />
-              ))}
+              {posts.map((post) => {
+                const redirectUrl = extractUrlFromExcerpt(post.excerpt);
+                
+                return (
+                  <PressCard
+                    key={post.id}
+                    slug={post.slug}
+                    title={post.title}
+                    date={post.date}
+                    image={post.featuredImage?.node.mediaItemUrl || ''}
+                    redirectUrl={redirectUrl || undefined}
+                  />
+                );
+              })}
             </div>
             
             {hasNextPage && (

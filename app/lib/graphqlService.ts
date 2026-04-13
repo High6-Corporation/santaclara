@@ -23,6 +23,26 @@ export interface Post {
   };
 }
 
+// Extract URL from excerpt/description
+export function extractUrlFromExcerpt(excerpt: string): string | null {
+  if (!excerpt) return null;
+  
+  // Remove HTML tags
+  const plainText = excerpt.replace(/<[^>]*>/g, '');
+  
+  // Check if the plain text is a URL
+  const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+  
+  if (urlPattern.test(plainText.trim())) {
+    // Add https:// if not present
+    return plainText.trim().startsWith('http') 
+      ? plainText.trim() 
+      : `https://${plainText.trim()}`;
+  }
+  
+  return null;
+}
+
 export interface PostsResponse {
   data?: {
     posts: {
