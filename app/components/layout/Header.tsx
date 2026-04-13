@@ -5,12 +5,22 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
+const productCategories = [
+  { name: "Santa Clara Marine Plywood", slug: "santa-clara-marine-plywood" },
+  { name: "Santa Clara Ordinary Plywood", slug: "santa-clara-ordinary-plywood" },
+  { name: "Santa Clara Plyboard", slug: "santa-clara-plyboard" },
+  { name: "SM Ply", slug: "sm-ply" },
+];
+
 export default function Header() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
+  const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
   
   const isActive = (path: string) => pathname === path;
+  const isProductActive = () => pathname.startsWith('/products');
 
   useEffect(() => {
    const handleScroll = () => {
@@ -82,12 +92,40 @@ export default function Header() {
                 <div className={`absolute bg-[#ff1c14] h-[3px] left-0 -bottom-[29px] w-full transition-opacity duration-200 pointer-events-none ${isActive('/about-us') ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
               </Link>
               
-              {/* Products */}
-              <Link href="/products" className={`content-stretch flex flex-col items-start px-[12px] py-[10px] relative shrink-0 w-[93px] group cursor-pointer ${isActive('/products') ? 'text-[#ff1c14]' : isScrolled ? 'text-black hover:text-[#ff1c14]' : 'text-white hover:text-[#ff1c14]'} transition-colors duration-200`}>
-                <p className="font-body font-medium leading-[normal] not-italic relative shrink-0 text-[18px] tracking-[-0.72px] whitespace-nowrap pointer-events-none">Products</p>
-                {/* Underline - shown on hover and active */}
-                <div className={`absolute bg-[#ff1c14] h-[3px] left-0 -bottom-[29px] w-full transition-opacity duration-200 pointer-events-none ${isActive('/products') ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
-              </Link>
+              {/* Products with Dropdown */}
+              <div 
+                className="relative group"
+                onMouseEnter={() => setIsProductsDropdownOpen(true)}
+                onMouseLeave={() => setIsProductsDropdownOpen(false)}
+              >
+                <Link href="/products" className={`content-stretch flex flex-row items-center gap-2 px-[12px] py-[10px] relative shrink-0 cursor-pointer ${isProductActive() ? 'text-[#ff1c14]' : isScrolled ? 'text-black hover:text-[#ff1c14]' : 'text-white hover:text-[#ff1c14]'} transition-colors duration-200`}>
+                  <p className="font-body font-medium leading-[normal] not-italic relative shrink-0 text-[18px] tracking-[-0.72px] whitespace-nowrap pointer-events-none">Products</p>
+                  <Image 
+                    src="/images/dropdown-icon.svg" 
+                    alt="" 
+                    width={20} 
+                    height={20} 
+                    className={`transition-transform duration-200 pointer-events-none ${isProductsDropdownOpen ? 'rotate-180' : ''}`}
+                  />
+                  {/* Underline - shown on hover and active */}
+                  <div className={`absolute bg-[#ff1c14] h-[3px] left-0 -bottom-[29px] w-full transition-opacity duration-200 pointer-events-none ${isProductActive() ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
+                </Link>
+                
+                {/* Desktop Dropdown */}
+                <div className={`absolute top-full left-0 pt-2 transition-all duration-200 ${isProductsDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
+                  <div className="bg-white rounded-lg shadow-lg py-2 min-w-[280px] border border-gray-100">
+                    {productCategories.map((category) => (
+                      <Link
+                        key={category.slug}
+                        href={`/products/${category.slug}`}
+                        className={`block px-4 py-3 text-[16px] font-body font-medium transition-colors duration-200 ${pathname === `/products/${category.slug}` ? 'text-[#ff1c14] bg-red-50' : 'text-[#1e1e1e] hover:text-[#ff1c14] hover:bg-gray-50'}`}
+                      >
+                        {category.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
               
               {/* Press */}
               <Link href="/press" className={`content-stretch flex items-center justify-center px-[12px] py-[10px] relative shrink-0 group cursor-pointer ${isActive('/press') ? 'text-[#ff1c14]' : isScrolled ? 'text-black hover:text-[#ff1c14]' : 'text-white hover:text-[#ff1c14]'} transition-colors duration-200`}>
@@ -159,14 +197,46 @@ export default function Header() {
             <p className="font-body font-medium text-[20px]">About Us</p>
           </Link>
           
-          {/* Products */}
-          <Link 
-            href="/products" 
-            className={`py-3 border-b border-gray-200 ${isActive('/products') ? 'text-[#ff1c14]' : 'text-[#1e1e1e] hover:text-[#ff1c14]'} transition-colors duration-200`}
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <p className="font-body font-medium text-[20px]">Products</p>
-          </Link>
+          {/* Products with Mobile Dropdown */}
+          <div className="border-b border-gray-200">
+            <button
+              className={`w-full py-3 flex items-center justify-between ${isProductActive() ? 'text-[#ff1c14]' : 'text-[#1e1e1e] hover:text-[#ff1c14]'} transition-colors duration-200`}
+              onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
+            >
+              <p className="font-body font-medium text-[20px]">Products</p>
+              <svg 
+                className={`w-5 h-5 transition-transform duration-200 ${isMobileProductsOpen ? 'rotate-180' : ''}`} 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            
+            {/* Mobile Dropdown Items */}
+            <div className={`overflow-hidden transition-all duration-200 ${isMobileProductsOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+              <div className="pl-4 pb-2 flex flex-col gap-1">
+                <Link 
+                  href="/products" 
+                  className={`py-2 text-[16px] ${isActive('/products') ? 'text-[#ff1c14]' : 'text-[#666] hover:text-[#ff1c14]'} transition-colors duration-200`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  All Products
+                </Link>
+                {productCategories.map((category) => (
+                  <Link 
+                    key={category.slug}
+                    href={`/products/${category.slug}`}
+                    className={`py-2 text-[16px] ${pathname === `/products/${category.slug}` ? 'text-[#ff1c14]' : 'text-[#666] hover:text-[#ff1c14]'} transition-colors duration-200`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
           
           {/* Press */}
           <Link 
