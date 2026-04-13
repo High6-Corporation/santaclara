@@ -10,6 +10,16 @@ interface PressCardProps {
   image: string;
 }
 
+// Format date from ISO to "Month Day, Year" format
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
+
 export function PressCard({ slug, title, date, image }: PressCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -17,13 +27,19 @@ export function PressCard({ slug, title, date, image }: PressCardProps) {
     <div className="md:max-w-[315px] group">
       <div className="w-full">
         {/* Image */}
-        <div className="w-full overflow-hidden">
-          <img 
-            src={image} 
-            alt={title} 
-            className="w-full max-h-[300px] object-cover"
-          />
-        </div>
+        {image ? (
+          <div className="w-full overflow-hidden">
+            <img 
+              src={image} 
+              alt={title} 
+              className="w-full max-h-[300px] object-cover"
+            />
+          </div>
+        ) : (
+          <div className="w-full h-[200px] bg-gray-200 flex items-center justify-center">
+            <p className="text-gray-500 text-sm">No image available</p>
+          </div>
+        )}
 
         {/* Content */}
         <div className="w-full text-left mt-[20px] mb-[24px]">
@@ -31,7 +47,7 @@ export function PressCard({ slug, title, date, image }: PressCardProps) {
             {title}
           </p>
           <p className="text-sm leading-[17px] tracking-[-0.56px] text-[#333333] opacity-70">
-            {date}
+            {formatDate(date)}
           </p>
         </div>
 

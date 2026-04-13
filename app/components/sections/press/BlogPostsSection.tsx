@@ -1,30 +1,80 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Section } from "@/components/layout/Section";
 import { Row } from "@/components/layout/Row";
 import { PressCard } from "@/components/blocks/PressCard";
 import { ArrowButton } from "@/components/ui/ArrowButton";
-import { newsData } from "@/app/lib/data/newsData";
+import { fetchPosts, Post } from "@/lib/graphqlService";
 
 const ITEMS_PER_PAGE = 4;
 
 export function BlogPostsSection() {
-  const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [endCursor, setEndCursor] = useState<string | null>(null);
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
-  const handleToggleItems = () => {
-    if (visibleItems >= newsData.length) {
-      // Show less - reset to initial 4 items
-      setVisibleItems(ITEMS_PER_PAGE);
-    } else {
-      // Load more - show 4 more items
-      setVisibleItems(prev => Math.min(prev + ITEMS_PER_PAGE, newsData.length));
+  // Fetch initial posts
+  useEffect(() => {
+    async function loadInitialPosts() {
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        const response = await fetchPosts(ITEMS_PER_PAGE);
+        
+        if (response.errors) {
+          setError('Failed to load posts');
+          console.error('GraphQL errors:', response.errors);
+          return;
+        }
+        
+        if (response.data?.posts) {
+          setPosts(response.data.posts.nodes);
+          setEndCursor(response.data.posts.pageInfo.endCursor);
+          setHasNextPage(response.data.posts.pageInfo.hasNextPage);
+        }
+      } catch (err) {
+        setError('Failed to load posts');
+        console.error('Error loading posts:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    
+    loadInitialPosts();
+  }, []);
+
+  const handleLoadMore = async () => {
+    if (!hasNextPage || !endCursor || isLoading) return;
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const response = await fetchPosts(ITEMS_PER_PAGE, endCursor);
+      
+      if (response.errors) {
+        setError('Failed to load more posts');
+        console.error('GraphQL errors:', response.errors);
+        return;
+      }
+      
+      if (response.data?.posts) {
+        // Append new posts to existing posts
+        setPosts(prev => [...prev, ...response.data!.posts.nodes]);
+        setEndCursor(response.data.posts.pageInfo.endCursor);
+        setHasNextPage(response.data.posts.pageInfo.hasNextPage);
+      }
+    } catch (err) {
+      setError('Failed to load more posts');
+      console.error('Error loading more posts:', err);
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  const visibleNewsData = newsData.slice(0, visibleItems);
-  const showLoadMore = visibleItems < newsData.length;
-  const showShowLess = visibleItems >= newsData.length && newsData.length > ITEMS_PER_PAGE;
 
   return (
     <Section bgColor="bg-white lg:py-[100px] md:py-[60px] py-[40px]">
@@ -37,23 +87,37 @@ export function BlogPostsSection() {
             Explore our latest articles designed to answer common questions and share practical knowledge.
           </p>
         </div>
-        <div className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center gap-[18px]">
-          {visibleNewsData.map((item) => (
-            <PressCard
-              key={item.id}
-              slug={item.slug}
-              title={item.title}
-              date={item.date}
-              image={item.image}
-            />
-          ))}
-        </div>
-        {(showLoadMore || showShowLess) && (
-          <div className="flex justify-center lg:mt-[50px] mt-[36px]">
-            <ArrowButton onClick={handleToggleItems}>
-              {showShowLess ? "Show Less" : "Load More"}
-            </ArrowButton>
+        
+        {error && (
+          <div className="text-center text-red-600 mb-4">
+            {error}
           </div>
+        )}
+        
+        {isLoading && posts.length === 0 ? (
+          <div className="text-center text-gray-600 py-10">Loading posts...</div>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center gap-[18px]">
+              {posts.map((post) => (
+                <PressCard
+                  key={post.id}
+                  slug={post.slug}
+                  title={post.title}
+                  date={post.date}
+                  image={post.featuredImage?.node.mediaItemUrl || ''}
+                />
+              ))}
+            </div>
+            
+            {hasNextPage && (
+              <div className="flex justify-center lg:mt-[50px] mt-[36px]">
+                <ArrowButton onClick={handleLoadMore}>
+                  {isLoading ? 'Loading...' : 'Load More'}
+                </ArrowButton>
+              </div>
+            )}
+          </>
         )}
       </Row>
     </Section>
