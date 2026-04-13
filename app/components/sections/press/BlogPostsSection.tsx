@@ -30,7 +30,7 @@ export function BlogPostsSection() {
     <Section bgColor="bg-white lg:py-[100px] md:py-[60px] py-[40px]">
       <Row>
         <div className="text-center max-w-[674px] mx-auto mb-[30px]">
-          <h2 className="text-[36px] md:text-[48px] lg:text-6xl font-normal leading-[40px] md:leading-[72.6px] tracking-[2.4px] text-[#333333] md:mb-[30px] mb-[20px]">
+          <h2 className="text-[36px] md:text-[48px] lg:text-6xl font-normal tracking-[-2.4px] leading-[40px] md:leading-[72.6px] text-[#333333] md:mb-[30px] mb-[20px]">
             Latest Blog Posts
           </h2>
           <p className="text-base leading-[28px] tracking-[-0.64px] text-[#333333]">
