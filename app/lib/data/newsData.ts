@@ -6,6 +6,7 @@ export interface NewsItem {
   image: string;
   excerpt: string;
   content: string;
+  redirectUrl?: string; // External URL for linking to external sites
 }
 
 export const newsData: NewsItem[] = [

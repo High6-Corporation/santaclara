@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { NewsListing } from "@/app/components/globals/NewsListing";
 import { NewsItem } from "@/app/lib/data/newsData";
-import { fetchPosts, Post } from "@/lib/graphqlService";
+import { fetchPosts, Post, extractUrlFromExcerpt } from "@/lib/graphqlService";
 
 function SectionBadge() {
   return (
@@ -72,6 +72,8 @@ function NewsContentContainer() {
 
 // Convert WordPress Post to NewsItem format
 function convertPostToNewsItem(post: Post): NewsItem {
+  const redirectUrl = extractUrlFromExcerpt(post.excerpt);
+
   return {
     id: post.id,
     slug: post.slug,
@@ -84,6 +86,7 @@ function convertPostToNewsItem(post: Post): NewsItem {
     image: post.featuredImage?.node.mediaItemUrl || '/images/d966250cfb844e94dc527202c54d6a4db20d25f9.png',
     excerpt: post.excerpt.replace(/<[^>]*>/g, '').slice(0, 120) + '...',
     content: post.excerpt,
+    redirectUrl: redirectUrl || undefined,
   };
 }
 

@@ -25,9 +25,16 @@ function ReadMore({ isHovered }: { isHovered?: boolean }) {
 function HomepageNewsItem({ item }: { item: NewsItem }) {
   const [isHovered, setIsHovered] = React.useState(false);
 
+  const linkUrl = item.redirectUrl || `/press/${item.slug}`;
+  const isExternalLink = item.redirectUrl && item.redirectUrl.startsWith('http');
+
+  const linkProps = isExternalLink
+    ? { href: linkUrl, target: "_blank", rel: "noopener noreferrer" }
+    : { href: linkUrl };
+
   return (
     <Link 
-      href={`/press/${item.slug}`} 
+      {...linkProps}
       className="block w-full"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
