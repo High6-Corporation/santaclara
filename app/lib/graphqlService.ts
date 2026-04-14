@@ -143,98 +143,20 @@ export async function fetchPosts(first: number = 4, after: string | null = null)
   }
 }
 
-// GraphQL Queries for Products
-const GET_PRODUCT_CATEGORIES_QUERY = `
-  query GetProductCategories {
-    productCategories(first: 100) {
-      nodes {
-        id
-        databaseId
-        name
-        slug
-        description
-        productCategoryBanner {
-          categoryBanner {
-            node {
-              sourceUrl
-              altText
-            }
-          }
-          featuredImage {
-            node {
-              sourceUrl
-              altText
-            }
-          }
-        }
-      }
-    }
-  }
-`;
+export interface ProductCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  image?: {
+    node: {
+      sourceUrl: string;
+      altText: string;
+    };
+  };
+}
 
-const GET_PRODUCT_CATEGORY_BY_SLUG_QUERY = `
-  query GetProductCategoryBySlug($slug: ID!) {
-    productCategory(id: $slug, idType: SLUG) {
-      id
-      databaseId
-      name
-      slug
-      description
-      productCategoryBanner {
-        categoryBanner {
-          node {
-            sourceUrl
-            altText
-          }
-        }
-        featuredImage {
-          node {
-            sourceUrl
-            altText
-          }
-        }
-      }
-    }
-  }
-`;
-
-const GET_PRODUCTS_BY_CATEGORY_SLUG_QUERY = `
-  query GetProductsByCategorySlug($slug: String!) {
-    products(where: { category: $slug }, first: 100) {
-      nodes {
-        id
-        databaseId
-        title
-        slug
-        content
-        productCategories {
-          nodes {
-            name
-            slug
-          }
-        }
-        productGalleries {
-          imageAndVideoGalleries {
-            fileType
-            file {
-              node {
-                sourceUrl
-              }
-            }
-          }
-        }
-        productMoreInfo {
-          moreInfo
-        }
-        productApplication {
-          application
-        }
-      }
-    }
-  }
-`;
-
-// Fetch all product categories
+// Fetch product categories from WordPress GraphQL
 export async function getProductCategories(): Promise<ProductCategory[]> {
   try {
     const response = await fetch(WP_GRAPHQL_URL, {
@@ -243,76 +165,43 @@ export async function getProductCategories(): Promise<ProductCategory[]> {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        query: GET_PRODUCT_CATEGORIES_QUERY,
+        query: `
+          query GetProductCategories {
+            productCategories(first: 100) {
+              nodes {
+                id
+                name
+                slug
+                description
+                image {
+                  node {
+                    sourceUrl
+                    altText
+                  }
+                }
+              }
+            }
+          }
+        `,
       }),
-      next: { revalidate: 60 },
+      next: { revalidate: 3600 }, // Cache for 1 hour
     });
 
     if (!response.ok) {
-      console.error('Failed to fetch product categories:', response.statusText);
+      console.error('GraphQL request failed:', response.statusText);
       return [];
     }
 
     const data = await response.json();
-    return data?.data?.productCategories?.nodes || [];
+    
+    if (data.errors) {
+      console.error('GraphQL errors:', JSON.stringify(data.errors, null, 2));
+      return [];
+    }
+
+    return data.data?.productCategories?.nodes || [];
   } catch (error) {
     console.error('Error fetching product categories:', error);
-    return [];
-  }
-}
-
-// Fetch a single product category by slug
-export async function getProductCategoryBySlug(slug: string): Promise<ProductCategory | null> {
-  try {
-    const response = await fetch(WP_GRAPHQL_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: GET_PRODUCT_CATEGORY_BY_SLUG_QUERY,
-        variables: { slug },
-      }),
-      next: { revalidate: 60 },
-    });
-
-    if (!response.ok) {
-      console.error('Failed to fetch product category:', response.statusText);
-      return null;
-    }
-
-    const data = await response.json();
-    return data?.data?.productCategory || null;
-  } catch (error) {
-    console.error('Error fetching product category by slug:', error);
-    return null;
-  }
-}
-
-// Fetch products by category slug
-export async function getProductsByCategorySlug(slug: string): Promise<Product[]> {
-  try {
-    const response = await fetch(WP_GRAPHQL_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: GET_PRODUCTS_BY_CATEGORY_SLUG_QUERY,
-        variables: { slug },
-      }),
-      next: { revalidate: 60 },
-    });
-
-    if (!response.ok) {
-      console.error('Failed to fetch products:', response.statusText);
-      return [];
-    }
-
-    const data = await response.json();
-    return data?.data?.products?.nodes || [];
-  } catch (error) {
-    console.error('Error fetching products by category slug:', error);
     return [];
   }
 }
