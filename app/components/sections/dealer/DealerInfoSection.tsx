@@ -326,68 +326,79 @@ export function DealerInfoSection() {
         geocoderRef.current = new google.maps.Geocoder();
         infoWindowRef.current = new google.maps.InfoWindow();
         setMapLoaded(true);
+        
+        // Pin the first dealer if already selected
+        if (selectedDealer) {
+          pinDealerOnMap(selectedDealer);
+        }
       }
     }
   }, []);
   
+  // Function to pin dealer on map
+  const pinDealerOnMap = (dealer: Dealer) => {
+    if (!googleMapRef.current || !geocoderRef.current || !infoWindowRef.current || !(window as any).google) return;
+    
+    const google = (window as any).google;
+    const geocoder = geocoderRef.current;
+    const map = googleMapRef.current;
+    const infoWindow = infoWindowRef.current;
+    
+    geocoder.geocode({ address: dealer.name }, (results: any, status: any) => {
+      if (status === 'OK' && results && results[0]) {
+        const location = results[0].geometry.location;
+        
+        if (markerRef.current) {
+          markerRef.current.setMap(null);
+        }
+        
+        const marker = new google.maps.Marker({
+          map: map,
+          position: location,
+          title: dealer.name,
+          animation: google.maps.Animation.DROP,
+        });
+        
+        markerRef.current = marker;
+        map.setCenter(location);
+        
+        marker.addListener('click', () => {
+          infoWindow.open(map, marker);
+        });
+        
+        const contentString = `
+          <div style="font-family: Roboto, Arial, sans-serif; padding: 0; margin: 0; max-width: 300px;">
+            <div style="font-size: 16px; font-weight: 500; color: #202124; padding: 12px 16px 4px 16px; margin: 0;">
+              ${dealer.name}
+            </div>
+            <div style="font-size: 14px; color: #70757a; padding: 0 16px 12px 16px; margin: 0; line-height: 1.4;">
+              ${dealer.address}
+            </div>
+            <a 
+              href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dealer.name + ', ' + dealer.address)}" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style="display: block; font-size: 14px; color: #1a73e8; text-decoration: none; padding: 0 16px 12px 16px; font-weight: 500; border: none !important; outline: none !important; box-shadow: none !important;"
+              onmouseover="this.style.textDecoration='underline'" 
+              onmouseout="this.style.textDecoration='none'"
+            >
+              View on Google Maps
+            </a>
+          </div>
+        `;
+        
+        infoWindow.setContent(contentString);
+        infoWindow.open(map, marker);
+      }
+    });
+  };
+  
   // Update map when dealer is selected
   useEffect(() => {
-    if (selectedDealer && googleMapRef.current && geocoderRef.current && infoWindowRef.current && (window as any).google) {
-      const google = (window as any).google;
-      const geocoder = geocoderRef.current;
-      const map = googleMapRef.current;
-      const infoWindow = infoWindowRef.current;
-      
-      geocoder.geocode({ address: selectedDealer.name }, (results: any, status: any) => {
-        if (status === 'OK' && results && results[0]) {
-          const location = results[0].geometry.location;
-          
-          if (markerRef.current) {
-            markerRef.current.setMap(null);
-          }
-          
-          const marker = new google.maps.Marker({
-            map: map,
-            position: location,
-            title: selectedDealer.name,
-            animation: google.maps.Animation.DROP,
-          });
-          
-          markerRef.current = marker;
-          map.setCenter(location);
-          
-          // Add click listener to marker to reopen info window
-          marker.addListener('click', () => {
-            infoWindow.open(map, marker);
-          });
-          
-          const contentString = `
-            <div style="font-family: Roboto, Arial, sans-serif; padding: 0; margin: 0; max-width: 300px;">
-              <div style="font-size: 16px; font-weight: 500; color: #202124; padding: 12px 16px 4px 16px; margin: 0;">
-                ${selectedDealer.name}
-              </div>
-              <div style="font-size: 14px; color: #70757a; padding: 0 16px 12px 16px; margin: 0; line-height: 1.4;">
-                ${selectedDealer.address}
-              </div>
-              <a 
-                href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedDealer.name + ', ' + selectedDealer.address)}" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                style="display: block; font-size: 14px; color: #1a73e8; text-decoration: none; padding: 0 16px 12px 16px; font-weight: 500;"
-                onmouseover="this.style.textDecoration='underline'" 
-                onmouseout="this.style.textDecoration='none'"
-              >
-                View on Google Maps
-              </a>
-            </div>
-          `;
-          
-          infoWindow.setContent(contentString);
-          infoWindow.open(map, marker);
-        }
-      });
+    if (selectedDealer && mapLoaded) {
+      pinDealerOnMap(selectedDealer);
     }
-  }, [selectedDealer]);
+  }, [selectedDealer, mapLoaded]);
   
   useEffect(() => {
     // Set the first dealer as selected when the active tab or search term changes
@@ -522,7 +533,7 @@ export function DealerInfoSection() {
                 filteredDealers.map((dealer, index) => (
                 <div 
                   key={`${dealer.name}-${index}`} 
-                  className={`px-5 py-5 cursor-pointer transition-colors
+                  className={`p-[30px] cursor-pointer transition-colors
                     ${index > 0 ? 'border-t border-black' : ''}
                     ${selectedDealer && selectedDealer.name === dealer.name 
                       ? 'bg-[#0839D0]' 
@@ -531,7 +542,7 @@ export function DealerInfoSection() {
                   onClick={() => setSelectedDealer(dealer)}
                 >
                     {/* Dealer name */}
-                    <h3 className="text-white font-body text-[16px] leading-[20px] md:text-[18px] lg:text-[20px] lg:leading-[24px] font-bold tracking-[-0.2px]">
+                    <h3 className="text-white font-body text-[16px] leading-[20px] md:text-[18px] lg:text-[20px] lg:leading-[24px] font-bold tracking-[-0.2px] mb-[10px]">
                       {dealer.name}
                     </h3>
 
@@ -541,7 +552,7 @@ export function DealerInfoSection() {
                         href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dealer.address)}`} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-white font-body text-[14px] md:text-[16px] font-normal leading-[19px] tracking-[-0.15px] hover:underline"
+                        className="flex items-center gap-2 mb-[10px] text-white font-body text-[14px] md:text-[16px] font-normal leading-[19px] tracking-[-0.15px] hover:underline"
                         onClick={(e) => { e.stopPropagation(); setSelectedDealer(dealer); }}
                       >
                         <img
@@ -621,7 +632,7 @@ export function DealerInfoSection() {
           </div>
 
           {/* Right side - Google Maps */}
-            <div className="h-[500px] md:h-[600px] lg:h-[702px] w-full bg-gray-100 border border-gray-300 relative overflow-hidden">
+            <div className="h-[500px] md:h-[600px] lg:h-[702px] lg:max-w-[847px] w-full bg-gray-100 border border-gray-300 relative overflow-hidden">
               {selectedDealer ? (
                 <div 
                   ref={mapRef} 
