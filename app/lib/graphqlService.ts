@@ -88,3 +88,66 @@ export async function fetchPosts(first: number = 4, after: string | null = null)
     return { errors: [{ message: error instanceof Error ? error.message : 'Unknown error' }] };
   }
 }
+
+export interface ProductCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  image?: {
+    node: {
+      sourceUrl: string;
+      altText: string;
+    };
+  };
+}
+
+// Fetch product categories from WordPress GraphQL
+export async function getProductCategories(): Promise<ProductCategory[]> {
+  try {
+    const response = await fetch(WP_GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+          query GetProductCategories {
+            productCategories(first: 100) {
+              nodes {
+                id
+                name
+                slug
+                description
+                image {
+                  node {
+                    sourceUrl
+                    altText
+                  }
+                }
+              }
+            }
+          }
+        `,
+      }),
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    });
+
+    if (!response.ok) {
+      console.error('GraphQL request failed:', response.statusText);
+      return [];
+    }
+
+    const data = await response.json();
+    
+    if (data.errors) {
+      console.error('GraphQL errors:', JSON.stringify(data.errors, null, 2));
+      return [];
+    }
+
+    return data.data?.productCategories?.nodes || [];
+  } catch (error) {
+    console.error('Error fetching product categories:', error);
+    return [];
+  }
+}
