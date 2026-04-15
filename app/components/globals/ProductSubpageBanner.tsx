@@ -50,7 +50,7 @@ export function ProductSubpageBanner({
             badgeBorderColor="border-white"
             badgeTextColor="text-white"
             gap="gap-[24px]"
-            titleTracking="tracking-[-2.4px]"
+            titleTracking="tracking-[-0.84px]"
             titleSize="text-[42px] md:text-[72px] lg:text-[84px]"
             textSize="text-[16px]"
             align="left"

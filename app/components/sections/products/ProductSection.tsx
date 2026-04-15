@@ -59,11 +59,11 @@ export function ProductSection({ product, variant = "light", index = 0 }: Produc
       } py-[100px] lg:py-[120px] overflow-hidden`}
     >
       <div className="w-[90%] max-w-[1320px] mx-auto">
-        <div className={`flex flex-col lg:flex-row items-start lg:items-center justify-between gap-[60px] lg:gap-[50px] ${
-          isEven ? '' : 'lg:flex-row-reverse'
+        <div className={`flex flex-col xl:flex-row items-start xl:items-center justify-between gap-[60px] xl:gap-[50px] ${
+          isEven ? '' : 'xl:flex-row-reverse'
         }`}>
           {/* Content Section */}
-          <div className="flex flex-col gap-[40px] items-start w-full lg:w-[599px]">
+          <div className="flex flex-col gap-[40px] items-start w-full xl:w-[599px]">
             {/* Title Section */}
             <div className="flex flex-col gap-[24px] items-start w-full">
               <h2
@@ -87,7 +87,7 @@ export function ProductSection({ product, variant = "light", index = 0 }: Produc
                 }`}
               >
                 <div>
-                  <strong>Details:</strong>{" "}
+                  <span className="font-semibold">Details:</span>{" "}
                   <span
                     dangerouslySetInnerHTML={{
                       __html: product.content.replace(/^<p>|<\/p>$/g, ""),
@@ -105,7 +105,7 @@ export function ProductSection({ product, variant = "light", index = 0 }: Produc
                 }`}
               >
                 <div>
-                  <strong>More info:</strong>
+                  <span className="font-semibold">More info:</span>
                 </div>
                 <div
                   className="more-info-content"
@@ -124,7 +124,7 @@ export function ProductSection({ product, variant = "light", index = 0 }: Produc
                 }`}
               >
                 <div className="mb-[16px]">
-                  <strong>Recommended Application:</strong>{" "}
+                  <span className="font-semibold">Recommended Application:</span>{" "}
                   <span
                     dangerouslySetInnerHTML={{
                       __html: product.productApplication.application.replace(/^<p>|<\/p>$/g, ""),
@@ -139,7 +139,7 @@ export function ProductSection({ product, variant = "light", index = 0 }: Produc
           </div>
 
           {/* Gallery Section */}
-          <div className="flex flex-col gap-[20px] items-start w-full lg:w-[671px]">
+          <div className="flex flex-col gap-[20px] items-start w-full xl:w-[671px]">
             {/* Main Image Display - Clickable for Lightbox */}
             <div 
               className="bg-white w-full h-[460px] overflow-clip relative cursor-pointer"
@@ -170,20 +170,32 @@ export function ProductSection({ product, variant = "light", index = 0 }: Produc
                   modules={[Navigation, Pagination]}
                   spaceBetween={20}
                   slidesPerView={4}
-                  navigation
+                  loop={true}
+                  navigation={{
+                    enabled: true,
+                  }}
                   pagination={{ clickable: true, dynamicBullets: true }}
                   breakpoints={{
                     320: {
                       slidesPerView: 2,
                       spaceBetween: 10,
+                      navigation: {
+                        enabled: false,
+                      },
                     },
                     768: {
                       slidesPerView: 3,
                       spaceBetween: 15,
+                      navigation: {
+                        enabled: false,
+                      },
                     },
                     1024: {
                       slidesPerView: 4,
                       spaceBetween: 20,
+                      navigation: {
+                        enabled: true,
+                      },
                     },
                   }}
                   className="!pb-12"
@@ -222,8 +234,28 @@ export function ProductSection({ product, variant = "light", index = 0 }: Produc
                   modules={[Navigation, Pagination]}
                   spaceBetween={20}
                   slidesPerView={1}
-                  navigation
+                  loop={true}
+                  navigation={{
+                    enabled: true,
+                  }}
                   pagination={{ clickable: true }}
+                  breakpoints={{
+                    320: {
+                      navigation: {
+                        enabled: false,
+                      },
+                    },
+                    768: {
+                      navigation: {
+                        enabled: false,
+                      },
+                    },
+                    1024: {
+                      navigation: {
+                        enabled: true,
+                      },
+                    },
+                  }}
                 >
                   {videos.map((video, index) => {
                     const videoUrl = getMediaUrl(video);

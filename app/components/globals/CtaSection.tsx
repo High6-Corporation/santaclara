@@ -10,7 +10,7 @@ export function CtaSection() {
         <img
           alt=""
           className="w-full h-full object-cover"
-          src="/images/82ab61a2c1183322d06f1184fc8aecd8366ae9ae.png"
+          src="/images/cta-new-background.jpg"
         />
         <div className="absolute inset-0 bg-black/50" />
       </div>
