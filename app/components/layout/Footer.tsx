@@ -39,6 +39,12 @@ function FooterNavTitle1() {
   
   return (
     <div className="content-stretch flex flex-col gap-[4px] items-center md:items-start relative shrink-0" data-name="FooterNavTitle">
+            <Link 
+        href="/dealer" 
+        className={`relative shrink-0 transition-colors duration-200 ${isActive('/dealer') ? 'text-[#e31c26]' : 'hover:text-[#e31c26]'}`}
+      >
+        Dealer
+      </Link>
       <Link 
         href="/press" 
         className={`relative shrink-0 w-full text-center md:text-left transition-colors duration-200 ${isActive('/press') ? 'text-[#e31c26]' : 'hover:text-[#e31c26]'}`}

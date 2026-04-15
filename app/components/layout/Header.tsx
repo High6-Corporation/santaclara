@@ -127,6 +127,13 @@ export default function Header() {
                 </div>
               </div>
               
+              {/* Dealer */}
+              <Link href="/dealer" className={`content-stretch flex items-center justify-center px-[12px] py-[10px] relative shrink-0 group cursor-pointer ${isActive('/dealer') ? 'text-[#ff1c14]' : isScrolled ? 'text-black hover:text-[#ff1c14]' : 'text-white hover:text-[#ff1c14]'} transition-colors duration-200`}>
+                <p className="font-body font-medium leading-[normal] not-italic relative shrink-0 text-[18px] tracking-[-0.72px] whitespace-nowrap pointer-events-none">Dealer</p>
+                {/* Underline - expands from center on hover */}
+                <div className={`absolute bg-[#ff1c14] h-[3px] -bottom-[29px] left-1/2 -translate-x-1/2 transition-all duration-300 ease-out pointer-events-none ${isActive('/dealer') ? 'w-full' : 'w-0 group-hover:w-full'}`} />
+              </Link>
+              
               {/* Press */}
               <Link href="/press" className={`content-stretch flex items-center justify-center px-[12px] py-[10px] relative shrink-0 group cursor-pointer ${isActive('/press') ? 'text-[#ff1c14]' : isScrolled ? 'text-black hover:text-[#ff1c14]' : 'text-white hover:text-[#ff1c14]'} transition-colors duration-200`}>
                 <p className="font-body font-medium leading-[normal] not-italic relative shrink-0 text-[18px] tracking-[-0.72px] whitespace-nowrap pointer-events-none">Press</p>
@@ -237,6 +244,15 @@ export default function Header() {
               </div>
             </div>
           </div>
+          
+          {/* Dealer */}
+          <Link 
+            href="/dealer" 
+            className={`py-3 border-b border-gray-200 ${isActive('/dealer') ? 'text-[#ff1c14]' : 'text-[#1e1e1e] hover:text-[#ff1c14]'} transition-colors duration-200`}
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <p className="font-body font-medium text-[20px]">Dealer</p>
+          </Link>
           
           {/* Press */}
           <Link 
