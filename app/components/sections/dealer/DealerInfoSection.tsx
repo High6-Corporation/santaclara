@@ -353,13 +353,14 @@ export function DealerInfoSection() {
   
   // Function to pin dealer on map
   const pinDealerOnMap = (dealer: Dealer) => {
-    if (!googleMapRef.current || !geocoderRef.current || !infoWindowRef.current || !(window as any).google) return;
+    if (!googleMapRef.current || !geocoderRef.current || !infoWindowRef.current || !(window as unknown as { google?: GoogleMap }).google) return;
     
-    const google = (window as any).google;
+    const google = (window as unknown as { google: GoogleMap }).google;
     const geocoder = geocoderRef.current;
     const map = googleMapRef.current;
     const infoWindow = infoWindowRef.current;
     
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     geocoder.geocode({ address: dealer.name }, (results: any, status: any) => {
       if (status === 'OK' && results && results[0]) {
         const location = results[0].geometry.location;
