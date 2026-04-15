@@ -10,13 +10,13 @@ interface NewsListingProps {
 }
 
 function ReadMore({ isHovered }: { isHovered?: boolean }) {
- return (
-    <div className="content-stretch flex gap-[4px] items-center relative shrink-0 w-auto" data-name="Read More">
-      <p className="font-body font-semibold leading-[normal] not-italic relative shrink-0 text-[#ff1c14] text-[14px] tracking-[-0.56px] whitespace-nowrap">Read More</p>
+  return (
+    <div className="flex gap-[4px] items-center relative shrink-0 w-auto pointer-events-none">
+      <span className="font-body font-semibold text-[14px] text-[#ff1c14] tracking-[-0.56px] whitespace-nowrap">Read More</span>
       <img 
-       src="/images/button-icon-red.svg" 
-    alt="Arrow icon" 
-    className={`w-[20px] h-[20px] transition-transform duration-300 ${isHovered ? 'rotate-[-45deg]' : ''}`}
+        src="/images/button-icon-red.svg" 
+        alt="Arrow icon" 
+        className={`w-[20px] h-[20px] transition-transform duration-300 ${isHovered ? 'rotate-[-45deg]' : ''}`}
       />
     </div>
   );
@@ -25,13 +25,23 @@ function ReadMore({ isHovered }: { isHovered?: boolean }) {
 function HomepageNewsItem({ item }: { item: NewsItem }) {
   const [isHovered, setIsHovered] = React.useState(false);
 
+  const linkUrl = item.redirectUrl || `/press/${item.slug}`;
+  const isExternalLink = item.redirectUrl && item.redirectUrl.startsWith('http');
+
+  const linkProps = isExternalLink
+    ? { href: linkUrl, target: "_blank", rel: "noopener noreferrer" }
+    : { href: linkUrl };
+
   return (
-    <Link href={`/press/${item.slug}`} className="group block w-full">
+    <Link 
+      {...linkProps}
+      className="block w-full"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <div
         className="content-stretch flex gap-[16px] md:gap-[24px] items-center relative shrink-0 w-full cursor-pointer"
         data-name="News Item"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
       >
         <div className="bg-white h-[80px] md:h-[100px] overflow-clip relative shrink-0 w-[100px] md:w-[160px]" data-name="Image">
           <div className="absolute inset-0" data-name="Image">

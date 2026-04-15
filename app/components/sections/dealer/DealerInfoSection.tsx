@@ -4,6 +4,22 @@ import { Row } from "@/components/layout/Row";
 import { useState, useEffect, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
 
+// Google Maps type declarations
+declare global {
+  interface Window {
+    google?: typeof google;
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type GoogleMap = any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type GoogleMarker = any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type GoogleInfoWindow = any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type GoogleGeocoder = any;
+
 interface Dealer {
   name: string;
   address: string;
@@ -274,10 +290,10 @@ export function DealerInfoSection() {
   const [selectedDealer, setSelectedDealer] = useState<Dealer | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
-  const googleMapRef = useRef<any>(null);
-  const markerRef = useRef<any>(null);
-  const infoWindowRef = useRef<any>(null);
-  const geocoderRef = useRef<any>(null);
+  const googleMapRef = useRef<GoogleMap>(null);
+  const markerRef = useRef<GoogleMarker>(null);
+  const infoWindowRef = useRef<GoogleInfoWindow>(null);
+  const geocoderRef = useRef<GoogleGeocoder>(null);
   
   // Initialize Google Maps
   useEffect(() => {
@@ -293,7 +309,7 @@ export function DealerInfoSection() {
     }
     
     // Load Google Maps script
-    if (typeof window !== 'undefined' && !(window as any).google) {
+    if (typeof window !== 'undefined' && !(window as unknown as { google?: GoogleMap }).google) {
       const script = document.createElement('script');
       script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geocoding`;
       script.async = true;
@@ -302,13 +318,13 @@ export function DealerInfoSection() {
         initMap();
       };
       document.head.appendChild(script);
-    } else if ((window as any).google) {
+    } else if ((window as unknown as { google?: GoogleMap }).google) {
       initMap();
     }
     
     function initMap() {
-      if (mapRef.current && (window as any).google) {
-        const google = (window as any).google;
+      if (mapRef.current && (window as unknown as { google?: GoogleMap }).google) {
+        const google = (window as unknown as { google: GoogleMap }).google;
         
         const map = new google.maps.Map(mapRef.current, {
           zoom: 17,

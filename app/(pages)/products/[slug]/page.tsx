@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { ProductSection } from "@/components/sections/products/ProductSection";
-import { getProductCategoryBySlug, getProductsByCategorySlug } from "@/lib/graphqlService";
+import { getProductCategories, getProductCategoryBySlug, getProductsByCategorySlug } from "@/lib/graphqlService";
 import { ProductSubpageBanner } from "@/app/components/globals/ProductSubpageBanner";
 import { CtaSection } from "@/app/components/globals/CtaSection";
 import { FadeIn } from "@/app/components/ui/FadeIn";
@@ -14,14 +14,12 @@ interface ProductDetailPageProps {
 }
 
 export async function generateStaticParams() {
-  // For now, return static params. In production, you can fetch from GraphQL
-  return [
-    { slug: "marine-plywood" },
-    { slug: "ordinary-plywood" },
-    { slug: "ordinary-plyboard" },
-    { slug: "sm-ply" },
-    { slug: "5mm" },
-  ];
+  // Fetch dynamic product categories from WordPress
+  const categories = await getProductCategories();
+  
+  return categories.map((category) => ({
+    slug: category.slug,
+  }));
 }
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {

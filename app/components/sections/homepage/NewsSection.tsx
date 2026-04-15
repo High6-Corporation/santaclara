@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { NewsListing } from "@/app/components/globals/NewsListing";
-import { newsData } from "@/app/lib/data/newsData";
+import { NewsItem } from "@/app/lib/data/newsData";
+import { fetchPosts, Post, extractUrlFromExcerpt } from "@/lib/graphqlService";
 
 function SectionBadge() {
   return (
@@ -69,13 +70,61 @@ function NewsContentContainer() {
   );
 }
 
+// Convert WordPress Post to NewsItem format
+function convertPostToNewsItem(post: Post): NewsItem {
+  const redirectUrl = extractUrlFromExcerpt(post.excerpt);
+
+  return {
+    id: post.id,
+    slug: post.slug,
+    title: post.title,
+    date: new Date(post.date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }),
+    image: post.featuredImage?.node.mediaItemUrl || '/images/d966250cfb844e94dc527202c54d6a4db20d25f9.png',
+    excerpt: post.excerpt.replace(/<[^>]*>/g, '').slice(0, 120) + '...',
+    content: post.excerpt,
+    redirectUrl: redirectUrl || undefined,
+  };
+}
+
 export function NewsSection() {
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadPosts() {
+      setIsLoading(true);
+      try {
+        const response = await fetchPosts(3);
+        if (response.data?.posts?.nodes) {
+          const items = response.data.posts.nodes.map(convertPostToNewsItem);
+          setNewsItems(items);
+        }
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadPosts();
+  }, []);
+
   return (
     <section className="relative w-full bg-[#020718] py-[124px]">
       <div className="max-w-[1440px] mx-auto px-[5%] lg:px-[60px]">
         <div className="content-stretch flex flex-col lg:flex-row justify-between items-start gap-[60px] lg:gap-[40px] relative shrink-0 w-full" data-name="NewsContainer">
           <NewsContentContainer />
-          <NewsListing items={newsData} maxItems={3} variant="homepage" />
+          {isLoading ? (
+            <div className="flex items-center justify-center w-full lg:w-[50%] h-[200px]">
+              <div className="text-white">Loading...</div>
+            </div>
+          ) : (
+            <NewsListing items={newsItems} maxItems={3} variant="homepage" />
+          )}
         </div>
       </div>
     </section>

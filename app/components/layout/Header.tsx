@@ -81,15 +81,15 @@ export default function Header() {
               {/* Home */}
               <Link href="/" className={`content-stretch flex flex-col items-center justify-center px-[12px] py-[10px] relative shrink-0 w-[73px] group cursor-pointer ${isActive('/') ? 'text-[#ff1c14]' : isScrolled ? 'text-black hover:text-[#ff1c14]' : 'text-white hover:text-[#ff1c14]'} transition-colors duration-200`}>
                 <p className="font-body font-medium leading-[normal] not-italic relative shrink-0 text-[18px] tracking-[-0.72px] w-full pointer-events-none">Home</p>
-                {/* Underline - shown on hover and active */}
-                <div className={`absolute bg-[#ff1c14] h-[3px] left-0 -bottom-[29px] w-full transition-opacity duration-200 pointer-events-none ${isActive('/') ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
+                {/* Underline - expands from center on hover */}
+                <div className={`absolute bg-[#ff1c14] h-[3px] -bottom-[29px] left-1/2 -translate-x-1/2 transition-all duration-300 ease-out pointer-events-none ${isActive('/') ? 'w-full' : 'w-0 group-hover:w-full'}`} />
               </Link>
               
               {/* About Us */}
               <Link href="/about-us" className={`content-stretch flex flex-col items-start px-[12px] py-[10px] relative shrink-0 w-[95px] group cursor-pointer ${isActive('/about-us') ? 'text-[#ff1c14]' : isScrolled ? 'text-black hover:text-[#ff1c14]' : 'text-white hover:text-[#ff1c14]'} transition-colors duration-200`}>
                 <p className="font-body font-medium leading-[normal] not-italic relative shrink-0 text-[18px] tracking-[-0.72px] whitespace-nowrap pointer-events-none">About Us</p>
-                {/* Underline - shown on hover and active */}
-                <div className={`absolute bg-[#ff1c14] h-[3px] left-0 -bottom-[29px] w-full transition-opacity duration-200 pointer-events-none ${isActive('/about-us') ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
+                {/* Underline - expands from center on hover */}
+                <div className={`absolute bg-[#ff1c14] h-[3px] -bottom-[29px] left-1/2 -translate-x-1/2 transition-all duration-300 ease-out pointer-events-none ${isActive('/about-us') ? 'w-full' : 'w-0 group-hover:w-full'}`} />
               </Link>
               
               {/* Products with Dropdown */}
@@ -107,8 +107,8 @@ export default function Header() {
                     height={20} 
                     className={`transition-transform duration-200 pointer-events-none ${isProductsDropdownOpen ? 'rotate-180' : ''}`}
                   />
-                  {/* Underline - shown on hover and active */}
-                  <div className={`absolute bg-[#ff1c14] h-[3px] left-0 -bottom-[29px] w-full transition-opacity duration-200 pointer-events-none ${isProductActive() ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
+                  {/* Underline - expands from center on hover */}
+                  <div className={`absolute bg-[#ff1c14] h-[3px] -bottom-[29px] left-1/2 -translate-x-1/2 transition-all duration-300 ease-out pointer-events-none ${isProductActive() ? 'w-full' : 'w-0 group-hover:w-full'}`} />
                 </Link>
                 
                 {/* Desktop Dropdown */}
@@ -130,8 +130,8 @@ export default function Header() {
               {/* Press */}
               <Link href="/press" className={`content-stretch flex items-center justify-center px-[12px] py-[10px] relative shrink-0 group cursor-pointer ${isActive('/press') ? 'text-[#ff1c14]' : isScrolled ? 'text-black hover:text-[#ff1c14]' : 'text-white hover:text-[#ff1c14]'} transition-colors duration-200`}>
                 <p className="font-body font-medium leading-[normal] not-italic relative shrink-0 text-[18px] tracking-[-0.72px] whitespace-nowrap pointer-events-none">Press</p>
-                {/* Underline - shown on hover and active */}
-                <div className={`absolute bg-[#ff1c14] h-[3px] left-0 -bottom-[29px] right-0 transition-opacity duration-200 pointer-events-none ${isActive('/press') ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
+                {/* Underline - expands from center on hover */}
+                <div className={`absolute bg-[#ff1c14] h-[3px] -bottom-[29px] left-1/2 -translate-x-1/2 transition-all duration-300 ease-out pointer-events-none ${isActive('/press') ? 'w-full' : 'w-0 group-hover:w-full'}`} />
               </Link>
               
               {/* Contact Us - CTA Button (no underline effect) */}
