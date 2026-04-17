@@ -58,7 +58,7 @@ export function TestimonialsSection() {
             <div className="inline-flex items-center justify-center px-[20px] py-[14px] rounded-[100px] border border-black">
               <span className="font-body font-normal text-[14px] text-black tracking-[-0.14px] whitespace-nowrap">Testimonials</span>
             </div>
-            <h2 className="font-body font-normal text-[36px] md:text-[48px] lg:text-[60px] text-black tracking-[-2.4px]">What Are Clients Say</h2>
+            <h2 className="font-body font-normal text-[36px] md:text-[48px] lg:text-[60px] text-black tracking-[-2.4px]">What Our Clients Say</h2>
             <div className="w-full h-[2px] bg-[#CF2923]" />
           </div>
 
