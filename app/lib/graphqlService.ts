@@ -326,3 +326,124 @@ export async function getProductsByCategorySlug(slug: string): Promise<Product[]
     return [];
   }
 }
+
+// Dealer Types
+export interface Dealer {
+  id: string;
+  databaseId: number;
+  title: string;
+  slug: string;
+  content: string; // Contains Google Maps link
+  details: {
+    address: string;
+    contactNumbers: Array<{
+      mobileNumber: string;
+    }>;
+    emailAddress: string;
+  };
+  dealerRegions: {
+    nodes: Array<{
+      name: string;
+      slug: string;
+    }>;
+  };
+}
+
+// Fetch all dealers
+export async function getDealers(): Promise<Dealer[]> {
+  try {
+    const response = await fetch(WP_GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        queryId: '7a395890b281c0d49726f0a98dbca2a536c7a4995f767bcd3197a407a6bbcf41',
+      }),
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    });
+
+    if (!response.ok) {
+      console.error('Failed to fetch dealers:', response.statusText);
+      return [];
+    }
+
+    const data = await response.json();
+    
+    if (data.errors) {
+      console.error('GraphQL errors:', JSON.stringify(data.errors, null, 2));
+      return [];
+    }
+
+    return data?.data?.dealers?.nodes || [];
+  } catch (error) {
+    console.error('Error fetching dealers:', error);
+    return [];
+  }
+}
+
+// Helper function to extract coordinates from Google Maps URL
+export function extractCoordinatesFromMapsUrl(url: string): { lat: number; lng: number } | null {
+  if (!url) return null;
+  
+  try {
+    // Match patterns like /@11.2445,125.0045,17z or /place/name/@11.2445,125.0045
+    const regex = /@(-?\d+\.\d+),(-?\d+\.\d+)/;
+    const match = url.match(regex);
+    
+    if (match && match.length >= 3) {
+      return {
+        lat: parseFloat(match[1]),
+        lng: parseFloat(match[2])
+      };
+    }
+  } catch (error) {
+    console.error('Error parsing Google Maps URL:', error);
+  }
+  
+  return null;
+}
+
+// Fetch dealer regions (tabs)
+export async function getDealerRegions(): Promise<string[]> {
+  try {
+    const response = await fetch(WP_GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        queryId: '28b910934666b9a399dfa1ae575838cf2295486225300c995f7e93cb6c461998',
+      }),
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    });
+
+    if (!response.ok) {
+      console.error('Failed to fetch dealer regions:', response.statusText);
+      return [];
+    }
+
+    const data = await response.json();
+    
+    if (data.errors) {
+      console.error('GraphQL errors:', JSON.stringify(data.errors, null, 2));
+      return [];
+    }
+
+    const regions = data?.data?.dealerRegions?.nodes || [];
+    const regionNames = regions.map((region: any) => {
+      // Try different possible field names
+      const name = region.taxonomyName || region.name || '';
+      return name.toUpperCase();
+    }).filter((name: string) => name); // Remove empty strings
+    
+    // Sort regions: NCR first, then alphabetically
+    const ncrFirst = regionNames.filter((r: string) => r === 'NCR');
+    const others = regionNames.filter((r: string) => r !== 'NCR').sort();
+    
+    return [...ncrFirst, ...others];
+  } catch (error) {
+    console.error('Error fetching dealer regions:', error);
+    return [];
+  }
+}
