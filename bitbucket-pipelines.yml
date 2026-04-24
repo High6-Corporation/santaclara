@@ -3,22 +3,62 @@
 #  This template allows you to validate your NodeJS code.
 #  The workflow allows running tests and code linting on the default branch.
 
-image: node:16
+image: node:20
+
+options:
+  max-time: 30
+
+definitions:
+  caches:
+    npm: ~/.npm
 
 pipelines:
   default:
     - parallel:
         - step:
-            name: Build and Test
+            name: Build
             caches:
               - node
             script:
-              - npm install
-              - npm test
+              - npm ci
+              - npm run build
         - step:
-            name: Code linting
-            script:
-              - npm install eslint
-              - npx eslint .
+            name: Lint
             caches:
               - node
+            script:
+              - npm ci
+              - npm run lint
+
+  branches:
+    master:
+      - step:
+          name: Build
+          caches:
+            - node
+          script:
+            - npm ci
+            - npm run build
+
+      - step:
+          name: Deploy to VPS (PM2)
+          deployment: production
+          script:
+            - pipe: atlassian/ssh-run:0.8.1
+              variables:
+                SSH_USER: $SSH_USER
+                SERVER: $SSH_HOST
+                PORT: $SSH_PORT
+                COMMAND: >
+                  cd $DEPLOY_PATH &&
+                  git fetch --all &&
+                  git reset --hard origin/master &&
+                  export WP_SITE_URL="$WP_SITE_URL" &&
+                  export WP_GRAVITY_API_KEY="$WP_GRAVITY_API_KEY" &&
+                  export WP_GRAVITY_API_SECRET="$WP_GRAVITY_API_SECRET" &&
+                  export WP_GRAVITY_FORM_CONTACT_ID="$WP_GRAVITY_FORM_CONTACT_ID" &&
+                  export WP_GRAVITY_FORM_INQUIRY_ID="$WP_GRAVITY_FORM_INQUIRY_ID" &&
+                  npm ci &&
+                  npm run build &&
+                  pm2 startOrReload ecosystem.config.cjs --only santaclara &&
+                  pm2 save
