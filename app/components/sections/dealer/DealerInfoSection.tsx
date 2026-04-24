@@ -124,7 +124,25 @@ export function DealerInfoSection() {
     }
     
     // Load Google Maps script
-    if (typeof window !== 'undefined' && !(window as unknown as { google?: GoogleMap }).google) {
+    const loadGoogleMaps = () => {
+      // Check if already loaded
+      if ((window as unknown as { google?: GoogleMap }).google) {
+        console.log('Google Maps already loaded, initializing...');
+        setTimeout(() => initMap(), 100);
+        return;
+      }
+      
+      // Check if script is already being loaded (but not finished yet)
+      const existingScript = document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]');
+      if (existingScript) {
+        console.log('Google Maps script is loading, waiting...');
+        existingScript.addEventListener('load', () => {
+          setTimeout(() => initMap(), 100);
+        });
+        return;
+      }
+      
+      // Load the script
       const script = document.createElement('script');
       script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geocoding`;
       script.async = true;
@@ -134,11 +152,9 @@ export function DealerInfoSection() {
         initMap();
       };
       document.head.appendChild(script);
-    } else if ((window as unknown as { google?: GoogleMap }).google) {
-      console.log('Google Maps already loaded, initializing...');
-      // Small delay to ensure DOM is ready
-      setTimeout(() => initMap(), 100);
-    }
+    };
+    
+    loadGoogleMaps();
     
     function initMap() {
       console.log('initMap called, mapRef exists:', !!mapRef.current, 'google exists:', !!(window as unknown as { google?: GoogleMap }).google);
@@ -195,7 +211,6 @@ export function DealerInfoSection() {
     }
     
     const google = (window as any).google;
-    const geocoder = geocoderRef.current;
     const map = googleMapRef.current;
     const infoWindow = infoWindowRef.current;
     const geocoder = geocoderRef.current;

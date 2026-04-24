@@ -2,7 +2,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Section } from "@/components/layout/Section";
 import { Row } from "@/components/layout/Row";
-import { newsData } from "@/app/lib/data/newsData";
+import { fetchPostBySlug, Post, extractUrlFromExcerpt } from "@/lib/graphqlService";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FadeIn } from "@/app/components/ui/FadeIn";
@@ -16,11 +16,49 @@ interface PressPageProps {
 export default async function SinglePressPage({ params }: PressPageProps) {
  const { slug } = await params;
   
-  // Find the news item by slug
-  const newsItem = newsData.find((item) => item.slug === slug);
-
-  if (!newsItem) {
+  // Fetch the post from WordPress
+  const response = await fetchPostBySlug(slug);
+  
+  if (!response.data?.post) {
    notFound();
+  }
+  
+  const post = response.data.post;
+  const redirectUrl = extractUrlFromExcerpt(post.excerpt);
+  
+  // If post has external URL, redirect to it
+  if (redirectUrl) {
+    return (
+      <div className="bg-white flex justify-center min-h-screen w-full">
+        <div className="relative w-full">
+          <Header />
+          <FadeIn direction="none">
+            <Section bgColor="bg-white">
+              <Row>
+                <div className="pt-[200px] pb-[100px] px-[60px] max-w-[1200px] mx-auto text-center">
+                  <p className="text-[18px] text-gray-600 mb-[20px]">
+                    This article has moved to an external site.
+                  </p>
+                  <Link 
+                    href={redirectUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-[8px] text-[#CF2923] hover:text-[#a91f1a] transition-colors duration-300"
+                  >
+                    <span className="font-semibold text-[16px]">Click here to read the article</span>
+                    <svg className="w-[20px] h-[20px]" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                      <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                    </svg>
+                  </Link>
+                </div>
+              </Row>
+            </Section>
+          </FadeIn>
+          <Footer />
+        </div>
+      </div>
+    );
   }
 
  return (
@@ -47,17 +85,25 @@ export default async function SinglePressPage({ params }: PressPageProps) {
                 {/* Article Header */}
                 <FadeIn>
                   <div className="mb-[60px]">
-                    <p className="text-[16px] text-gray-500 mb-[16px]">{newsItem.date}</p>
+                    <p className="text-[16px] text-gray-500 mb-[16px]">
+                      {new Date(post.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </p>
                     <h1 className="text-[48px] font-bold text-[#2c2525] leading-[56px] tracking-[-0.96px] mb-[32px]">
-                      {newsItem.title}
+                      {post.title}
                     </h1>
-                    <div className="w-full h-[400px] rounded-lg overflow-hidden">
-                      <img 
-                        src={newsItem.image} 
-                        alt={newsItem.title} 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
+                    {post.featuredImage?.node.mediaItemUrl && (
+                      <div className="w-full h-[400px] rounded-lg overflow-hidden">
+                        <img 
+                          src={post.featuredImage.node.mediaItemUrl} 
+                          alt={post.title} 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
                   </div>
                 </FadeIn>
 
@@ -65,7 +111,7 @@ export default async function SinglePressPage({ params }: PressPageProps) {
                 <FadeIn>
                   <div 
                     className="prose prose-lg max-w-none"
-                    dangerouslySetInnerHTML={{ __html: newsItem.content }}
+                    dangerouslySetInnerHTML={{ __html: post.content }}
                   />
                 </FadeIn>
 

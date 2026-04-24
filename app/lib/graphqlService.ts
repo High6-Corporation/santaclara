@@ -143,6 +143,62 @@ export async function fetchPosts(first: number = 4, after: string | null = null)
   }
 }
 
+// Fetch single post by slug from WordPress GraphQL
+export interface SinglePostResponse {
+  data?: {
+    post: Post;
+  };
+  errors?: Array<{
+    message: string;
+  }>;
+}
+
+export async function fetchPostBySlug(slug: string): Promise<SinglePostResponse> {
+  try {
+    const response = await fetch(WP_GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+          query GetPostBySlug($slug: ID!) {
+            post(id: $slug, idType: SLUG) {
+              id
+              slug
+              title
+              content
+              date
+              excerpt
+              featuredImage {
+                node {
+                  mediaItemUrl
+                  altText
+                }
+              }
+            }
+          }
+        `,
+        variables: {
+          slug,
+        },
+      }),
+      next: { revalidate: 60 }, // Cache for 1 minute
+    });
+
+    if (!response.ok) {
+      console.error('GraphQL request failed:', response.statusText);
+      return { errors: [{ message: 'Failed to fetch post' }] };
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching post:', error);
+    return { errors: [{ message: error instanceof Error ? error.message : 'Unknown error' }] };
+  }
+}
+
 // Fetch product categories from WordPress GraphQL
 export async function getProductCategories(): Promise<ProductCategory[]> {
   try {

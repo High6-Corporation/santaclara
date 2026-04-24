@@ -54,10 +54,10 @@ export function AboutCompanyValuesSection() {
               title="Our Purpose"
               paragraphs={[
                 "To be able to continue improving our products in order to perpetuate the life of the business.",
-                "To cope with the pace and challenges besetting the world's wood industry through updated technology.",
+                "To cope with the pace and challenges facing the world's wood industry through updated technology.",
                 "To have a dynamic organization to carry out the task of innovative undertakings.",
                 "To motivate our people into higher level of commitment in fulfilling our mission.",
-                "To be able to sustain growth & continue improving our human resources, machineries and structural facilities."
+                "To be able to sustain growth and continue improving our human resources, machineries and structural facilities."
               ]}
               showLine={true}
               lineWidth="w-full"
@@ -119,7 +119,7 @@ export function AboutCompanyValuesSection() {
                 </SwiperSlide>
                 
                 {/* Custom Pagination Container - Positioned inside at bottom */}
-                <div className="left-slider-pagination absolute bottom-4 left-0 right-0 flex justify-center space-x-2 z-10"></div>
+                <div className="left-slider-pagination absolute bottom-4 left-0 right-0 flex justify-center space-x-2 z-10 gap-3"></div>
               </Swiper>
             </div>
             
@@ -128,7 +128,7 @@ export function AboutCompanyValuesSection() {
               <ContentBlock
                 title="Superior Quality"
                 paragraphs={[
-                  "SMWPI prides itself in the renowned Santa Clara Marine Plywood. The Santa Clara Marine Plywood brand gained the acceptance of customers because of its unmatched quality. A set of Santa Clara Marine Plywood sample is taken from each batch produced and subjected to the 72-hour continuous boiling test to make sure that it can withstand even the toughest weather conditions. The superior quality of Santa Clara Marine Plywood is also a result of using the right adhesive and correct pressing temperature, and careful manual inspection of each Santa Clara Marine Plywood sheet."
+                  "SMWPI prides itself on the renowned Santa Clara Marine Plywood. The Santa Clara Marine Plywood brand gained the acceptance of customers because of its unmatched quality. A set of Santa Clara Marine Plywood sample is taken from each batch produced and subjected to the 72-hour continuous boiling test to make sure that it can withstand even the toughest weather conditions. The superior quality of Santa Clara Marine Plywood is also a result of using the right adhesive and correct pressing temperature, and careful manual inspection of each Santa Clara Marine Plywood sheet."
                 ]}
                 showLine={true}
                 lineWidth="w-full"
@@ -187,7 +187,7 @@ export function AboutCompanyValuesSection() {
                 </SwiperSlide>
                 
                 {/* Custom Pagination Container - Positioned inside at bottom */}
-                <div className="right-slider-pagination absolute bottom-4 left-0 right-0 flex justify-center space-x-2 z-10"></div>
+                <div className="right-slider-pagination absolute bottom-4 left-0 right-0 flex justify-center space-x-2 z-10 gap-3"></div>
               </Swiper>
             </div>
             
@@ -196,7 +196,7 @@ export function AboutCompanyValuesSection() {
               <ContentBlock
                 title="Authenticity Guarantee"
                 paragraphs={[
-                  "Customers are assured that they receive only the best product through the authenticity markings, such as Santa Clara Marine Plywood stickers with barcode and tracking number, stamped logo and/or laser etching. Customers can track or inquire about a product through SMWPI’s hotline."
+                  "Customers are assured that they receive only the best products through the authenticity markings, such as Santa Clara Marine Plywood stickers with barcode and tracking number, stamped logos and/or laser etching. Customers can track or inquire about a product through SMWPI’s hotline."
                 ]}
                 showLine={true}
                 lineWidth="w-full"
