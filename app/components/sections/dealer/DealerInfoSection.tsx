@@ -64,7 +64,7 @@ export function DealerInfoSection() {
         
         // Group dealers by region
         dealers.forEach((dealer: WPDealer) => {
-          dealer.dealerRegions.nodes.forEach((region: any) => {
+          dealer.dealerRegions.nodes.forEach((region) => {
             const regionName = (region.taxonomyName || region.name || '').toUpperCase();
             if (!regionName) return; // Skip if no region name
             let regionData = transformedData.find(r => r.region === regionName);
@@ -201,21 +201,21 @@ export function DealerInfoSection() {
   const pinDealerOnMap = (dealer: Dealer) => {
     console.log('pinDealerOnMap called for:', dealer.name);
     
-    if (!googleMapRef.current || !infoWindowRef.current || !(window as any).google) {
+    if (!googleMapRef.current || !infoWindowRef.current || !window.google) {
       console.log('Map not ready:', {
         googleMapRef: !!googleMapRef.current,
         infoWindowRef: !!infoWindowRef.current,
-        google: !!(window as any).google
+        google: !!window.google
       });
       return;
     }
     
-    const google = (window as any).google;
+    const google = window.google;
     const map = googleMapRef.current;
     const infoWindow = infoWindowRef.current;
     const geocoder = geocoderRef.current;
     
-    geocoder.geocode({ address: dealer.name }, (results: any, status: any) => {
+    geocoder.geocode({ address: dealer.name }, (results: google.maps.GeocoderResult[], status: google.maps.GeocoderStatus) => {
       if (status === 'OK' && results && results[0]) {
         const location = results[0].geometry.location;
         

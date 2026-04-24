@@ -401,6 +401,7 @@ export interface Dealer {
     nodes: Array<{
       name: string;
       slug: string;
+      taxonomyName?: string;
     }>;
   };
 }
@@ -487,7 +488,7 @@ export async function getDealerRegions(): Promise<string[]> {
     }
 
     const regions = data?.data?.dealerRegions?.nodes || [];
-    const regionNames = regions.map((region: any) => {
+    const regionNames = regions.map((region: { taxonomyName?: string; name?: string }) => {
       // Try different possible field names
       const name = region.taxonomyName || region.name || '';
       return name.toUpperCase();
