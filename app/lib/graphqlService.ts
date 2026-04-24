@@ -61,6 +61,7 @@ export interface Post {
   databaseId: number;
   title: string;
   slug: string;
+  content: string;
   date: string;
   excerpt: string;
   featuredImage?: {
