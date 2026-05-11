@@ -25,39 +25,42 @@ function ReadMore({ isHovered }: { isHovered?: boolean }) {
 function HomepageNewsItem({ item }: { item: NewsItem }) {
   const [isHovered, setIsHovered] = React.useState(false);
 
-  const linkUrl = item.redirectUrl || `/press/${item.slug}`;
-  const isExternalLink = item.redirectUrl && item.redirectUrl.startsWith('http');
-
-  const linkProps = isExternalLink
-    ? { href: linkUrl, target: "_blank", rel: "noopener noreferrer" }
-    : { href: linkUrl };
-
-  return (
-    <Link 
-      {...linkProps}
-      className="block w-full"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+  const content = (
+    <div
+      className="content-stretch flex gap-[16px] md:gap-[24px] items-center relative shrink-0 w-full cursor-pointer"
+      data-name="News Item"
     >
-      <div
-        className="content-stretch flex gap-[16px] md:gap-[24px] items-center relative shrink-0 w-full cursor-pointer"
-        data-name="News Item"
-      >
-        <div className="bg-white h-[80px] md:h-[100px] overflow-clip relative shrink-0 w-[100px] md:w-[160px]" data-name="Image">
-          <div className="absolute inset-0" data-name="Image">
-            <img alt="" className="absolute inset-0 object-cover pointer-events-none size-full" src={item.image} />
-          </div>
-        </div>
-        <div className="content-stretch flex flex-col gap-[8px] items-start not-italic relative shrink-0 text-white flex-1 min-w-0" data-name="NewsItemContent">
-          <div className="content-stretch flex flex-col gap-[8px] items-start not-italic relative shrink-0 text-white w-full" data-name="NewsItemTitle">
-            <p className="font-body font-medium leading-[1.4] lg:leading-[32px] relative shrink-0 text-[16px] md:text-[18px] lg:text-[20px] tracking-[-0.8px] w-full line-clamp-2">{item.title}</p>
-            <p className="font-body font-normal leading-[normal] opacity-70 relative shrink-0 text-[12px] md:text-[14px] tracking-[-0.56px] w-full">{item.date}</p>
-          </div>
-          <ReadMore isHovered={isHovered} />
+      <div className="bg-white h-[80px] md:h-[100px] overflow-clip relative shrink-0 w-[100px] md:w-[160px]" data-name="Image">
+        <div className="absolute inset-0" data-name="Image">
+          <img alt="" className="absolute inset-0 object-cover pointer-events-none size-full" src={item.image} />
         </div>
       </div>
-    </Link>
+      <div className="content-stretch flex flex-col gap-[8px] items-start not-italic relative shrink-0 text-white flex-1 min-w-0" data-name="NewsItemContent">
+        <div className="content-stretch flex flex-col gap-[8px] items-start not-italic relative shrink-0 text-white w-full" data-name="NewsItemTitle">
+          <p className="font-body font-medium leading-[1.4] lg:leading-[32px] relative shrink-0 text-[16px] md:text-[18px] lg:text-[20px] tracking-[-0.8px] w-full line-clamp-2">{item.title}</p>
+          <p className="font-body font-normal leading-[normal] opacity-70 relative shrink-0 text-[12px] md:text-[14px] tracking-[-0.56px] w-full">{item.date}</p>
+        </div>
+        <ReadMore isHovered={isHovered} />
+      </div>
+    </div>
   );
+
+  if (item.redirectUrl) {
+    return (
+      <a
+        href={item.redirectUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block w-full"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return content;
 }
 
 function PressNewsItem({ item }: { item: NewsItem }) {

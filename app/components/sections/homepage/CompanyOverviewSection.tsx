@@ -146,10 +146,17 @@ function OverviewContent() {
   return (
     <div className="font-body font-normal text-[#333] text-[16px] leading-[28px] tracking-[-0.64px]">
       <p className="mb-4">
-        Santa Clara Marine Plywood by SMWPI is the marine plywood brand name synonymous with unmatched quality. Its quality is known to withstand any weather condition, making it the ideal plywood for boat-making, home building, and furniture-making.
+        <Link href="/products" className="text-[#CF2923] hover:underline font-semibold">
+          Santa Clara Marine Plywood
+        </Link>{' '}
+        by SMWPI is the marine plywood brand name synonymous with unmatched quality. Its quality is known to withstand any weather condition, making it the ideal plywood for boat-making, home building, and furniture-making.
       </p>
       <p>
-        Santa Clara Marine Plywood is produced locally from two manufacturing plants in Davao and Agusan. Each sheet of Santa Clara Marine Plywood carries the distinct quality seal after passing SMWPI&apos;s stringent quality assurance process. This ensures all products delivered to local and international clients have met quality and workmanship standards.
+        Santa Clara Marine Plywood is produced locally from two manufacturing plants in Davao and Agusan. Each sheet carries the distinct quality seal after passing SMWPI&apos;s stringent quality assurance process. This ensures all products delivered to local and international clients have met quality and workmanship standards.{' '}
+        <Link href="/about-us" className="text-[#CF2923] hover:underline font-semibold">
+          Learn more about our legacy
+        </Link>
+        .
       </p>
     </div>
   );

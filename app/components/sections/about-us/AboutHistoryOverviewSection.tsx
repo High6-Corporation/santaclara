@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { ContentBlock } from "@/components/blocks/ContentBlock";
 
 export function AboutHistoryOverviewSection() {
@@ -25,7 +26,21 @@ export function AboutHistoryOverviewSection() {
               paragraphs={[
                 "Founded with a commitment to quality and durability, Santa Clara Plywood has become one of the most trusted plywood brands in the Philippines.",
                 "Manufactured by SMWPI (SMWPI Wood Products, Inc.), our plywood products are known for their excellent strength, craftsmanship, and consistent performance.",
-                "From marine-grade panels to ordinary plywood, Santa Clara has been supporting Filipino builders, craftsmen, and homeowners for decades—building a legacy of reliability, one sheet at a time."
+                <span key="history-paragraph">
+                  From{' '}
+                  <Link href="/products/santa-clara-marine-plywood" className="text-[#CF2923] hover:underline font-semibold">
+                    marine-grade panels
+                  </Link>{' '}
+                  to{' '}
+                  <Link href="/products/santa-clara-ordinary-plywood" className="text-[#CF2923] hover:underline font-semibold">
+                    ordinary plywood
+                  </Link>
+                  , Santa Clara has been supporting Filipino builders, craftsmen, and homeowners for decades—building a legacy of reliability, one sheet at a time.{' '}
+                  <Link href="/products" className="text-[#CF2923] hover:underline font-semibold">
+                    Explore our full product range
+                  </Link>
+                  .
+                </span>
               ]}
               showLine={true}
               lineWidth="w-full"

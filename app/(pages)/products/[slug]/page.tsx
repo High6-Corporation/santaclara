@@ -1,16 +1,25 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { ProductSection } from "@/components/sections/products/ProductSection";
-import { getProductCategories, getProductCategoryBySlug, getProductsByCategorySlug } from "@/lib/graphqlService";
+import { getProductCategories, getProductCategoryBySlug, getProductsByCategorySlug, fetchProductCategorySEOBySlug, rankMathSEOToMetadata } from "@/lib/graphqlService";
 import { ProductSubpageBanner } from "@/app/components/globals/ProductSubpageBanner";
 import { CtaSection } from "@/app/components/globals/CtaSection";
 import { FadeIn } from "@/app/components/ui/FadeIn";
+import { StructuredData } from "@/app/components/seo/StructuredData";
+import { breadcrumbSchema, productSchema } from "@/app/lib/schema";
 
 interface ProductDetailPageProps {
   params: Promise<{
     slug: string;
   }>;
+}
+
+export async function generateMetadata({ params }: ProductDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const seo = await fetchProductCategorySEOBySlug(slug);
+  return rankMathSEOToMetadata(seo);
 }
 
 export async function generateStaticParams() {
@@ -40,17 +49,38 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                       category.productCategoryBanner?.featuredImage?.node?.sourceUrl ||
                       "/images/category-listing-bg.jpg";
 
+  const categoryUrl = `https://santaclaraplywood.com/products/${slug}`;
+
   return (
-    <div className="bg-white flex justify-center min-h-screen w-full">
-      <div className="relative w-full">
-        <Header />
-        <FadeIn direction="none">
-          <ProductSubpageBanner 
-            title={category.name}
-            description={category.description}
-            backgroundImage={bannerImage}
-          />
-        </FadeIn>
+    <>
+      <StructuredData
+        data={[
+          breadcrumbSchema([
+            { name: 'Home', url: 'https://santaclaraplywood.com/' },
+            { name: 'Products', url: 'https://santaclaraplywood.com/products' },
+            { name: category.name, url: categoryUrl },
+          ]),
+          ...products.map((product) =>
+            productSchema({
+              name: product.title,
+              description: product.content.replace(/<[^>]*>/g, '').slice(0, 160),
+              image: product.productGalleries?.imageAndVideoGalleries?.[0]?.file?.node?.sourceUrl || '/images/santa-clara-logo.png',
+              category: category.name,
+              url: `${categoryUrl}#${product.slug}`,
+            })
+          ),
+        ]}
+      />
+      <div className="bg-white flex justify-center min-h-screen w-full">
+        <div className="relative w-full">
+          <Header />
+          <FadeIn direction="none">
+            <ProductSubpageBanner
+              title={category.name}
+              description={category.description}
+              backgroundImage={bannerImage}
+            />
+          </FadeIn>
 
         {/* Product Sections - Alternating light and dark variants */}
         {products.map((product, index) => {
@@ -76,5 +106,6 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         <Footer />
       </div>
     </div>
+  </>
   );
 }

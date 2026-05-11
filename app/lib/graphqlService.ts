@@ -505,3 +505,286 @@ export async function getDealerRegions(): Promise<string[]> {
     return [];
   }
 }
+
+// ============================================================
+// Rank Math SEO Integration
+// ============================================================
+
+import type { Metadata } from 'next';
+
+export interface RankMathSEO {
+  title: string;
+  description: string;
+  canonicalUrl: string;
+  focusKeywords: string[] | null;
+  breadcrumbTitle: string;
+  openGraph: {
+    title: string;
+    description: string;
+    url: string;
+    type: string;
+    image: {
+      url: string;
+    } | null;
+  } | null;
+}
+
+export interface PageSEOResponse {
+  data?: {
+    page: {
+      seo: RankMathSEO;
+    } | null;
+  };
+  errors?: Array<{ message: string }>;
+}
+
+export interface PostSEOResponse {
+  data?: {
+    post: {
+      seo: RankMathSEO;
+    } | null;
+  };
+  errors?: Array<{ message: string }>;
+}
+
+export interface ProductCategorySEOResponse {
+  data?: {
+    productCategory: {
+      seo: RankMathSEO;
+    } | null;
+  };
+  errors?: Array<{ message: string }>;
+}
+
+export interface AllPagesSEOResponse {
+  data?: {
+    pages: {
+      nodes: Array<{
+        slug: string;
+        uri: string;
+        seo: RankMathSEO;
+      }>;
+    };
+  };
+  errors?: Array<{ message: string }>;
+}
+
+// Fetch all pages SEO (bulk query)
+export async function fetchAllPagesSEO(): Promise<AllPagesSEOResponse> {
+  try {
+    const response = await fetch(WP_GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        queryId: '4d45c72014d814b4f254d5ecea5caec5fddb44df5f54f731a052fbe19d0f35ad',
+      }),
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    });
+
+    if (!response.ok) {
+      console.error('Failed to fetch all pages SEO:', response.statusText);
+      return { errors: [{ message: 'Failed to fetch all pages SEO' }] };
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching all pages SEO:', error);
+    return { errors: [{ message: error instanceof Error ? error.message : 'Unknown error' }] };
+  }
+}
+
+// Fetch page SEO by URI
+export async function fetchPageSEOByUri(uri: string): Promise<RankMathSEO | null> {
+  try {
+    const response = await fetch(WP_GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+          query GetPageSEOByUri($uri: ID!) {
+            page(id: $uri, idType: URI) {
+              seo {
+                title
+                description
+                canonicalUrl
+                focusKeywords
+                breadcrumbTitle
+                openGraph {
+                  title
+                  description
+                  url
+                  type
+                  image {
+                    url
+                  }
+                }
+              }
+            }
+          }
+        `,
+        variables: { uri },
+      }),
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      console.error('Failed to fetch page SEO:', response.statusText);
+      return null;
+    }
+
+    const data: PageSEOResponse = await response.json();
+    
+    if (data.errors) {
+      console.error('GraphQL errors:', JSON.stringify(data.errors, null, 2));
+      return null;
+    }
+
+    return data.data?.page?.seo || null;
+  } catch (error) {
+    console.error('Error fetching page SEO:', error);
+    return null;
+  }
+}
+
+// Fetch post SEO by slug
+export async function fetchPostSEOBySlug(slug: string): Promise<RankMathSEO | null> {
+  try {
+    const response = await fetch(WP_GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+          query GetPostSEOBySlug($slug: ID!) {
+            post(id: $slug, idType: SLUG) {
+              seo {
+                title
+                description
+                canonicalUrl
+                focusKeywords
+                breadcrumbTitle
+                openGraph {
+                  title
+                  description
+                  url
+                  type
+                  image {
+                    url
+                  }
+                }
+              }
+            }
+          }
+        `,
+        variables: { slug },
+      }),
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      console.error('Failed to fetch post SEO:', response.statusText);
+      return null;
+    }
+
+    const data: PostSEOResponse = await response.json();
+    
+    if (data.errors) {
+      console.error('GraphQL errors:', JSON.stringify(data.errors, null, 2));
+      return null;
+    }
+
+    return data.data?.post?.seo || null;
+  } catch (error) {
+    console.error('Error fetching post SEO:', error);
+    return null;
+  }
+}
+
+// Fetch product category SEO by slug
+export async function fetchProductCategorySEOBySlug(slug: string): Promise<RankMathSEO | null> {
+  try {
+    const response = await fetch(WP_GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+          query GetProductCategorySEOBySlug($slug: ID!) {
+            productCategory(id: $slug, idType: SLUG) {
+              seo {
+                title
+                description
+                canonicalUrl
+                focusKeywords
+                breadcrumbTitle
+                openGraph {
+                  title
+                  description
+                  url
+                  type
+                  image {
+                    url
+                  }
+                }
+              }
+            }
+          }
+        `,
+        variables: { slug },
+      }),
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      console.error('Failed to fetch product category SEO:', response.statusText);
+      return null;
+    }
+
+    const data: ProductCategorySEOResponse = await response.json();
+    
+    if (data.errors) {
+      console.error('GraphQL errors:', JSON.stringify(data.errors, null, 2));
+      return null;
+    }
+
+    return data.data?.productCategory?.seo || null;
+  } catch (error) {
+    console.error('Error fetching product category SEO:', error);
+    return null;
+  }
+}
+
+// Convert Rank Math SEO data to Next.js Metadata
+export function rankMathSEOToMetadata(seo: RankMathSEO | null): Metadata {
+  if (!seo) {
+    return {};
+  }
+
+  const metadata: Metadata = {
+    title: seo.title || undefined,
+    description: seo.description || undefined,
+    keywords: seo.focusKeywords || undefined,
+    alternates: {
+      canonical: seo.canonicalUrl || undefined,
+    },
+  };
+
+  if (seo.openGraph) {
+    metadata.openGraph = {
+      title: seo.openGraph.title || seo.title || undefined,
+      description: seo.openGraph.description || seo.description || undefined,
+      url: seo.openGraph.url || seo.canonicalUrl || undefined,
+      type: (seo.openGraph.type as 'website' | 'article') || 'website',
+      images: seo.openGraph.image?.url ? [{ url: seo.openGraph.image.url }] : undefined,
+    };
+  }
+
+  return metadata;
+}

@@ -37,6 +37,7 @@ export function ProductSubpageBanner({
             badge={badge}
             title={title}
             paragraphs={paragraphs}
+            titleTag="h1"
             primaryButton={showButton ? {
               text: buttonText,
               href: buttonHref,

@@ -105,11 +105,10 @@ export function BlogPostsSection() {
                 return (
                   <PressCard
                     key={post.id}
-                    slug={post.slug}
                     title={post.title}
                     date={post.date}
                     image={post.featuredImage?.node.mediaItemUrl || ''}
-                    redirectUrl={redirectUrl || undefined}
+                    redirectUrl={redirectUrl || ''}
                   />
                 );
               })}

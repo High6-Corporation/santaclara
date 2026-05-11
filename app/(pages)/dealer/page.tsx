@@ -1,13 +1,29 @@
+import type { Metadata } from "next";
 import Header from "@/app/components/layout/Header";
 import Footer from "@/app/components/layout/Footer";
 import { SubpageBanner } from "@/app/components/globals/SubpageBanner";
 import { CtaSection } from "@/app/components/globals/CtaSection";
 import { DealerInfoSection } from "@/app/components/sections/dealer/DealerInfoSection";
 import { FadeIn } from "@/app/components/ui/FadeIn";
+import { fetchPageSEOByUri, rankMathSEOToMetadata } from "@/lib/graphqlService";
+import { StructuredData } from "@/app/components/seo/StructuredData";
+import { breadcrumbSchema } from "@/app/lib/schema";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await fetchPageSEOByUri('/dealers/');
+  return rankMathSEOToMetadata(seo);
+}
 
 export default function DealerPage() {
   return (
-    <main className="bg-white min-h-screen w-full overflow-x-hidden">
+    <>
+      <StructuredData
+        data={breadcrumbSchema([
+          { name: 'Home', url: 'https://santaclaraplywood.com/' },
+          { name: 'Dealers', url: 'https://santaclaraplywood.com/dealers' },
+        ])}
+      />
+      <main className="bg-white min-h-screen w-full overflow-x-hidden">
       <Header />
       <FadeIn direction="none">
         <SubpageBanner 
@@ -23,5 +39,6 @@ export default function DealerPage() {
       </FadeIn>
       <Footer />
     </main>
+  </>
   );
 }

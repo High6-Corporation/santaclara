@@ -14,7 +14,7 @@ interface ContentBlockProps {
   title?: string;
   titleImage?: string;
   titleSuffix?: string;
-  paragraphs?: string[];
+  paragraphs?: React.ReactNode[];
   primaryButton?: ButtonConfig;
   secondaryButton?: ButtonConfig;
   showLine?: boolean;
@@ -33,6 +33,7 @@ interface ContentBlockProps {
   removeParagraphSpacing?: boolean;
   bulletIcon?: string;
   paragraphMarginTop?: string;
+  titleTag?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 }
 
 export function ContentBlock({
@@ -60,6 +61,7 @@ export function ContentBlock({
   removeParagraphSpacing = false,
   bulletIcon,
   paragraphMarginTop,
+  titleTag: TitleTag = 'h2',
 }: ContentBlockProps) {
   const alignClass =
     align === "center" ? "text-center items-center" : "text-left items-start";
@@ -82,7 +84,7 @@ export function ContentBlock({
           </h4>
         )}
         {(title || titleImage || titleSuffix) && (
-          <h2
+          <TitleTag
             className={`${titleSize} leading-[1.1] ${titleTracking} ${titleColor} flex items-center justify-center gap-2 font-body`}
           >
             {title}
@@ -94,7 +96,7 @@ export function ContentBlock({
               />
             )}
             {titleSuffix}
-          </h2>
+          </TitleTag>
         )}
       </div>
 
