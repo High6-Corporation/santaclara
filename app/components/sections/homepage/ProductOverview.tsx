@@ -19,9 +19,6 @@ export function ProductOverview() {
         <div className="flex flex-col gap-[40px] items-start justify-center h-full">
           {/* Title Section */}
           <div className="flex flex-col gap-[24px] items-start w-full lg:max-w-[682px]">
-            <div className="inline-flex items-center justify-center px-[20px] py-[14px] rounded-[100px] border border-white">
-              <span className="font-body text-[14px] text-white tracking-[-0.14px] whitespace-nowrap">Eucalyptus</span>
-            </div>
             <h2 className="font-body text-[36px] md:text-[48px] lg:text-[60px] text-white tracking-[-2.4px]">
               Building Hope with Yellow Boat of Hope Foundation
             </h2>

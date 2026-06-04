@@ -8,7 +8,6 @@ import { AboutCompanyOverviewSection } from "@/components/sections/about-us/Abou
 import { AboutHistoryOverviewSection } from "@/components/sections/about-us/AboutHistoryOverviewSection";
 import { AboutMissionVisionSection } from "@/components/sections/about-us/AboutMissionVisionSection";
 import { AboutCompanyValuesSection } from "@/components/sections/about-us/AboutCompanyValuesSection";
-import { AboutTrustSignalsSection } from "@/components/sections/about-us/AboutTrustSignalsSection";
 import { CtaSection } from "@/app/components/globals/CtaSection";
 import { FadeIn } from "@/app/components/ui/FadeIn";
 import { fetchPageSEOByUri, rankMathSEOToMetadata } from "@/lib/graphqlService";
@@ -46,9 +45,6 @@ export default function AboutPage() {
         </FadeIn>
         <FadeIn>
           <AboutCompanyValuesSection />
-        </FadeIn>
-        <FadeIn>
-          <AboutTrustSignalsSection />
         </FadeIn>
         <FadeIn>
           <CtaSection/>
