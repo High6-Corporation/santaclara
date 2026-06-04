@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import BackToTop from "./components/globals/BackToTop";
+import { Preloader } from "./components/globals/Preloader";
 import { StructuredData } from "./components/seo/StructuredData";
 import {
   organizationSchema,
@@ -64,8 +65,10 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} antialiased`}>
-        {children}
-        <BackToTop />
+        <Preloader>
+          {children}
+          <BackToTop />
+        </Preloader>
       </body>
     </html>
   );

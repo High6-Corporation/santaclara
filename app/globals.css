@@ -123,3 +123,75 @@
   }
 }
 
+/* Preloader Exit Animations */
+@keyframes curtainHorizontalExit {
+  0% {
+    clip-path: inset(0 0 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 50% 0), inset(50% 0 0 0);
+  }
+}
+
+@keyframes curtainVerticalExit {
+  0% {
+    clip-path: inset(0 0 0 0);
+  }
+  100% {
+    clip-path: inset(0 50% 0 0), inset(0 0 0 50%);
+  }
+}
+
+@keyframes diagonalWipeExit {
+  0% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  100% {
+    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+  }
+}
+
+@keyframes circleRevealExit {
+  0% {
+    clip-path: circle(75% at 50% 50%);
+  }
+  100% {
+    clip-path: circle(0% at 50% 50%);
+  }
+}
+
+@keyframes dissolveExit {
+  0% {
+    opacity: 1;
+    filter: none;
+  }
+  50% {
+    opacity: 0.5;
+    filter: url(#pixelate);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(10px);
+  }
+}
+
+.curtain-horizontal-exit {
+  animation: curtainHorizontalExit 1s ease-in-out forwards;
+}
+
+.curtain-vertical-exit {
+  animation: curtainVerticalExit 1s ease-in-out forwards;
+}
+
+.diagonal-wipe-exit {
+  animation: diagonalWipeExit 0.8s ease-in-out forwards;
+}
+
+.circle-reveal-exit {
+  animation: circleRevealExit 0.9s ease-in-out forwards;
+}
+
+.dissolve-exit {
+  animation: dissolveExit 0.8s ease-in-out forwards;
+}
+

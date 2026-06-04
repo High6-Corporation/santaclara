@@ -197,10 +197,61 @@ export function DealerInfoSection() {
     }
   }, []);
   
+  // Helper to place a marker and open the InfoWindow at a given position
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const placeMarker = (position: any, dealer: Dealer) => {
+    const google = window.google;
+    const map = googleMapRef.current;
+    const infoWindow = infoWindowRef.current;
+    if (!map || !infoWindow || !google) return;
+
+    if (markerRef.current) {
+      markerRef.current.setMap(null);
+    }
+
+    const marker = new google.maps.Marker({
+      map,
+      position,
+      title: dealer.name,
+      animation: google.maps.Animation.DROP,
+    });
+
+    markerRef.current = marker;
+    map.setCenter(position);
+
+    marker.addListener('click', () => {
+      infoWindow.open(map, marker);
+    });
+
+    const contentString = `
+      <div style="font-family: Roboto, Arial, sans-serif; padding: 0; margin: 0; max-width: 300px;">
+        <div style="font-size: 16px; font-weight: 500; color: #202124; padding: 12px 16px 4px 16px; margin: 0;">
+          ${dealer.name}
+        </div>
+        <div style="font-size: 14px; color: #70757a; padding: 0 16px 12px 16px; margin: 0; line-height: 1.4;">
+          ${dealer.address}
+        </div>
+        <a 
+          href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dealer.name + ', ' + dealer.address)}" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          style="display: block; font-size: 14px; color: #1a73e8; text-decoration: none; padding: 0 16px 12px 16px; font-weight: 500; border: none !important; outline: none !important; box-shadow: none !important;"
+          onmouseover="this.style.textDecoration='underline'" 
+          onmouseout="this.style.textDecoration='none'"
+        >
+          View on Google Maps
+        </a>
+      </div>
+    `;
+
+    infoWindow.setContent(contentString);
+    infoWindow.open(map, marker);
+  };
+
   // Function to pin dealer on map
   const pinDealerOnMap = (dealer: Dealer) => {
     console.log('pinDealerOnMap called for:', dealer.name);
-    
+
     if (!googleMapRef.current || !infoWindowRef.current || !window.google) {
       console.log('Map not ready:', {
         googleMapRef: !!googleMapRef.current,
@@ -209,57 +260,25 @@ export function DealerInfoSection() {
       });
       return;
     }
-    
+
     const google = window.google;
-    const map = googleMapRef.current;
-    const infoWindow = infoWindowRef.current;
+
+    // Priority 1: Use pre-extracted coordinates from the WordPress Google Maps URL
+    if (dealer.coordinates) {
+      const position = new google.maps.LatLng(dealer.coordinates.lat, dealer.coordinates.lng);
+      placeMarker(position, dealer);
+      return;
+    }
+
+    // Priority 2: Geocode using name + address for better accuracy
+    const geocodeQuery = [dealer.name, dealer.address].filter(Boolean).join(', ');
     const geocoder = geocoderRef.current;
-    
-    geocoder.geocode({ address: dealer.name }, (results: google.maps.GeocoderResult[], status: google.maps.GeocoderStatus) => {
+
+    geocoder.geocode({ address: geocodeQuery }, (results: google.maps.GeocoderResult[], status: google.maps.GeocoderStatus) => {
       if (status === 'OK' && results && results[0]) {
-        const location = results[0].geometry.location;
-        
-        if (markerRef.current) {
-          markerRef.current.setMap(null);
-        }
-        
-        const marker = new google.maps.Marker({
-          map: map,
-          position: location,
-          title: dealer.name,
-          animation: google.maps.Animation.DROP,
-        });
-        
-        markerRef.current = marker;
-        map.setCenter(location);
-        
-        marker.addListener('click', () => {
-          infoWindow.open(map, marker);
-        });
-        
-        const contentString = `
-          <div style="font-family: Roboto, Arial, sans-serif; padding: 0; margin: 0; max-width: 300px;">
-            <div style="font-size: 16px; font-weight: 500; color: #202124; padding: 12px 16px 4px 16px; margin: 0;">
-              ${dealer.name}
-            </div>
-            <div style="font-size: 14px; color: #70757a; padding: 0 16px 12px 16px; margin: 0; line-height: 1.4;">
-              ${dealer.address}
-            </div>
-            <a 
-              href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dealer.name + ', ' + dealer.address)}" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              style="display: block; font-size: 14px; color: #1a73e8; text-decoration: none; padding: 0 16px 12px 16px; font-weight: 500; border: none !important; outline: none !important; box-shadow: none !important;"
-              onmouseover="this.style.textDecoration='underline'" 
-              onmouseout="this.style.textDecoration='none'"
-            >
-              View on Google Maps
-            </a>
-          </div>
-        `;
-        
-        infoWindow.setContent(contentString);
-        infoWindow.open(map, marker);
+        placeMarker(results[0].geometry.location, dealer);
+      } else {
+        console.warn(`Geocoding failed for dealer "${dealer.name}" with status: ${status}`);
       }
     });
   };
