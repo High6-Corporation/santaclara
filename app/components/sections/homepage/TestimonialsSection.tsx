@@ -1,3 +1,7 @@
+"use client";
+
+import { useScrollAnimation } from "@/app/hooks/useScrollAnimation";
+
 interface Testimonial {
   title: string;
   quote: string;
@@ -28,13 +32,13 @@ const testimonials: Testimonial[] = [
 
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
-    <div className="bg-[#f5f6fa] relative rounded-[20px] w-full md:w-[calc(50%-10px)] xl:w-full max-w-[413px] flex flex-col border border-[#cdcdcd]">
+    <div className="bg-[#f5f6fa] relative rounded-[20px] w-full md:w-[calc(50%-10px)] xl:w-full flex flex-col border border-[#cdcdcd]">
       <div className="px-[20px] py-[41.5px] flex flex-col gap-[16px] flex-1">
         <p className="font-body font-medium leading-[1.3] lg:leading-[27px] text-[20px] md:text-[24px] text-black tracking-[-0.24px]">
           {testimonial.title}
         </p>
         <img src="/images/rating-stars.svg" alt="5 star rating" className="w-[144px] h-[24px]" />
-        <p className="font-body font-normal leading-[1.5] lg:leading-[27px] text-[14px] md:text-[16px] text-black tracking-[-0.64px] flex-1">
+        <p className="font-body font-normal leading-[1.5] lg:leading-[27px] text-[14px] md:text-[16px] text-black tracking-[-0.64px] flex-1 min-h-[84px]">
           {testimonial.quote}
         </p>
       </div>
@@ -49,12 +53,23 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
 }
 
 export function TestimonialsSection() {
+  const { ref: headingRef, isVisible: headingVisible } = useScrollAnimation(0.2);
+  const { ref: cardsRef, isVisible: cardsVisible } = useScrollAnimation(0.1);
+
   return (
     <section id="testimonials" className="relative w-full bg-[rgba(4,33,123,0.04)] py-[100px]">
       <div className="max-w-[1440px] mx-auto px-[5%] lg:px-[60px]">
         <div className="flex flex-col gap-[40px] items-center w-full">
           {/* Title */}
-          <div className="flex flex-col gap-[24px] items-start w-full">
+          <div 
+            ref={headingRef}
+            className="flex flex-col gap-[24px] items-start w-full"
+            style={{
+              opacity: headingVisible ? 1 : 0,
+              transform: headingVisible ? "translateY(0)" : "translateY(30px)",
+              transition: "opacity 0.8s ease-out 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s",
+            }}
+          >
             <div className="inline-flex items-center justify-center px-[20px] py-[14px] rounded-[100px] border border-black">
               <span className="font-body font-normal text-[14px] text-black tracking-[-0.14px] whitespace-nowrap">Testimonials</span>
             </div>
@@ -63,9 +78,19 @@ export function TestimonialsSection() {
           </div>
 
           {/* Testimonial Grid */}
-          <div className="flex flex-col md:flex-row md:flex-wrap xl:flex-nowrap justify-center gap-[20px] items-stretch w-full">
+          <div ref={cardsRef} className="flex flex-col md:flex-row md:flex-wrap xl:flex-nowrap gap-[20px] items-stretch w-full">
             {testimonials.map((testimonial, index) => (
-              <TestimonialCard key={index} testimonial={testimonial} />
+              <div
+                key={index}
+                className="flex-1 flex flex-col"
+                style={{
+                  opacity: cardsVisible ? 1 : 0,
+                  transform: cardsVisible ? "translateY(0) scale(1)" : "translateY(60px) scale(0.9)",
+                  transition: `opacity 0.8s ease-out ${0.2 + index * 0.15}s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${0.2 + index * 0.15}s`,
+                }}
+              >
+                <TestimonialCard testimonial={testimonial} />
+              </div>
             ))}
           </div>
         </div>

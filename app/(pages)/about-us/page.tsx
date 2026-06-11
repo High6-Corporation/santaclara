@@ -9,7 +9,6 @@ import { AboutHistoryOverviewSection } from "@/components/sections/about-us/Abou
 import { AboutMissionVisionSection } from "@/components/sections/about-us/AboutMissionVisionSection";
 import { AboutCompanyValuesSection } from "@/components/sections/about-us/AboutCompanyValuesSection";
 import { CtaSection } from "@/app/components/globals/CtaSection";
-import { FadeIn } from "@/app/components/ui/FadeIn";
 import { fetchPageSEOByUri, rankMathSEOToMetadata } from "@/lib/graphqlService";
 import { StructuredData } from "@/app/components/seo/StructuredData";
 import { breadcrumbSchema } from "@/app/lib/schema";
@@ -31,24 +30,12 @@ export default function AboutPage() {
       <div className="bg-white flex justify-center min-h-screen w-full">
       <div className="relative w-full">
         <Header />
-        <FadeIn direction="none">
-          <SubpageBanner title="About Us" backgroundImage="/images/about_us_banner.jpg" />
-        </FadeIn>
-        <FadeIn>
-          <AboutCompanyOverviewSection />
-        </FadeIn>
-        <FadeIn>
-          <AboutHistoryOverviewSection />
-        </FadeIn>
-        <FadeIn>
-          <AboutMissionVisionSection />
-        </FadeIn>
-        <FadeIn>
-          <AboutCompanyValuesSection />
-        </FadeIn>
-        <FadeIn>
-          <CtaSection/>
-        </FadeIn>
+        <SubpageBanner title="About Us" backgroundImage="/images/about_us_banner.jpg" />
+        <AboutCompanyOverviewSection />
+        <AboutHistoryOverviewSection />
+        <AboutMissionVisionSection />
+        <AboutCompanyValuesSection />
+        <CtaSection/>
         <Footer />
       </div>
     </div>

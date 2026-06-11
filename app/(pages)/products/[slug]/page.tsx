@@ -6,7 +6,6 @@ import { ProductSection } from "@/components/sections/products/ProductSection";
 import { getProductCategories, getProductCategoryBySlug, getProductsByCategorySlug, fetchProductCategorySEOBySlug, rankMathSEOToMetadata } from "@/lib/graphqlService";
 import { ProductSubpageBanner } from "@/app/components/globals/ProductSubpageBanner";
 import { CtaSection } from "@/app/components/globals/CtaSection";
-import { FadeIn } from "@/app/components/ui/FadeIn";
 import { StructuredData } from "@/app/components/seo/StructuredData";
 import { breadcrumbSchema, productSchema } from "@/app/lib/schema";
 
@@ -74,13 +73,11 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
       <div className="bg-white flex justify-center min-h-screen w-full">
         <div className="relative w-full">
           <Header />
-          <FadeIn direction="none">
-            <ProductSubpageBanner
-              title={category.name}
-              description={category.description}
-              backgroundImage={bannerImage}
-            />
-          </FadeIn>
+          <ProductSubpageBanner
+            title={category.name}
+            description={category.description}
+            backgroundImage={bannerImage}
+          />
 
         {/* Product Sections - Alternating light and dark variants */}
         {products.map((product, index) => {
@@ -88,20 +85,17 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
           const variant = index % 2 === 0 ? "light" : "dark";
 
           return (
-            <FadeIn key={product.id}>
-              <ProductSection
-                product={product}
-                variant={variant}
-                index={index}
-              />
-            </FadeIn>
+            <ProductSection
+              key={product.id}
+              product={product}
+              variant={variant}
+              index={index}
+            />
           );
         })}
 
         {/* CTA Section */}
-        <FadeIn>
-          <CtaSection />
-        </FadeIn>
+        <CtaSection />
         
         <Footer />
       </div>

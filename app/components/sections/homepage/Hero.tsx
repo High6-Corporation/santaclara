@@ -2,8 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useScrollAnimation } from "@/app/hooks/useScrollAnimation";
 
 export function Hero() {
+  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation(0.1);
+  const { ref: testimonialRef, isVisible: testimonialVisible } = useScrollAnimation(0.1);
+
   return (
     <section className="relative w-full bg-black lg:h-[785px] lg:max-h-[785px] min-h-[600px] overflow-hidden">
       {/* Background Image */}
@@ -20,23 +24,53 @@ export function Hero() {
       <div className="relative max-w-[1440px] mx-auto px-[5%] lg:px-[60px] lg:h-full">
         <div className="flex flex-col lg:flex-row gap-[80px] items-start lg:items-end justify-between lg:h-full pt-[150px] lg:pt-[200px] pb-[50px] lg:pb-[100px]">
           {/* Left Column - Hero Text & CTA */}
-          <div className="flex flex-col gap-[40px] items-start lg:w-[682px] flex-shrink">
+          <div ref={contentRef} className="flex flex-col gap-[40px] items-start lg:w-[682px] flex-shrink">
             {/* Hero Text */}
             <div className="content-stretch flex flex-col gap-[12px] items-start text-white">
-              <h1 className="text-[42px] md:text-[72px] lg:text-[84px] leading-[1.1] lg:leading-[90px] tracking-[-0.84px] font-body">
+              <h1 
+                className="text-[42px] md:text-[72px] lg:text-[84px] leading-[1.1] lg:leading-[90px] tracking-[-0.84px] font-body"
+                style={{
+                  opacity: contentVisible ? 1 : 0,
+                  transform: contentVisible ? "translateY(0)" : "translateY(40px)",
+                  transition: "opacity 0.8s ease-out 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s",
+                }}
+              >
                 A Proud<br />Filipino Product
               </h1>
-              <p className="text-[20px] md:text-[24px] leading-[1.4] lg:leading-[36px] tracking-[-0.24px] font-body max-w-[686px]">
+              <p 
+                className="text-[20px] md:text-[24px] leading-[1.4] lg:leading-[36px] tracking-[-0.24px] font-body max-w-[686px]"
+                style={{
+                  opacity: contentVisible ? 1 : 0,
+                  transform: contentVisible ? "translateY(0)" : "translateY(30px)",
+                  transition: "opacity 0.8s ease-out 0.4s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s",
+                }}
+              >
                 Santa Clara Marine Plywood is a proud Filipino product and the country&apos;s most trusted marine-grade plywood brand.
               </p>
             </div>
 
             {/* CTA Button */}
-            <HeroCTAButton />
+            <div
+              style={{
+                opacity: contentVisible ? 1 : 0,
+                transform: contentVisible ? "translateY(0)" : "translateY(30px)",
+                transition: "opacity 0.8s ease-out 0.6s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s",
+              }}
+            >
+              <HeroCTAButton />
+            </div>
           </div>
 
           {/* Right Column - Testimonial Card */}
-          <div className="flex-shrink-0">
+          <div 
+            ref={testimonialRef}
+            className="flex-shrink-0"
+            style={{
+              opacity: testimonialVisible ? 1 : 0,
+              transform: testimonialVisible ? "translateX(0)" : "translateX(60px)",
+              transition: "opacity 1s ease-out 0.5s, transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.5s",
+            }}
+          >
             <HeroTestimonialCard />
           </div>
         </div>

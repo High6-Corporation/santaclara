@@ -5,6 +5,7 @@ import Link from "next/link";
 import { NewsListing } from "@/app/components/globals/NewsListing";
 import { NewsItem } from "@/app/lib/data/newsData";
 import { fetchPosts, Post, extractUrlFromExcerpt } from "@/lib/graphqlService";
+import { useScrollAnimation } from "@/app/hooks/useScrollAnimation";
 
 function SectionBadge() {
   return (
@@ -63,7 +64,7 @@ function NewsDescription() {
 
 function NewsContentContainer() {
   return (
-    <div className="content-stretch flex flex-col gap-[40px] items-start relative shrink-0 w-full lg:w-[45%]" data-name="NewsContentContainer">
+    <div className="content-stretch flex flex-col gap-[40px] items-start relative shrink-0 w-full" data-name="NewsContentContainer">
       <NewsTitle />
       <NewsDescription />
     </div>
@@ -93,6 +94,8 @@ function convertPostToNewsItem(post: Post): NewsItem {
 export function NewsSection() {
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation(0.2);
+  const { ref: listingRef, isVisible: listingVisible } = useScrollAnimation(0.1);
 
   useEffect(() => {
     async function loadPosts() {
@@ -117,14 +120,34 @@ export function NewsSection() {
     <section className="relative w-full bg-[#020718] py-[124px]">
       <div className="max-w-[1440px] mx-auto px-[5%] lg:px-[60px]">
         <div className="content-stretch flex flex-col lg:flex-row justify-between items-start gap-[60px] lg:gap-[40px] relative shrink-0 w-full" data-name="NewsContainer">
-          <NewsContentContainer />
-          {isLoading ? (
-            <div className="flex items-center justify-center w-full lg:w-[50%] h-[200px]">
-              <div className="text-white">Loading...</div>
-            </div>
-          ) : (
-            <NewsListing items={newsItems} maxItems={3} variant="homepage" />
-          )}
+          <div
+            ref={contentRef}
+            className="w-full lg:w-[45%]"
+            style={{
+              opacity: contentVisible ? 1 : 0,
+              transform: contentVisible ? "translateY(0)" : "translateY(40px)",
+              transition: "opacity 0.8s ease-out 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s",
+            }}
+          >
+            <NewsContentContainer />
+          </div>
+          <div
+            ref={listingRef}
+            className="w-full lg:w-[50%]"
+            style={{
+              opacity: listingVisible ? 1 : 0,
+              transform: listingVisible ? "translateY(0)" : "translateY(50px)",
+              transition: "opacity 0.8s ease-out 0.4s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s",
+            }}
+          >
+            {isLoading ? (
+              <div className="flex items-center justify-center w-full h-[200px]">
+                <div className="text-white">Loading...</div>
+              </div>
+            ) : (
+              <NewsListing items={newsItems} maxItems={3} variant="homepage" />
+            )}
+          </div>
         </div>
       </div>
     </section>

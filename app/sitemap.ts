@@ -1,11 +1,14 @@
 import type { MetadataRoute } from 'next';
-import { getProductCategories } from '@/lib/graphqlService';
+import { getProductCategories, getGalleries } from '@/lib/graphqlService';
 
 const BASE_URL = 'https://santaclaraplywood.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Fetch dynamic product categories
-  const categories = await getProductCategories();
+  // Fetch dynamic product categories and galleries
+  const [categories, galleries] = await Promise.all([
+    getProductCategories(),
+    getGalleries(),
+  ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -39,6 +42,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
+      url: `${BASE_URL}/gallery`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
       url: `${BASE_URL}/contact-us`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
@@ -46,12 +55,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const dynamicRoutes: MetadataRoute.Sitemap = categories.map((category) => ({
-    url: `${BASE_URL}/products/${category.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.8,
-  }));
+  const dynamicRoutes: MetadataRoute.Sitemap = [
+    ...categories.map((category) => ({
+      url: `${BASE_URL}/products/${category.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    })),
+    ...galleries.map((gallery) => ({
+      url: `${BASE_URL}/gallery/${gallery.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    })),
+  ];
 
   return [...staticRoutes, ...dynamicRoutes];
 }

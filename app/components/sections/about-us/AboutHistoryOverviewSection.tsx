@@ -2,14 +2,27 @@
 
 import Link from "next/link";
 import { ContentBlock } from "@/components/blocks/ContentBlock";
+import { useScrollAnimation } from "@/app/hooks/useScrollAnimation";
 
 export function AboutHistoryOverviewSection() {
+  const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation(0.1);
+  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation(0.2);
+
   return (
     <section className="relative w-full bg-[#04217B] py-[100px] overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-[5%] lg:px-[60px]">
         <div className="flex flex-col lg:flex-row gap-[40px] items-center">
           {/* Left Column - Image */}
-          <div className="w-full lg:flex-[1.06]">
+          <div 
+            ref={imageRef}
+            className="w-full lg:flex-[1.06]"
+            style={{
+              opacity: imageVisible ? 1 : 0,
+              transform: imageVisible ? "scaleX(1)" : "scaleX(0)",
+              transformOrigin: "left",
+              transition: "opacity 1.2s ease-out, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
+            }}
+          >
             <div className="aspect-[671/556] max-w-[671px] relative w-full">
               <img 
                 alt="Santa Clara Marine Plywood history" 
@@ -20,7 +33,15 @@ export function AboutHistoryOverviewSection() {
           </div>
 
           {/* Right Column - Content Block */}
-          <div className="w-full lg:flex-[0.94]">
+          <div 
+            ref={contentRef}
+            className="w-full lg:flex-[0.94]"
+            style={{
+              opacity: contentVisible ? 1 : 0,
+              transform: contentVisible ? "translateX(0)" : "translateX(60px)",
+              transition: "opacity 0.8s ease-out 0.3s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s",
+            }}
+          >
             <ContentBlock
               title="A Century of Excellence"
               paragraphs={[

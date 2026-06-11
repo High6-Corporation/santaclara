@@ -4,7 +4,6 @@ import Footer from "@/app/components/layout/Footer";
 import { SubpageBanner } from "@/app/components/globals/SubpageBanner";
 import { CtaSection } from "@/app/components/globals/CtaSection";
 import { DealerInfoSection } from "@/app/components/sections/dealer/DealerInfoSection";
-import { FadeIn } from "@/app/components/ui/FadeIn";
 import { fetchPageSEOByUri, rankMathSEOToMetadata } from "@/lib/graphqlService";
 import { StructuredData } from "@/app/components/seo/StructuredData";
 import { breadcrumbSchema } from "@/app/lib/schema";
@@ -25,18 +24,12 @@ export default function DealerPage() {
       />
       <main className="bg-white min-h-screen w-full overflow-x-hidden">
       <Header />
-      <FadeIn direction="none">
-        <SubpageBanner 
-          title="Dealer" 
-          backgroundImage="/images/press-banner.jpg"
-        />
-      </FadeIn>
-      <FadeIn>
-        <DealerInfoSection />
-      </FadeIn>
-      <FadeIn>
-        <CtaSection />
-      </FadeIn>
+      <SubpageBanner 
+        title="Dealer" 
+        backgroundImage="/images/press-banner.jpg"
+      />
+      <DealerInfoSection />
+      <CtaSection />
       <Footer />
     </main>
   </>

@@ -4,6 +4,7 @@ import { Row } from "@/components/layout/Row";
 import { useState, useEffect, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { getDealers, getDealerRegions, type Dealer as WPDealer, extractCoordinatesFromMapsUrl } from '@/lib/graphqlService';
+import { useScrollAnimation } from "@/app/hooks/useScrollAnimation";
 
 // Google Maps type declarations
 declare global {
@@ -48,6 +49,9 @@ export function DealerInfoSection() {
   const markerRef = useRef<GoogleMarker>(null);
   const infoWindowRef = useRef<GoogleInfoWindow>(null);
   const geocoderRef = useRef<GoogleGeocoder>(null);
+  const { ref: headingRef, isVisible: headingVisible } = useScrollAnimation(0.2);
+  const { ref: controlsRef, isVisible: controlsVisible } = useScrollAnimation(0.1);
+  const { ref: listRef, isVisible: listVisible } = useScrollAnimation(0.1);
   
   // Fetch dealers and regions from WordPress
   useEffect(() => {
@@ -320,7 +324,15 @@ export function DealerInfoSection() {
   return (
     <Section bgColor="bg-[#F5F6FA] lg:py-[100px] md:py-[40px] py-[30px]">
       <Row>
-        <div className="text-center mb-[30px]">
+        <div 
+          ref={headingRef}
+          className="text-center mb-[30px]"
+          style={{
+            opacity: headingVisible ? 1 : 0,
+            transform: headingVisible ? "translateY(0)" : "translateY(30px)",
+            transition: "opacity 0.8s ease-out 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s",
+          }}
+        >
                 <h2 className="text-[36px] md:text-[48px] lg:text-6xl font-normal tracking-[-2.4px] leading-[40px] lg:leading-[72.6px] text-[#333333] lg:mb-[30px] mb-[20px]">
                   Find a Trusted SMWPI Dealer
                 </h2>
@@ -331,7 +343,15 @@ export function DealerInfoSection() {
       </Row>
       <Row className="!max-w-[1280px]">
         {/* Tabs and Search */}
-        <div className="flex flex-col min-[1240px]:flex-row">
+        <div 
+          ref={controlsRef}
+          className="flex flex-col min-[1240px]:flex-row"
+          style={{
+            opacity: controlsVisible ? 1 : 0,
+            transform: controlsVisible ? "translateY(0)" : "translateY(30px)",
+            transition: "opacity 0.8s ease-out 0.3s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s",
+          }}
+        >
           {/* LEFT — Tabs */}
           <div className="order-2 min-[1240px]:order-1 hidden md:flex flex-wrap flex-1 max-[1240px]:mt-6">
             {regions.map((region, index) => (
@@ -416,7 +436,15 @@ export function DealerInfoSection() {
         </div>
 
         {/* Dealer List and Map */}
-        <div className="flex flex-col lg:flex-row gap-0 w-full">
+        <div 
+          ref={listRef}
+          className="flex flex-col lg:flex-row gap-0 w-full"
+          style={{
+            opacity: listVisible ? 1 : 0,
+            transform: listVisible ? "translateY(0)" : "translateY(50px)",
+            transition: "opacity 0.8s ease-out 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s",
+          }}
+        >
           {/* Left side - Dealer listings */}
           <div className="lg:w-[433px]">
             {isLoading ? (

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ContentBlock } from "@/components/blocks/ContentBlock";
+import { useScrollAnimation } from "@/app/hooks/useScrollAnimation";
 
 // Reusable hook for counter animation
 function useCounterAnimation(targetValue: number, duration: number = 2000) {
@@ -81,12 +82,24 @@ function StatCard({ icon, value, label, suffix = "" }: StatCardProps) {
 }
 
 export function AboutCompanyOverviewSection() {
+  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation(0.2);
+  const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation(0.1);
+  const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation(0.1);
+
   return (
     <section className="relative w-full bg-white py-[60px] md:py-[80px] lg:py-[100px] overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-[5%] lg:px-[60px]">
         <div className="flex flex-col lg:flex-row gap-[18px] items-start mb-[40px] md:mb-[60px] lg:mb-[80px]">
           {/* Left Column - Content Block */}
-          <div className="w-full lg:flex-[1.001]">
+          <div 
+            ref={contentRef}
+            className="w-full lg:flex-[1.001]"
+            style={{
+              opacity: contentVisible ? 1 : 0,
+              transform: contentVisible ? "translateY(0)" : "translateY(40px)",
+              transition: "opacity 0.8s ease-out 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s",
+            }}
+          >
             <ContentBlock
               title="The Leading Manufacturer of Premium Wood Products"
               paragraphs={[
@@ -107,7 +120,16 @@ export function AboutCompanyOverviewSection() {
           </div>
 
           {/* Right Column - Image */}
-          <div className="w-full lg:flex-[0.999]">
+          <div 
+            ref={imageRef}
+            className="w-full lg:flex-[0.999]"
+            style={{
+              opacity: imageVisible ? 1 : 0,
+              transform: imageVisible ? "scaleX(1)" : "scaleX(0)",
+              transformOrigin: "right",
+              transition: "opacity 1.2s ease-out, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
+            }}
+          >
             <div className="aspect-[650/556] relative w-full">
               <img 
                 alt="Santa Clara Marine Plywood manufacturing" 
@@ -119,22 +141,23 @@ export function AboutCompanyOverviewSection() {
         </div>
 
         {/* Bottom Row - Stat Cards */}
-        <div className="w-full max-w-[1035px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[20px] sm:gap-[30px] pt-[40px] md:pt-[60px]">
-          <StatCard
-            icon="/images/century.svg"
-            value={103}
-            label="More than a century of excellence in marine plywood manufacturing"
-          />
-          <StatCard
-            icon="/images/employees.svg"
-            value={1000}
-            label="Employees supporting over a century<br />of excellence"
-          />
-          <StatCard
-            icon="/images/manufacturing-plants.svg"
-            value={2}
-            label="Strategically located manufacturing plants nationwide"
-          />
+        <div ref={statsRef} className="w-full max-w-[1035px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[20px] sm:gap-[30px] pt-[40px] md:pt-[60px]">
+          {[
+            { icon: "/images/century.svg", value: 103, label: "More than a century of excellence in marine plywood manufacturing" },
+            { icon: "/images/employees.svg", value: 1000, label: "Employees supporting over a century<br />of excellence" },
+            { icon: "/images/manufacturing-plants.svg", value: 2, label: "Strategically located manufacturing plants nationwide" },
+          ].map((stat, index) => (
+            <div
+              key={index}
+              style={{
+                opacity: statsVisible ? 1 : 0,
+                transform: statsVisible ? "translateY(0) scale(1)" : "translateY(50px) scale(0.9)",
+                transition: `opacity 0.8s ease-out ${0.2 + index * 0.15}s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${0.2 + index * 0.15}s`,
+              }}
+            >
+              <StatCard icon={stat.icon} value={stat.value} label={stat.label} />
+            </div>
+          ))}
         </div>
       </div>
     </section>

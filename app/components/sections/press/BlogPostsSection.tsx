@@ -99,17 +99,18 @@ export function BlogPostsSection() {
         ) : (
           <>
             <div className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center gap-[18px]">
-              {posts.map((post) => {
+              {posts.map((post, index) => {
                 const redirectUrl = extractUrlFromExcerpt(post.excerpt);
                 
                 return (
-                  <PressCard
-                    key={post.id}
-                    title={post.title}
-                    date={post.date}
-                    image={post.featuredImage?.node.mediaItemUrl || ''}
-                    redirectUrl={redirectUrl || ''}
-                  />
+                  <div key={post.id}>
+                    <PressCard
+                      title={post.title}
+                      date={post.date}
+                      image={post.featuredImage?.node.mediaItemUrl || ''}
+                      redirectUrl={redirectUrl || ''}
+                    />
+                  </div>
                 );
               })}
             </div>

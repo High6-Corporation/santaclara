@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowButton } from "@/app/components/ui/ArrowButton";
+import { useScrollAnimation } from "@/app/hooks/useScrollAnimation";
 
 interface CategorySectionProps {
   title: string;
@@ -20,6 +21,8 @@ export function CategorySection({
   href = "#",
 }: CategorySectionProps) {
   const isDark = variant === "dark";
+  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation(0.2);
+  const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation(0.1);
 
   return (
     <section
@@ -34,7 +37,15 @@ export function CategorySection({
           } items-center justify-between gap-[30px] lg:gap-[50px]`}
         >
           {/* Content */}
-          <div className="flex flex-col gap-[40px] items-start w-full lg:w-[599px]">
+          <div 
+            ref={contentRef}
+            className="flex flex-col gap-[40px] items-start w-full lg:w-[599px]"
+            style={{
+              opacity: contentVisible ? 1 : 0,
+              transform: contentVisible ? "translateY(0)" : "translateY(40px)",
+              transition: "opacity 0.8s ease-out 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s",
+            }}
+          >
             {/* Title Section */}
             <div className="flex flex-col gap-[24px] items-start w-full">
               <h2
@@ -61,7 +72,16 @@ export function CategorySection({
           </div>
 
           {/* Image */}
-          <div className="bg-white w-full lg:w-[671px] h-auto lg:h-[460px] overflow-clip relative">
+          <div 
+            ref={imageRef}
+            className="bg-white w-full lg:w-[671px] h-auto lg:h-[460px] overflow-clip relative"
+            style={{
+              opacity: imageVisible ? 1 : 0,
+              transform: imageVisible ? "scaleX(1)" : "scaleX(0)",
+              transformOrigin: reverseLayout ? "left" : "right",
+              transition: "opacity 1.2s ease-out, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
+            }}
+          >
             <img
               src={image}
               alt={title}

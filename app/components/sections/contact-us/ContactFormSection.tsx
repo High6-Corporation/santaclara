@@ -7,6 +7,7 @@ import { Row } from "@/components/layout/Row";
 import Image from "next/image";
 import { ArrowButton } from "@/components/ui/ArrowButton";
 import { getDynamicFormFields, DynamicFormField } from "@/lib/contactFormService";
+import { useScrollAnimation } from "@/app/hooks/useScrollAnimation";
 
 function SocialMediaIcons() {
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
@@ -71,6 +72,8 @@ export function ContactFormSection() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isButtonHovered, setIsButtonHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { ref: leftRef, isVisible: leftVisible } = useScrollAnimation(0.2);
+  const { ref: rightRef, isVisible: rightVisible } = useScrollAnimation(0.1);
 
   // Fetch form fields from Gravity Forms
   useEffect(() => {
@@ -253,7 +256,15 @@ export function ContactFormSection() {
     <Section bgColor="bg-white lg:py-[100px] md:py-[60px] py-[40px]">
       <Row className="!max-w-[1222px] flex gap-[30px] max-lg:flex-col">
         {/* Contact Details */}
-        <div className="text-left lg:max-w-[562px] w-full flex flex-col lg:gap-[30px] gap-[20px]">
+        <div 
+          ref={leftRef}
+          className="text-left lg:max-w-[562px] w-full flex flex-col lg:gap-[30px] gap-[20px]"
+          style={{
+            opacity: leftVisible ? 1 : 0,
+            transform: leftVisible ? "translateY(0)" : "translateY(40px)",
+            transition: "opacity 0.8s ease-out 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s",
+          }}
+        >
             <div>
                 <h2 className="text-[36px] md:text-[48px] lg:text-6xl font-normal tracking-[-2.4px] leading-[40px] lg:leading-[72.6px] text-[#333333] lg:mb-[30px] mb-[20px]">
                   Get in Touch!
@@ -345,7 +356,15 @@ export function ContactFormSection() {
         </div>
 
         {/* Contact Form */}
-        <div className="lg:max-w-[630px] w-full bg-[#04217B] lg:h-[737px] md:px-[30px] px-[20px] md:py-[50px] py-[30px]">
+        <div 
+          ref={rightRef}
+          className="lg:max-w-[630px] w-full bg-[#04217B] lg:h-[737px] md:px-[30px] px-[20px] md:py-[50px] py-[30px]"
+          style={{
+            opacity: rightVisible ? 1 : 0,
+            transform: rightVisible ? "translateY(0)" : "translateY(50px)",
+            transition: "opacity 0.8s ease-out 0.4s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s",
+          }}
+        >
           {isLoading ? (
             <div className="text-white text-center py-10">Loading form...</div>
           ) : (

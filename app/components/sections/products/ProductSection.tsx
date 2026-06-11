@@ -10,6 +10,7 @@ import "swiper/css/pagination";
 import { Product as WPProduct } from "@/lib/graphqlService";
 import { ArrowButton } from "@/app/components/ui/ArrowButton";
 import { InquiryModal } from "@/app/components/ui/InquiryModal";
+import { useScrollAnimation } from "@/app/hooks/useScrollAnimation";
 
 interface ProductSectionProps {
   product: WPProduct;
@@ -23,6 +24,8 @@ export function ProductSection({ product, variant = "light", index = 0 }: Produc
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [lightboxMedia, setLightboxMedia] = useState<{ url: string; type: 'image' | 'video' } | null>(null);
   const [mounted, setMounted] = useState(false);
+  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation(0.2);
+  const { ref: galleryRef, isVisible: galleryVisible } = useScrollAnimation(0.1);
   
   useEffect(() => {
     setMounted(true);
@@ -63,7 +66,15 @@ export function ProductSection({ product, variant = "light", index = 0 }: Produc
           isEven ? '' : 'xl:flex-row-reverse'
         }`}>
           {/* Content Section */}
-          <div className="flex flex-col gap-[40px] items-start w-full xl:w-[599px]">
+          <div 
+            ref={contentRef}
+            className="flex flex-col gap-[40px] items-start w-full xl:w-[599px]"
+            style={{
+              opacity: contentVisible ? 1 : 0,
+              transform: contentVisible ? "translateY(0)" : "translateY(40px)",
+              transition: "opacity 0.8s ease-out 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s",
+            }}
+          >
             {/* Title Section */}
             <div className="flex flex-col gap-[24px] items-start w-full">
               <h2
@@ -139,7 +150,15 @@ export function ProductSection({ product, variant = "light", index = 0 }: Produc
           </div>
 
           {/* Gallery Section */}
-          <div className="flex flex-col gap-[20px] items-start w-full xl:w-[671px]">
+          <div 
+            ref={galleryRef}
+            className="flex flex-col gap-[20px] items-start w-full xl:w-[671px]"
+            style={{
+              opacity: galleryVisible ? 1 : 0,
+              transform: galleryVisible ? "translateY(0)" : "translateY(50px)",
+              transition: "opacity 0.8s ease-out 0.3s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s",
+            }}
+          >
             {/* Main Image Display - Clickable for Lightbox */}
             <div 
               className="bg-white w-full h-[460px] overflow-clip relative cursor-pointer"
@@ -167,35 +186,23 @@ export function ProductSection({ product, variant = "light", index = 0 }: Produc
             {allImageUrls.length > 1 && (
               <div className="w-full">
                 <Swiper
-                  modules={[Navigation, Pagination]}
+                  modules={[Pagination]}
                   spaceBetween={20}
                   slidesPerView={4}
                   loop={true}
-                  navigation={{
-                    enabled: true,
-                  }}
                   pagination={{ clickable: true, dynamicBullets: true }}
                   breakpoints={{
                     320: {
                       slidesPerView: 2,
                       spaceBetween: 10,
-                      navigation: {
-                        enabled: false,
-                      },
                     },
                     768: {
                       slidesPerView: 3,
                       spaceBetween: 15,
-                      navigation: {
-                        enabled: false,
-                      },
                     },
                     1024: {
                       slidesPerView: 4,
                       spaceBetween: 20,
-                      navigation: {
-                        enabled: true,
-                      },
                     },
                   }}
                   className="!pb-12"

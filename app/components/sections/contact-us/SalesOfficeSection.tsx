@@ -2,9 +2,13 @@
 
 import { Section } from "@/components/layout/Section";
 import { Row } from "@/components/layout/Row";
+import { useScrollAnimation } from "@/app/hooks/useScrollAnimation";
 
 export function SalesOfficeSection() {
   const GOOGLE_MAPS_API_KEY = "AIzaSyAjbHyFs7o64UZtx5xVhryDsHxPHONhNC4";
+  const { ref: headingRef, isVisible: headingVisible } = useScrollAnimation(0.2);
+  const { ref: manilaRef, isVisible: manilaVisible } = useScrollAnimation(0.1);
+  const { ref: davaoRef, isVisible: davaoVisible } = useScrollAnimation(0.1);
 
   // Manila - using place query with fixed marker
   const manilaQuery = encodeURIComponent("Tytana Plaza, Insular St, Binondo, Manila, 1000 Metro Manila");
@@ -16,14 +20,30 @@ export function SalesOfficeSection() {
     <Section bgColor="bg-[#F5F6FA] lg:py-[50px] md:py-[40px] py-[30px]">
       <Row className="!max-w-[1227px]">
           {/* Heading */}
-          <div className="text-center">
+          <div 
+            ref={headingRef}
+            className="text-center"
+            style={{
+              opacity: headingVisible ? 1 : 0,
+              transform: headingVisible ? "translateY(0)" : "translateY(30px)",
+              transition: "opacity 0.8s ease-out 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s",
+            }}
+          >
             <h2 className="text-[36px] md:text-[48px] lg:text-6xl font-normal tracking-[-2.4px] leading-[40px] md:leading-[72.6px] text-[#333333] lg:mb-[42px] md:mb-[30px] mb-[20px]">
               SMWPI Sales Office
             </h2>
           </div>
 
           {/* Manila Row */}
-          <div className="flex flex-col lg:flex-row gap-[30px] lg:mb-[50px] mb-[40px]">
+          <div 
+            ref={manilaRef}
+            className="flex flex-col lg:flex-row gap-[30px] lg:mb-[50px] mb-[40px]"
+            style={{
+              opacity: manilaVisible ? 1 : 0,
+              transform: manilaVisible ? "translateY(0)" : "translateY(50px)",
+              transition: "opacity 0.8s ease-out 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s",
+            }}
+          >
             {/* Map Column */}
             <div className="lg:max-w-[670px] w-full">
               <div className="w-full h-[461px]">
@@ -89,7 +109,15 @@ export function SalesOfficeSection() {
           </div>
 
           {/* Davao Row - Reverse Layout */}
-          <div className="flex flex-col lg:flex-row gap-[30px]">
+          <div 
+            ref={davaoRef}
+            className="flex flex-col lg:flex-row gap-[30px]"
+            style={{
+              opacity: davaoVisible ? 1 : 0,
+              transform: davaoVisible ? "translateY(0)" : "translateY(50px)",
+              transition: "opacity 0.8s ease-out 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s",
+            }}
+          >
             {/* Details Column */}
             <div className="lg:w-1/2 w-full flex items-center lg:order-1 order-2">
               <div className="flex flex-col gap-[20px]">

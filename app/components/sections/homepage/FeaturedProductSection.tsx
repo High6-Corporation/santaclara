@@ -11,6 +11,7 @@ import { ArrowButton } from "@/app/components/ui/ArrowButton";
 import { ContentBlock } from "@/app/components/blocks/ContentBlock";
 import Link from "next/link";
 import { ProductCategory } from "@/lib/graphqlService";
+import { useScrollAnimation } from "@/app/hooks/useScrollAnimation";
 
 interface ProductCardProps {
   image: string;
@@ -102,6 +103,8 @@ export function FeaturedProductSection({ categories }: FeaturedProductSectionPro
   const desktopSwiperRef = useRef<SwiperType | null>(null);
   const tabletSwiperRef = useRef<SwiperType | null>(null);
   const mobileSwiperRef = useRef<SwiperType | null>(null);
+  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation(0.2);
+  const { ref: sliderRef, isVisible: sliderVisible } = useScrollAnimation(0.1);
 
   // Duplicate categories for infinite loop effect
   const duplicatedCategories = [...categories, ...categories];
@@ -131,12 +134,28 @@ export function FeaturedProductSection({ categories }: FeaturedProductSectionPro
       <div className="max-w-[1440px] mx-auto lg:px-[60px]">
         <div className="flex flex-col lg:flex-row gap-[40px] lg:gap-[80px] items-start">
           {/* Left Column - Title & Description */}
-          <div className="w-full lg:w-[35%] xl:w-[40%] flex-shrink-0 px-[5%] lg:px-0 relative z-10">
+          <div 
+            ref={contentRef}
+            className="w-full lg:w-[35%] xl:w-[40%] flex-shrink-0 px-[5%] lg:px-0 relative z-10"
+            style={{
+              opacity: contentVisible ? 1 : 0,
+              transform: contentVisible ? "translateY(0)" : "translateY(40px)",
+              transition: "opacity 0.8s ease-out 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s",
+            }}
+          >
             <FeaturedProductsContainer />
           </div>
 
           {/* Right Column - Product Carousel */}
-          <div className="w-full lg:flex-1 min-w-0">
+          <div 
+            ref={sliderRef}
+            className="w-full lg:flex-1 min-w-0"
+            style={{
+              opacity: sliderVisible ? 1 : 0,
+              transform: sliderVisible ? "translateX(0)" : "translateX(80px)",
+              transition: "opacity 1s ease-out 0.3s, transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s",
+            }}
+          >
             {/* Desktop Swiper - Shows partial next slide */}
             <div className="hidden lg:block relative" style={{ clipPath: 'inset(0 -100vw 0 0)' }}>
               {/* Navigation Buttons */}

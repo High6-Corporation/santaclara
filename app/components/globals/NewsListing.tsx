@@ -110,7 +110,7 @@ export function NewsListing({ items = [], maxItems, variant = 'homepage' }: News
 
   if (variant === 'homepage') {
    return (
-      <div className="content-stretch flex flex-col gap-[24px] md:gap-[30px] items-start relative shrink-0 w-full lg:w-[50%]" data-name="NewsItemContainer">
+      <div className="content-stretch flex flex-col gap-[24px] md:gap-[30px] items-start relative shrink-0 w-full" data-name="NewsItemContainer">
         {displayItems.map((item) => (
           <NewsItemComponent key={item.id} item={item} variant={variant} />
         ))}

@@ -507,6 +507,95 @@ export async function getDealerRegions(): Promise<string[]> {
 }
 
 // ============================================================
+// Gallery Types & Queries
+// ============================================================
+
+export interface GalleryImageNode {
+  sourceUrl: string;
+  altText?: string;
+}
+
+export interface GalleryItem {
+  id: string;
+  databaseId: number;
+  title: string;
+  slug: string;
+  galleryFields: {
+    galleryImages: {
+      nodes: GalleryImageNode[];
+    };
+  };
+}
+
+// Normalize galleryImages to a flat array
+export function normalizeGalleryImages(galleryImages: GalleryItem['galleryFields']['galleryImages'] | undefined | null): GalleryImageNode[] {
+  if (!galleryImages) return [];
+  if (Array.isArray(galleryImages)) return galleryImages;
+  return galleryImages?.nodes || [];
+}
+
+// Fetch all gallery posts
+export async function getGalleries(): Promise<GalleryItem[]> {
+  try {
+    const response = await fetch(WP_GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        queryId: '4bffc36f0323dfa0afd8432e79793eef37d6f8f8c39bd52a6804ae7dd9b2656e',
+      }),
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    });
+
+    if (!response.ok) {
+      console.error('Failed to fetch galleries:', response.statusText);
+      return [];
+    }
+
+    const data = await response.json();
+
+    if (data.errors) {
+      console.error('GraphQL errors:', JSON.stringify(data.errors, null, 2));
+      return [];
+    }
+
+    return data?.data?.contentNodes?.nodes || [];
+  } catch (error) {
+    console.error('Error fetching galleries:', error);
+    return [];
+  }
+}
+
+// Fetch a single gallery post by slug
+export async function getGalleryBySlug(slug: string): Promise<GalleryItem | null> {
+  try {
+    const response = await fetch(WP_GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        queryId: '395132d0a09ce9a132bf8098322f640dfc397b2804a9df750fe6890c31067ca9',
+        variables: { slug },
+      }),
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      console.error('Failed to fetch gallery:', response.statusText);
+      return null;
+    }
+
+    const data = await response.json();
+    return data?.data?.gallery || null;
+  } catch (error) {
+    console.error('Error fetching gallery by slug:', error);
+    return null;
+  }
+}
+
+// ============================================================
 // Rank Math SEO Integration
 // ============================================================
 

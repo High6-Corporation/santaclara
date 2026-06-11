@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useScrollAnimation } from "@/app/hooks/useScrollAnimation";
 
 // Reusable hook for counter animation
 function useCounterAnimation(targetValue: number, duration: number = 2000) {
@@ -163,27 +164,73 @@ function OverviewContent() {
 }
 
 // Stats Grid Component
-function StatsGrid() {
+function StatsGrid({ isVisible = false }: { isVisible?: boolean }) {
+  const items = [
+    { value: 103, label: "More than a century of excellence in marine plywood manufacturing", borderPosition: "right" as const },
+    { value: 1, suffix: "k", label: "Employees supporting over a century<br />of excellence", borderPosition: "left" as const },
+    { value: 2, label: "Strategically located manufacturing plants nationwide", borderPosition: "right" as const },
+  ];
+
   return (
     <div className="flex flex-col md:flex-row md:flex-wrap gap-[24px] md:gap-0 w-full md:w-[650px] border-t border-black/50">
-      <StatCard value={103} label="More than a century of excellence in marine plywood manufacturing" borderPosition="right" />
-      <StatCard value={1} suffix="k" label="Employees supporting over a century<br />of excellence" borderPosition="left" />
-      <StatCard value={2} label="Strategically located manufacturing plants nationwide" borderPosition="right" />
-      <CTACard />
+      {items.map((item, index) => (
+        <div
+          key={index}
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? "translateY(0) scale(1)" : "translateY(40px) scale(0.9)",
+            transition: `opacity 0.8s ease-out ${0.2 + index * 0.15}s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${0.2 + index * 0.15}s`,
+          }}
+        >
+          <StatCard value={item.value} label={item.label} suffix={item.suffix || ""} borderPosition={item.borderPosition} />
+        </div>
+      ))}
+      <div
+        style={{
+          opacity: isVisible ? 1 : 0,
+          transform: isVisible ? "translateY(0) scale(1)" : "translateY(40px) scale(0.9)",
+          transition: `opacity 0.8s ease-out ${0.2 + 3 * 0.15}s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${0.2 + 3 * 0.15}s`,
+        }}
+      >
+        <CTACard />
+      </div>
     </div>
   );
 }
 
 export function CompanyOverviewSection() {
+  const { ref: headingRef, isVisible: headingVisible } = useScrollAnimation(0.2);
+  const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation(0.1);
+  const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation(0.1);
+
   return (
     <section className="relative w-full bg-white py-[100px]">
       <div className="max-w-[1440px] mx-auto px-[5%] lg:px-[60px]">
         <div className="flex flex-col xl:flex-row gap-[80px] items-start xl:items-end">
           {/* Left Column - Content */}
           <div className="w-full xl:w-[550px] flex flex-col gap-[47px]">
-            <SectionTitle badge="Who We Are" title="Santa Clara Marine Plywood Built to Last" />
-            <OverviewContent />
-            <div className="aspect-[509/340] relative w-full">
+            <div ref={headingRef}>
+              <SectionTitle badge="Who We Are" title="Santa Clara Marine Plywood Built to Last" />
+            </div>
+            <div
+              style={{
+                opacity: headingVisible ? 1 : 0,
+                transform: headingVisible ? "translateY(0)" : "translateY(30px)",
+                transition: "opacity 0.8s ease-out 0.4s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s",
+              }}
+            >
+              <OverviewContent />
+            </div>
+            <div 
+              ref={imageRef}
+              className="aspect-[509/340] relative w-full"
+              style={{
+                opacity: imageVisible ? 1 : 0,
+                transform: imageVisible ? "scaleX(1)" : "scaleX(0)",
+                transformOrigin: "left",
+                transition: "opacity 1.2s ease-out, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
+              }}
+            >
               <img 
                 alt="Santa Clara Marine Plywood manufacturing" 
                 className="absolute inset-0 w-full h-full object-cover" 
@@ -193,8 +240,8 @@ export function CompanyOverviewSection() {
           </div>
 
           {/* Right Column - Stats Grid */}
-          <div className="w-full flex justify-center xl:justify-start xl:w-auto">
-            <StatsGrid />
+          <div ref={statsRef} className="w-full flex justify-center xl:justify-start xl:w-auto">
+            <StatsGrid isVisible={statsVisible} />
           </div>
         </div>
       </div>

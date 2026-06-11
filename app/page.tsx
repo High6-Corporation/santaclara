@@ -9,8 +9,7 @@ import { CompanyGallerySection } from "@/app/components/sections/homepage/Compan
 import { TestimonialsSection } from "@/app/components/sections/homepage/TestimonialsSection";
 import { NewsSection } from "@/app/components/sections/homepage/NewsSection";
 import { CtaSection } from "@/app/components/globals/CtaSection";
-import { getProductCategories, fetchPageSEOByUri, rankMathSEOToMetadata } from "@/lib/graphqlService";
-import { FadeIn } from "@/app/components/ui/FadeIn";
+import { getProductCategories, getGalleries, fetchPageSEOByUri, rankMathSEOToMetadata } from "@/lib/graphqlService";
 import { StructuredData } from "@/app/components/seo/StructuredData";
 import { websiteSchema } from "@/app/lib/schema";
 
@@ -20,38 +19,25 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  // Fetch product categories from WordPress
-  const categories = await getProductCategories();
+  // Fetch product categories and galleries from WordPress
+  const [categories, galleries] = await Promise.all([
+    getProductCategories(),
+    getGalleries(),
+  ]);
 
   return (
     <>
       <StructuredData data={websiteSchema()} />
       <main className="bg-white min-h-screen w-full overflow-x-hidden">
         <Header />
-      <FadeIn direction="none">
         <Hero />
-      </FadeIn>
-      <FadeIn>
         <CompanyOverviewSection />
-      </FadeIn>
-      <FadeIn>
         <FeaturedProductSection categories={categories} />
-      </FadeIn>
-      <FadeIn>
         <ProductOverview />
-      </FadeIn>
-      <FadeIn>
-        <CompanyGallerySection />
-      </FadeIn>
-      <FadeIn>
+        <CompanyGallerySection galleries={galleries} />
         <TestimonialsSection />
-      </FadeIn>
-      <FadeIn>
         <NewsSection />
-      </FadeIn>
-      <FadeIn>
         <CtaSection />
-      </FadeIn>
       <Footer />
     </main>
   </>

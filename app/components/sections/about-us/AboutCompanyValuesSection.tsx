@@ -7,10 +7,14 @@ import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 import { ContentBlock } from "@/components/blocks/ContentBlock";
+import { useScrollAnimation } from "@/app/hooks/useScrollAnimation";
 
 export function AboutCompanyValuesSection() {
   const leftSwiperRef = useRef<SwiperType | null>(null);
   const rightSwiperRef = useRef<SwiperType | null>(null);
+  const { ref: topImageRef, isVisible: topImageVisible } = useScrollAnimation(0.1);
+  const { ref: topContentRef, isVisible: topContentVisible } = useScrollAnimation(0.2);
+  const { ref: slidersRef, isVisible: slidersVisible } = useScrollAnimation(0.1);
 
   return (
     <>
@@ -38,7 +42,16 @@ export function AboutCompanyValuesSection() {
         {/* First Row - Existing Content */}
         <div className="flex flex-col lg:flex-row gap-[50px] items-center mb-[100px]">
           {/* Left Column - Image */}
-          <div className="w-full lg:flex-[1.06]">
+          <div 
+            ref={topImageRef}
+            className="w-full lg:flex-[1.06]"
+            style={{
+              opacity: topImageVisible ? 1 : 0,
+              transform: topImageVisible ? "scaleX(1)" : "scaleX(0)",
+              transformOrigin: "left",
+              transition: "opacity 1.2s ease-out, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
+            }}
+          >
             <div className="aspect-[671/556] relative w-full">
               <img 
                 alt="Santa Clara Company Values" 
@@ -49,7 +62,15 @@ export function AboutCompanyValuesSection() {
           </div>
 
           {/* Right Column - Content Block */}
-          <div className="w-full lg:flex-[0.94]">
+          <div 
+            ref={topContentRef}
+            className="w-full lg:flex-[0.94]"
+            style={{
+              opacity: topContentVisible ? 1 : 0,
+              transform: topContentVisible ? "translateX(0)" : "translateX(60px)",
+              transition: "opacity 0.8s ease-out 0.3s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s",
+            }}
+          >
             <ContentBlock
               title="Our Purpose"
               paragraphs={[
@@ -74,7 +95,15 @@ export function AboutCompanyValuesSection() {
         </div>
 
         {/* Second Row - Two Columns with Sliders */}
-        <div className="flex flex-col lg:flex-row gap-[20px] items-start">
+        <div 
+          ref={slidersRef}
+          className="flex flex-col lg:flex-row gap-[20px] items-start"
+          style={{
+            opacity: slidersVisible ? 1 : 0,
+            transform: slidersVisible ? "translateY(0)" : "translateY(50px)",
+            transition: "opacity 0.8s ease-out 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s",
+          }}
+        >
           {/* Left Column - Slider with Content */}
           <div className="w-full lg:flex-[1.00] min-w-0">
             {/* Slider Container */}
