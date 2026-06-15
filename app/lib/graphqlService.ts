@@ -543,7 +543,7 @@ export async function getGalleries(): Promise<GalleryItem[]> {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        queryId: '4bffc36f0323dfa0afd8432e79793eef37d6f8f8c39bd52a6804ae7dd9b2656e',
+        queryId: '3e95dd6763c515b6d645475f9effe81e77f390d209a3d2ceb65e459183471998',
       }),
       next: { revalidate: 3600 }, // Cache for 1 hour
     });
