@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import BackToTop from "./components/globals/BackToTop";
 import { Preloader } from "./components/globals/Preloader";
@@ -55,6 +56,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      {/*
+        Google Analytics 4 — only loads on the Next.js frontend (santaclaraplywood.com).
+        The WordPress admin (admin.santaclaraplywood.com) is a separate domain
+        and does NOT include this script, so no admin tracking occurs.
+
+        Verification: Open https://analytics.google.com > Realtime report,
+        then visit your site — your session should appear within seconds.
+      */}
+      {process.env.NEXT_PUBLIC_GA_ID && (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+      )}
       <head>
         <StructuredData
           data={[
