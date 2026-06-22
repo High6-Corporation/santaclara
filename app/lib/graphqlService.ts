@@ -128,7 +128,7 @@ export async function fetchPosts(first: number = 4, after: string | null = null)
           after,
         },
       }),
-      next: { revalidate: 60 }, // Cache for 1 minute
+      next: { revalidate: 60, tags: ['wordpress-posts', 'wordpress-sitemap'] }, // Cache for 1 minute
     });
 
     if (!response.ok) {
@@ -184,7 +184,7 @@ export async function fetchPostBySlug(slug: string): Promise<SinglePostResponse>
           slug,
         },
       }),
-      next: { revalidate: 60 }, // Cache for 1 minute
+      next: { revalidate: 60, tags: ['wordpress-posts'] }, // Cache for 1 minute
     });
 
     if (!response.ok) {
@@ -237,7 +237,7 @@ export async function getProductCategories(): Promise<ProductCategory[]> {
           }
         `,
       }),
-      next: { revalidate: 3600 }, // Cache for 1 hour
+      next: { revalidate: 3600, tags: ['wordpress-products', 'wordpress-sitemap'] }, // Cache for 1 hour
     });
 
     if (!response.ok) {
@@ -295,7 +295,7 @@ export async function getProductCategoryBySlug(slug: string): Promise<ProductCat
         `,
         variables: { slug },
       }),
-      next: { revalidate: 3600 },
+      next: { revalidate: 3600, tags: ['wordpress-products'] },
     });
 
     if (!response.ok) {
@@ -356,7 +356,7 @@ export async function getProductsByCategorySlug(slug: string): Promise<Product[]
           }
         `,
       }),
-      next: { revalidate: 3600 },
+      next: { revalidate: 3600, tags: ['wordpress-products'] },
     });
 
     if (!response.ok) {
@@ -418,7 +418,7 @@ export async function getDealers(): Promise<Dealer[]> {
       body: JSON.stringify({
         queryId: '7a395890b281c0d49726f0a98dbca2a536c7a4995f767bcd3197a407a6bbcf41',
       }),
-      next: { revalidate: 3600 }, // Cache for 1 hour
+      next: { revalidate: 3600, tags: ['wordpress-dealers'] }, // Cache for 1 hour
     });
 
     if (!response.ok) {
@@ -473,7 +473,7 @@ export async function getDealerRegions(): Promise<string[]> {
       body: JSON.stringify({
         queryId: '28b910934666b9a399dfa1ae575838cf2295486225300c995f7e93cb6c461998',
       }),
-      next: { revalidate: 3600 }, // Cache for 1 hour
+      next: { revalidate: 3600, tags: ['wordpress-dealers'] }, // Cache for 1 hour
     });
 
     if (!response.ok) {
@@ -545,7 +545,7 @@ export async function getGalleries(): Promise<GalleryItem[]> {
       body: JSON.stringify({
         queryId: '3e95dd6763c515b6d645475f9effe81e77f390d209a3d2ceb65e459183471998',
       }),
-      next: { revalidate: 3600 }, // Cache for 1 hour
+      next: { revalidate: 3600, tags: ['wordpress-galleries', 'wordpress-sitemap'] }, // Cache for 1 hour
     });
 
     if (!response.ok) {
@@ -579,7 +579,7 @@ export async function getGalleryBySlug(slug: string): Promise<GalleryItem | null
         queryId: '395132d0a09ce9a132bf8098322f640dfc397b2804a9df750fe6890c31067ca9',
         variables: { slug },
       }),
-      next: { revalidate: 3600 },
+      next: { revalidate: 3600, tags: ['wordpress-galleries'] },
     });
 
     if (!response.ok) {
@@ -669,7 +669,7 @@ export async function fetchAllPagesSEO(): Promise<AllPagesSEOResponse> {
       body: JSON.stringify({
         queryId: '4d45c72014d814b4f254d5ecea5caec5fddb44df5f54f731a052fbe19d0f35ad',
       }),
-      next: { revalidate: 3600 }, // Cache for 1 hour
+      next: { revalidate: 3600, tags: ['wordpress-pages'] }, // Cache for 1 hour
     });
 
     if (!response.ok) {
@@ -718,7 +718,7 @@ export async function fetchPageSEOByUri(uri: string): Promise<RankMathSEO | null
         `,
         variables: { uri },
       }),
-      next: { revalidate: 3600 },
+      next: { revalidate: 3600, tags: ['wordpress-pages'] },
     });
 
     if (!response.ok) {
@@ -773,7 +773,7 @@ export async function fetchPostSEOBySlug(slug: string): Promise<RankMathSEO | nu
         `,
         variables: { slug },
       }),
-      next: { revalidate: 3600 },
+      next: { revalidate: 3600, tags: ['wordpress-posts'] },
     });
 
     if (!response.ok) {
@@ -828,7 +828,7 @@ export async function fetchProductCategorySEOBySlug(slug: string): Promise<RankM
         `,
         variables: { slug },
       }),
-      next: { revalidate: 3600 },
+      next: { revalidate: 3600, tags: ['wordpress-products'] },
     });
 
     if (!response.ok) {

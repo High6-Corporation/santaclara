@@ -2,7 +2,7 @@
 export const SITE_CONFIG = {
   name: 'Santa Clara Plywood',
   description: 'Premium plywood solutions with quality, durability, and sustainability',
-  url: 'https://santaclara.com',
+  url: 'https://santaclaraplywood.com',
 } as const;
 
 export const NAVIGATION_ITEMS = [
