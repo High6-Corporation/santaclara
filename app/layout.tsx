@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import BackToTop from "./components/globals/BackToTop";
 import { Preloader } from "./components/globals/Preloader";
 import { StructuredData } from "./components/seo/StructuredData";
+import { ConsentProvider } from "./components/consent/ConsentProvider";
+import { CookieConsentBanner } from "./components/consent/CookieConsentBanner";
+import { CookieSettingsLink } from "./components/consent/CookieSettingsLink";
+import { CookieSettingsModal } from "./components/consent/CookieSettingsModal";
+import { ConsentScriptLoader } from "./components/consent/ConsentScriptLoader";
 import {
   organizationSchema,
   localBusinessManilaSchema,
@@ -56,17 +60,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/*
-        Google Analytics 4 — only loads on the Next.js frontend (santaclaraplywood.com).
-        The WordPress admin (admin.santaclaraplywood.com) is a separate domain
-        and does NOT include this script, so no admin tracking occurs.
-
-        Verification: Open https://analytics.google.com > Realtime report,
-        then visit your site — your session should appear within seconds.
-      */}
-      {process.env.NEXT_PUBLIC_GA_ID && (
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
-      )}
       <head>
         <StructuredData
           data={[
@@ -77,10 +70,18 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} antialiased`}>
-        <Preloader>
-          {children}
-          <BackToTop />
-        </Preloader>
+        <ConsentProvider>
+          <Preloader>
+            {children}
+            <BackToTop />
+          </Preloader>
+
+          {/* GDPR Cookie Consent */}
+          <CookieConsentBanner />
+          <CookieSettingsLink />
+          <CookieSettingsModal />
+          <ConsentScriptLoader />
+        </ConsentProvider>
       </body>
     </html>
   );

@@ -236,7 +236,14 @@ function FooterContainer() {
   return (
     <div className="flex flex-col gap-[40px] md:gap-[50px] items-center w-full">
       <Frame43 />
-      <p className="font-body font-normal text-[11px] text-black text-center px-[20px]">© 2026 SANTA CLARA MARINE PLYWOOD . All Rights Reserved</p>
+      <div className="flex flex-col items-center gap-[12px]">
+        <div className="flex flex-wrap justify-center gap-x-[20px] gap-y-[4px] font-body font-normal text-[12px] text-[#333]">
+          <Link href="/privacy-policy" className="hover:text-[#e31c26] transition-colors duration-200">Privacy Policy</Link>
+          <span className="text-gray-300">|</span>
+          <Link href="/cookie-policy" className="hover:text-[#e31c26] transition-colors duration-200">Cookie Policy</Link>
+        </div>
+        <p className="font-body font-normal text-[11px] text-black text-center px-[20px]">© 2026 SANTA CLARA MARINE PLYWOOD . All Rights Reserved</p>
+      </div>
     </div>
   );
 }
