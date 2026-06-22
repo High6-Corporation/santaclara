@@ -8,6 +8,7 @@ import Image from "next/image";
 import { ArrowButton } from "@/components/ui/ArrowButton";
 import { getDynamicFormFields, DynamicFormField } from "@/lib/contactFormService";
 import { useScrollAnimation } from "@/app/hooks/useScrollAnimation";
+import { useCleanTalkBotDetector } from "@/lib/cleantalk/cleantalkscript";
 
 function SocialMediaIcons() {
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
@@ -74,6 +75,7 @@ export function ContactFormSection() {
   const [isLoading, setIsLoading] = useState(true);
   const { ref: leftRef, isVisible: leftVisible } = useScrollAnimation(0.2);
   const { ref: rightRef, isVisible: rightVisible } = useScrollAnimation(0.1);
+  const { scriptFailed: ctScriptFailed } = useCleanTalkBotDetector();
 
   // Fetch form fields from Gravity Forms
   useEffect(() => {
@@ -123,12 +125,15 @@ export function ContactFormSection() {
     setErrorMessage('');
 
     try {
+      // Collect CleanTalk bot detector token from hidden input
+      const ctToken = (document.querySelector('input[name="ct_bot_detector_event_token"]') as HTMLInputElement)?.value || '';
+
       const response = await fetch('/api/contact/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, ct_bot_detector_event_token: ctToken }),
       });
 
       const result = await response.json();
@@ -380,6 +385,12 @@ export function ContactFormSection() {
                   {errorMessage}
                 </div>
               )}
+
+              {/* Honeypot field */}
+              <input type="text" name="website" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
+
+              {/* CleanTalk bot detector hidden input */}
+              <input type="hidden" name="ct_bot_detector_event_token" id="ct_bot_detector_event_token" />
 
               {/* Dynamic Form Fields */}
               <div className="space-y-6">

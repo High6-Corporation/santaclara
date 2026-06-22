@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { getDynamicFormFields, DynamicFormField } from "@/lib/contactFormService";
+import { useCleanTalkBotDetector } from "@/lib/cleantalk/cleantalkscript";
 
 interface InquiryModalProps {
   isOpen: boolean;
@@ -23,6 +24,7 @@ export function InquiryModal({ isOpen, onClose, productName, productCategory, fo
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const { scriptFailed: ctScriptFailed } = useCleanTalkBotDetector();
 
   useEffect(() => {
     setMounted(true);
@@ -110,12 +112,15 @@ export function InquiryModal({ isOpen, onClose, productName, productCategory, fo
     setErrorMessage('');
 
     try {
+      // Collect CleanTalk bot detector token from hidden input
+      const ctToken = (document.querySelector('#ct_bot_detector_event_token_modal') as HTMLInputElement)?.value || '';
+
       const response = await fetch('/api/contact/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...formData, form_id: formId }),
+        body: JSON.stringify({ ...formData, form_id: formId, ct_bot_detector_event_token: ctToken }),
       });
 
       const result = await response.json();
@@ -301,6 +306,12 @@ export function InquiryModal({ isOpen, onClose, productName, productCategory, fo
                   {errorMessage}
                 </div>
               )}
+
+              {/* Honeypot field */}
+              <input type="text" name="website" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
+
+              {/* CleanTalk bot detector hidden input */}
+              <input type="hidden" name="ct_bot_detector_event_token" id="ct_bot_detector_event_token_modal" />
 
               {/* Dynamic Form Fields */}
               <div className="space-y-6">

@@ -1,5 +1,7 @@
 'use server';
 
+import { headers } from 'next/headers';
+
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function isValidEmail(email: string): boolean {
@@ -201,7 +203,8 @@ export async function getDynamicFormFields(formId?: string): Promise<DynamicForm
 export async function submitDynamicFormAction(
   formData: FormData,
   fields: DynamicFormField[],
-  formId?: string
+  formId?: string,
+  ct_bot_detector_event_token?: string
 ): Promise<FormSubmissionResult> {
   try {
     const honeypot = formData.get('website')?.toString().trim() || '';
@@ -211,6 +214,67 @@ export async function submitDynamicFormAction(
 
     // Build submission data and validate dynamically
     const missingFields: string[] = [];
+
+    // CleanTalk token check
+    if (
+      !ct_bot_detector_event_token ||
+      ct_bot_detector_event_token.trim() === ''
+    ) {
+      console.warn('CleanTalk token not provided - rejecting submission');
+      return {
+        success: false,
+        message: 'Verification failed. Please refresh the page and try again.',
+      };
+    }
+
+    // Get user's real IP address from headers (Server Action compatible)
+    const headersList = await headers();
+    const userIP =
+      headersList.get('cf-connecting-ip') ||
+      headersList.get('x-forwarded-for')?.split(',')[0].trim() ||
+      headersList.get('x-real-ip') ||
+      headersList.get('x-client-ip') ||
+      headersList.get('remote-addr') ||
+      'unknown';
+
+    // Extract user agent and referrer from request headers
+    const userAgent = headersList.get('user-agent') || '';
+    const referrer = headersList.get('referer') || headersList.get('referrer') || '';
+
+    // Extract form data from FormData object
+    const formFields: { [key: string]: string } = {};
+    for (const [key, value] of formData.entries()) {
+      if (key !== 'website') {
+        formFields[key] = value.toString();
+      }
+    }
+
+    // Find email field
+    const emailField = fields.find((f) => f.type === 'email');
+    const senderEmail = emailField ? (formFields[emailField.name] || '') : '';
+
+    // Combine all form values for CleanTalk
+    const allFormValues = Object.values(formFields)
+      .filter((val) => val && val.trim() !== '')
+      .join(' | ')
+      .substring(0, 1024);
+
+    const ctValidationResult = await validateCleanTalkToken(
+      ct_bot_detector_event_token,
+      senderEmail,
+      allFormValues,
+      userIP,
+      userAgent,
+      referrer
+    );
+
+    if (!ctValidationResult.allow) {
+      console.warn('CleanTalk validation failed:', ctValidationResult.message);
+      return {
+        success: false,
+        message: 'Verification failed. Please refresh the page and try again.',
+      };
+    }
 
     for (const field of fields) {
       // Skip file uploads
@@ -262,6 +326,91 @@ export async function submitDynamicFormAction(
       success: false,
       message: error instanceof Error ? error.message : 'An unexpected error occurred'
     };
+  }
+}
+
+// CleanTalk API
+async function validateCleanTalkToken(
+  token: string,
+  senderEmail: string,
+  message: string,
+  userIP: string,
+  userAgent: string = '',
+  referrer: string = ''
+): Promise<{ allow: boolean; message?: string; code?: string }> {
+  try {
+    const apiKey = process.env.CLEANTALK_API_KEY;
+    if (!apiKey) {
+      console.warn('CLEANTALK_API_KEY not configured (development mode) - rejecting submission');
+      return { allow: false, message: 'Api Key not configured' };
+    }
+
+    // Create abort controller for timeout
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+    try {
+      // Use the correct CleanTalk API endpoint
+      const response = await fetch('https://moderate.cleantalk.org/api2.0', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          method_name: 'check_message',
+          auth_key: apiKey,
+          event_token: token,
+          event_token_enabled: 1,
+          sender_ip: userIP,
+          sender_email: senderEmail,
+          message: message,
+          sender_info: JSON.stringify({
+            REFFERRER: referrer,
+            USER_AGENT: userAgent
+          })
+        }),
+        signal: controller.signal
+      });
+
+      clearTimeout(timeout);
+      // Check if API response is OK
+      if (!response.ok) {
+        console.error('CleanTalk API error:', response.status, response.statusText);
+
+        // Fail closed - block submission when API is down
+        return { allow: false, message: 'Verification service unavailable. Please try again later.' };
+      }
+
+      const result = await response.json();
+
+      // CleanTalk returns allow as number (1 or 0), not boolean
+      if (result.allow === 1 || result.allow === true) {
+        return { allow: true };
+      } else {
+        console.warn('CleanTalk blocked:', result.codes);
+        return {
+          allow: false,
+          message: result.comment || 'Verification failed',
+          code: result.codes || result.code
+        };
+      }
+    } catch (fetchError: unknown) {
+      clearTimeout(timeout);
+
+      // Handle timeout specifically
+      if (fetchError instanceof Error && fetchError.name === 'AbortError') {
+        console.error('CleanTalk API request timed out');
+      } else {
+        console.error('CleanTalk validation network error:', fetchError instanceof Error ? fetchError.message : 'Unknown error');
+      }
+
+      // Fail closed - block submission on network errors
+      return { allow: false, message: 'Verification service unavailable. Please try again later.' };
+    }
+  } catch (error: unknown) {
+    console.error('CleanTalk validation unexpected error:', error instanceof Error ? error.message : 'Unknown error');
+    // Fail closed - block submission on unexpected errors
+    return { allow: false, message: 'Verification service unavailable. Please try again later.' };
   }
 }
 
