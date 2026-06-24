@@ -87,10 +87,10 @@ export function SalesOfficeSection() {
                 <div className="flex gap-[12px] items-center">
                   <img src="/images/EmailIcon.svg" alt="Email" className="w-[30px] h-[30px] shrink-0" />
                   <a
-                    href="mailto:smwpipurchasing@gmail.com"
+                    href="mailto:inquiry@santaclaraplywood.com"
                     className="md:text-base text-sm underline leading-[24px] tracking-[-0.72px] text-black hover:text-[#e31c26] transition-colors duration-200"
                   >
-                    smwpipurchasing@gmail.com
+                    inquiry@santaclaraplywood.com
                   </a>
                 </div>
 
@@ -139,10 +139,10 @@ export function SalesOfficeSection() {
                 <div className="flex gap-[12px] items-center">
                   <img src="/images/EmailIcon.svg" alt="Email" className="w-[30px] h-[30px] shrink-0" />
                   <a
-                    href="mailto:smwpipurchasing@gmail.com"
+                    href="mailto:inquiry@santaclaraplywood.com"
                     className="md:text-base text-sm underline leading-[24px] tracking-[-0.72px] text-black hover:text-[#e31c26] transition-colors duration-200"
                   >
-                    smwpipurchasing@gmail.com
+                    inquiry@santaclaraplywood.com
                   </a>
                 </div>
                 <div className="flex gap-[12px] items-center items-start">

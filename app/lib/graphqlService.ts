@@ -850,6 +850,33 @@ export async function fetchProductCategorySEOBySlug(slug: string): Promise<RankM
   }
 }
 
+// Decode HTML entities (e.g. &#039; → ', &amp; → &, &quot; → ")
+function decodeHtmlEntities(str: string): string {
+  if (!str) return str;
+  return str
+    .replace(/&#039;/g, "'")
+    .replace(/&#038;/g, '&')
+    .replace(/&#034;/g, '"')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#34;/g, '"')
+    .replace(/&#38;/g, '&')
+    .replace(/&#8217;/g, "'")
+    .replace(/&#8220;/g, '"')
+    .replace(/&#8221;/g, '"')
+    .replace(/&#8216;/g, "'")
+    .replace(/&#8230;/g, '...')
+    .replace(/&rsquo;/g, "'")
+    .replace(/&lsquo;/g, "'")
+    .replace(/&rdquo;/g, '"')
+    .replace(/&ldquo;/g, '"')
+    .replace(/&hellip;/g, '...')
+    .replace(/&mdash;/g, '—')
+    .replace(/&ndash;/g, '–')
+    .replace(/&nbsp;/g, ' ');
+}
+
 // Convert Rank Math SEO data to Next.js Metadata
 export function rankMathSEOToMetadata(seo: RankMathSEO | null): Metadata {
   if (!seo) {
@@ -857,8 +884,8 @@ export function rankMathSEOToMetadata(seo: RankMathSEO | null): Metadata {
   }
 
   const metadata: Metadata = {
-    title: seo.title || undefined,
-    description: seo.description || undefined,
+    title: decodeHtmlEntities(seo.title) || undefined,
+    description: decodeHtmlEntities(seo.description) || undefined,
     keywords: seo.focusKeywords || undefined,
     alternates: {
       canonical: seo.canonicalUrl || undefined,
@@ -867,8 +894,8 @@ export function rankMathSEOToMetadata(seo: RankMathSEO | null): Metadata {
 
   if (seo.openGraph) {
     metadata.openGraph = {
-      title: seo.openGraph.title || seo.title || undefined,
-      description: seo.openGraph.description || seo.description || undefined,
+      title: decodeHtmlEntities(seo.openGraph.title || seo.title) || undefined,
+      description: decodeHtmlEntities(seo.openGraph.description || seo.description) || undefined,
       url: seo.openGraph.url || seo.canonicalUrl || undefined,
       type: (seo.openGraph.type as 'website' | 'article') || 'website',
       images: seo.openGraph.image?.url ? [{ url: seo.openGraph.image.url }] : undefined,

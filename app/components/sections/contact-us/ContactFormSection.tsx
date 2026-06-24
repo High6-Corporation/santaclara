@@ -346,10 +346,10 @@ export function ContactFormSection() {
                         className="w-[24px] h-[24px]"
                     />
                     <a 
-                        href="mailto:smwpipurchasing@gmail.com" 
+                        href="mailto:inquiry@santaclaraplywood.com" 
                         className="text-base leading-[28px] underline tracking-[-0.64px] text-[#333333] hover:text-[#e31c26] transition-colors duration-200 break-all"
                     >
-                        smwpipurchasing@gmail.com
+                        inquiry@santaclaraplywood.com
                     </a>
                 </div>
             </div>
