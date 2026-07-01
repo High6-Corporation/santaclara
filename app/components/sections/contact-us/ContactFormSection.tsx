@@ -363,7 +363,7 @@ export function ContactFormSection() {
         {/* Contact Form */}
         <div 
           ref={rightRef}
-          className="lg:max-w-[630px] w-full bg-[#04217B] lg:h-[737px] md:px-[30px] px-[20px] md:py-[50px] py-[30px]"
+          className="lg:max-w-[630px] w-full bg-[#04217B] lg:min-h-[737px] md:px-[30px] px-[20px] md:py-[50px] py-[30px]"
           style={{
             opacity: rightVisible ? 1 : 0,
             transform: rightVisible ? "translateY(0)" : "translateY(50px)",
