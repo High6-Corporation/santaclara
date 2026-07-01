@@ -114,8 +114,8 @@ function EmailIcon() {
 function ContactInfo1() {
   return (
     <div className="content-stretch flex flex-col items-center md:items-start relative shrink-0 w-full" data-name="Contact Info">
-      <a href="mailto:smwpipurchasing@gmail.com" className="font-body font-normal leading-[normal] not-italic relative shrink-0 text-[#333] text-[16px] md:text-[18px] tracking-[-0.72px] w-full text-center md:text-left hover:text-[#e31c26] transition-colors duration-200 break-all">
-        smwpipurchasing@gmail.com
+      <a href="mailto:inquiry@santaclaraplywood.com" className="font-body font-normal leading-[normal] not-italic relative shrink-0 text-[#333] text-[16px] md:text-[18px] tracking-[-0.72px] w-full text-center md:text-left hover:text-[#e31c26] transition-colors duration-200 break-all">
+        inquiry@santaclaraplywood.com
       </a>
     </div>
   );
